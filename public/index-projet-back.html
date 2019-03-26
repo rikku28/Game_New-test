@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<!-- Liens vers la feuille de style et des polices-->
+    <!-- <link href="https://fonts.googleapis.com/css?family=Macondo+Swash+Caps" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet"> -->
+        <!-- Font pour les titres et mises en "avant" (ex.: date) ...-->
+    <link href="https://fonts.googleapis.com/css?family=Ranchers" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Boogaloo" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bangers" rel="stylesheet">
+        <!-- Font pour le texte des paragraphes, span, ...-->
+    <link href="https://fonts.googleapis.com/css?family=BenchNine" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed" rel="stylesheet">
+    <!-- <link href="./public/css/quiz-style.css" rel="stylesheet" type="text/css"> -->
+
+<!-- Chargement des scripts et librairies -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script src="./public/libs/jquery/jquery-3.3.1.min.js" type="text/javascript"></script> -->
+    <script src="../socket.io/socket.io.js"></script>
+    <script src="./public/client.js" type="text/javascript"></script>
+    <title>Quiz Pokémon</title>
+</head>
+<body>
+
+<!-- <main> ou <section> ? <header> avant?-->
+    <main> 
+
+        <section id="welcome">
+            <h1 style="text-align: center; font-size: 3em">Bienvenue</h1>
+            <div>
+                <form id="login-form">
+                    <input type="text" name="pseudo" id="login-form-pseudo" placeholder="Choisissez un pseudonyme" minlength="4" maxlength="10" size="25">
+                    <!-- pattern="/^[a-zA-Z0-9_-]{4,10}$"  -->
+                    <!-- <input type="email" name="mail" id="login-form-email" placeholder="Entrez votre adresse email" size="25"> pattern attend une expression réglière. testée sur regex101.com, ok en JS : pattern="^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[fr|com|eu|lu|de]{2,4}$" -> erreur sur Chrome -->
+                    <input type="password" name="mdp" id="login-form-mdp" placeholder="Saisissez votre mot de passe" minlength="6" maxlength="12" size="25">
+                    <!-- pattern="/^[a-zA-Z0-9_-]{6,12}$" -->
+                    <input type="text" name="avatar" id="login-form-avatar" placeholder="Entrez l'url de votre avatar" size="25">
+                    <input type="submit" value="Envoyer">       
+                </form>
+            </div>
+        </section>
+        <section id="quiz" class="masquee">
+            <h2>Question du quiz</h2>
+            <div id="questions">
+                <p>Question n° </p>
+                <div id="indices">
+                    <img id="indice-img" src="https://www.nautiljon.com/images/actualite/00/17/selon_les_concepteurs_de_la_serie_pokemon_pikachu_n_est_pas_une_souris_9271.jpg?1525335621" alt="Pikachu">
+                    <p id="indice-txt"></p>
+                </div>
+            </div>
+            <div class="reponses" class="masquee">
+                <form id="question-form">
+                    <fieldset>
+                        <legend>Choisissez la bonne réponse :</legend>
+                        <input type="radio" id="rep1" name="q1">
+                        <label for="rep1">Pikachu</label><br/>
+                        <input type="radio" id="rep2" name="q1">
+                        <label for="rep2">Mélofée</label><br/>
+                        <input type="radio" id="rep3" name="q1">
+                        <label for="rep3">Évoli</label><br/>
+                        <input type="radio" id="rep4" name="q1">
+                        <label for="rep4">Chétiflor</label><br/>
+                    </fieldset>
+                    <input type="submit" value="Envoyer">
+                </form>
+            </div>
+        </section>
+        <section id="chat" class="masquee">
+            <div id="zone-infos"></div>
+            <form id="chat-form">
+                <input type="text" name="msg" id="chat-message" placeholder="Hello" size="50"/>
+                <input type="submit" id="send-msg" value="Envoyer" />
+            </form>
+        </section>
+        <section id="scores" class="masquee">
+            <h3>Scores de la partie en cours</h2>
+            <div id="player1">
+                <p id="pseudo-player1"></p>
+                <p id="score-player1"></p>
+            </div>
+            <div id="player2">
+                <p id="pseudo-player2"></p>
+                <p id="score-player2"></p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p id="date-jour" class="gras"></p>
+    </footer>
+</body>
+</html>
