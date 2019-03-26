@@ -25,7 +25,7 @@ const dbName = 'jeuBackEnd';
 
 /************* Constante de raccourci pour "console.log" + déclaration des variables globales **************/
 const log = console.log;
-var players = [];  // ou objet, à convertir ensuite en tableau?
+var players = {};  // Tableau ou objet, à convertir ensuite?
 var tour = 0;
 var listeQuestions;
 var attenteJoueur;
@@ -90,9 +90,10 @@ io.on('connection', function(socket){
         // players.push(newPlayer);
         // players(newPlayer.pseudo) = newPlayer;
         socket.emit('loginOK', newPlayer);
-        log(players);
         socket.broadcast.emit('newPlayer', newPlayer);
-        io.emit('onlinePlayers', newPlayer);
+        log(players);
+        // io.emit('onlinePlayers', newPlayer);
+        io.emit('onlinePlayers', players);
     });
 
     // Echange de messages entre joueurs
@@ -100,7 +101,6 @@ io.on('connection', function(socket){
     socket.on('chatMsg', function (message){
         log(message);
         message = message;
-        log(players);
         // let socketId = socket.id;
         // log(socketId);
         // io.emit('afficheChatMsg', {pseudo: socket.pseudo, img: players[Player.socketId].avatar, msg: message});

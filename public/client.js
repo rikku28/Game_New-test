@@ -53,6 +53,7 @@
     });
 
     socket.on('onlinePlayers', function(infos){
+        log('Joueurs en ligne', infos)
         $('#online-players').append('<p class="infos-joueurs"><img src="' + infos.avatar + '" width="50px"/> ' + infos.pseudo + ' - Score : <span class="score">' + infos.score + '</span></p>');
     });
     
