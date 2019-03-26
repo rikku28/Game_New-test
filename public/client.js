@@ -42,15 +42,19 @@
         log(`Pseudo transmis au joueur connecté : ${infos}`);
         $('#login-form').remove();
         $('.masquee').show(); // ou .fadeIn()?
-        $('#welcome').html('<h1>Bienvenue ' + infos.pseudo + ' <img src="' + infos.avatar + '" width="75px"/></h1>');
+        $('#welcome').html('<h1 style="font-size: 3em">Bienvenue ' + infos.pseudo + ' <img src="' + infos.avatar + '" width="75px"/></h1>');
     });
 
     socket.on('newPlayer', function(infos){
         log('Pseudo transmis aux autres joueurs', infos);
-        $('#zone-infos').prepend('<p><img src="' + infos.avatar + '" width="50px"/><em> ' + infos.pseudo + ' a rejoint la partie !</em></p>');
+        $('#zone-infos').prepend('<p><em> ' + infos.pseudo + ' a rejoint la partie !</em></p>');
+        // $('#online-players').append('<p><img src="' + infos.avatar + '" width="50px"/> ' + infos.pseudo + ' - Score : ' + infos.score + '</p>');
+        // players
     });
 
-
+    socket.on('onlinePlayers', function(infos){
+        $('#online-players').append('<p class="infos-joueurs"><img src="' + infos.avatar + '" width="50px"/> ' + infos.pseudo + ' - Score : <span class="score">' + infos.score + '</span></p>');
+    });
     
 // Déconnexion d'un joueur
     socket.on('decoPlayer', function(player){

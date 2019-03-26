@@ -92,6 +92,7 @@ io.on('connection', function(socket){
         socket.emit('loginOK', newPlayer);
         log(players);
         socket.broadcast.emit('newPlayer', newPlayer);
+        io.emit('onlinePlayers', newPlayer);
     });
 
     // Echange de messages entre joueurs
