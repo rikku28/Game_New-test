@@ -53,15 +53,18 @@
     });
 
     socket.on('onlinePlayers', function(infos){
-        log('Joueurs en ligne', infos)
-        $('#online-players').append('<p class="infos-joueurs"><img src="' + infos.avatar + '" width="50px"/> ' + infos.pseudo + ' - Score : <span class="score">' + infos.score + '</span></p>');
+        $('#online-players').empty();
+        log('Joueurs en ligne', infos);
+        for (var player in infos){
+            $('#online-players').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
+        }
     });
     
 // Déconnexion d'un joueur
-    socket.on('decoPlayer', function(player){
-        log('Joueur déconnecté : ', player);
+    socket.on('decoPlayer', function(pseudo){
+        log('Joueur déconnecté : ', pseudo);
         // $('#' + player.id).remove();
-        // $('#zone-infos').append('<p><em>' + player.pseudo + ' s\'est déconnecté !</em></p>');
+        $('#zone-infos').prepend('<p><em>' + pseudo + ' s\'est déconnecté !</em></p>');
     });
 
 // Echange de messages

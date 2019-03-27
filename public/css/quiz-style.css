@@ -1,0 +1,41 @@
+/********************************************************************************************************************/
+/***************************************** Feuille de style du qui Pokémon *****************************************/
+/******************************************************************************************************************/
+body{
+    background-color: white;
+    /* width: 800px; */
+    background-image: url(../../public/img/pattern-pokemon.png);
+    background-repeat: repeat;
+}
+
+main{
+    width: 800px;
+}
+
+h1{
+    font-size: 3em;
+    text-align: center;
+    font-family: 'Ranchers', 'Bangers', 'Boogaloo', cursive;
+}
+
+h2{
+    font-size: 2.5em;
+    text-align: center;
+    font-family: 'Ranchers', 'Bangers', 'Boogaloo', cursive;
+}
+
+h3{
+    font-size: 2em;
+    text-align: center;
+    font-family: 'Ranchers', 'Bangers', 'Boogaloo', cursive;
+}
+
+p, span{
+    font-family: 'BenchNine', 'Saira Extra Condensed', sans-serif;
+}
+.gras{
+    /* font-weight: bold; */
+    color: #7c3a01;
+    font-family: 'Bangers', 'Boogaloo', cursive;
+    font-size: 1em;
+}

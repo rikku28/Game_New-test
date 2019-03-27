@@ -116,10 +116,19 @@ io.on('connection', function(socket){
 
 // Déconnexion d'un utilisateur
     socket.on('disconnect', function(reason){
+        log('Joueur qui vient de se déconnecter : ', players[socket.id]);
+        // let playerDisPseudo = players[socket.id].pseudo;
+        socket.broadcast.emit('decoPlayer', socket.pseudo);   // Envoyé à touts les autres
         log('[disconnect]', socket.id, reason);
-        // let playerDis = players[newPlayer.socketId];
+        // let playerDis = {
+        //     id: players['socket.id'].identifiant,
+        //     pseudo: players['socket.id'].pseudo,
+        //     avatar: players['socket.id'].avatar
+        // };
+        // let playerDis = players['socket.id'].pseudo;
+        // log(playerDis);
+        // socket.broadcast.emit('decoPlayer', playerDis);   // Envoyé à touts les autres
         delete players[socket.id];
-        socket.broadcast.emit('decoPlayer', players[socket.id]);   // Envoyé à tlm
     });
 
 
