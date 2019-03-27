@@ -65,7 +65,8 @@
 // Déconnexion d'un joueur
     socket.on('decoPlayer', function(infos){
         log('Joueur déconnecté : ', infos);
-        $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' - ' + infos.id + ' s\'est déconnecté !</em></p>');
+        // $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' - ' + infos.id + ' s\'est déconnecté !</em></p>');
+        $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' s\'est déconnecté !</em></p>');
         let balPlayerDis = document.getElementById(infos.id);
         $(balPlayerDis).remove();
         // A faire : Suppression de la balise dont l'id correspond au pseudo
