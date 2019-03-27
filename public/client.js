@@ -57,17 +57,17 @@
         // $('#online-players').append('<h2>Question du quiz</h2>');
         log('Joueurs en ligne', infos);
         for (var player in infos){
-            $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].pseudo + '"><img src="' + infos[player].avatar + '" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
+            $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
             // A voir pour utiliser infos[player].identifiant à la place.
         }
     });
     
 // Déconnexion d'un joueur
-    socket.on('decoPlayer', function(pseudo){
-        log('Joueur déconnecté : ', pseudo);
-        // $('#' + player.id).remove();
-        $('#zone-infos').prepend('<p><em>' + pseudo + ' s\'est déconnecté !</em></p>');
-
+    socket.on('decoPlayer', function(datas){
+        log('Joueur déconnecté : ', datas);
+        $('#zone-infos').prepend('<p><em>' + datas.pseudo - datas.id + ' s\'est déconnecté !</em></p>');
+        let balPlayerDis = document.getElementById(infos.id);
+        $(balPlayerDis).remove();
         // A faire : Suppression de la balise dont l'id correspond au pseudo
         // $('#'pseudo).remove();
     });

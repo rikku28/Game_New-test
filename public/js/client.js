@@ -53,18 +53,23 @@
     });
 
     socket.on('onlinePlayers', function(infos){
-        $('#online-players').empty();
+        $('#online-scores').empty();
+        // $('#online-players').append('<h2>Question du quiz</h2>');
         log('Joueurs en ligne', infos);
         for (var player in infos){
-            $('#online-players').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
+            $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
+            // A voir pour utiliser infos[player].identifiant à la place.
         }
     });
     
 // Déconnexion d'un joueur
-    socket.on('decoPlayer', function(pseudo){
-        log('Joueur déconnecté : ', pseudo);
-        // $('#' + player.id).remove();
-        $('#zone-infos').prepend('<p><em>' + pseudo + ' s\'est déconnecté !</em></p>');
+    socket.on('decoPlayer', function(infos){
+        log('Joueur déconnecté : ', infos);
+        $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' - ' + infos.id + ' s\'est déconnecté !</em></p>');
+        let balPlayerDis = document.getElementById(infos.id);
+        $(balPlayerDis).remove();
+        // A faire : Suppression de la balise dont l'id correspond au pseudo
+        // $('#'pseudo).remove();
     });
 
 // Echange de messages

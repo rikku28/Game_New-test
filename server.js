@@ -87,6 +87,7 @@ io.on('connection', function(socket){
         let pseudo = infosUser.pseudo;
         // players[infosUser.pseudo] = newPlayer;
         players[socket.id] = newPlayer;
+        socket.playerId = players[socket.id].identifiant;
         // players.push(newPlayer);
         // players(newPlayer.pseudo) = newPlayer;
         socket.emit('loginOK', newPlayer);
@@ -104,7 +105,10 @@ io.on('connection', function(socket){
         // let socketId = socket.id;
         // log(socketId);
         // io.emit('afficheChatMsg', {pseudo: socket.pseudo, img: players[Player.socketId].avatar, msg: message});
-        io.emit('afficheChatMsg', {pseudo: socket.pseudo, msg: message});
+        // io.emit('afficheChatMsg', {pseudo: socket.pseudo, msg: message});
+        log(players);
+        // log('Pseudo : ', players[socket.id].pseudo);
+        io.emit('afficheChatMsg',  {pseudo: players[socket.id].pseudo, msg: message});
     });
 
     //Faire une fonction "newQuestion"
@@ -116,10 +120,21 @@ io.on('connection', function(socket){
 
 // Déconnexion d'un utilisateur
     socket.on('disconnect', function(reason){
+        log('Déconnexion : ', socket.id, reason);
         log('Joueur qui vient de se déconnecter : ', players[socket.id]);
-        // let playerDisPseudo = players[socket.id].pseudo;
-        socket.broadcast.emit('decoPlayer', socket.pseudo);   // Envoyé à touts les autres
-        log('[disconnect]', socket.id, reason);
+
+        socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: players[socket.id].identifiant});
+        delete players[socket.id];
+        // if(players[socket.id].socketId == socket.id){
+        //     log('Son pseudo : ' + players[socket.id].pseudo + ' et son id : ' + players[socket.id].identifiant);
+        //     // let playerDisPseudo = players[socket.id].pseudo;
+        //     socket.broadcast.emit('decoPlayer', {pseudo: players[socket.id].pseudo, id: players[socket.id].identifiant});
+        //     delete players[socket.id];
+        // } else{
+        //     log('Serait-ce un joueur inconnu?');
+        // }
+        // const idPlayerDis = players[socket.id].identifiant;
+   // Envoyé à touts les autres
         // let playerDis = {
         //     id: players['socket.id'].identifiant,
         //     pseudo: players['socket.id'].pseudo,
@@ -128,7 +143,7 @@ io.on('connection', function(socket){
         // let playerDis = players['socket.id'].pseudo;
         // log(playerDis);
         // socket.broadcast.emit('decoPlayer', playerDis);   // Envoyé à touts les autres
-        delete players[socket.id];
+
     });
 
 
