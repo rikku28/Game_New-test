@@ -22,7 +22,7 @@
 /******************************************* Actions côté client ********************************************/
         log('Coucou côté client');
 // On masque toutes les balises sauf celles du formulaire de connexion
-        $('.masquee').hide(); // à la place de .fadeOut()
+        $('.cache-infos-joueurs').hide(); // à la place de .fadeOut()
 
 // Formulaire de connnexion : Récupération, puis envoi des infos de connexion au serveur
     let loginForm = document.getElementById('login-form');
@@ -41,7 +41,7 @@
     socket.on('loginOK', function(infos){
         log(`Pseudo transmis au joueur connecté : ${infos}`);
         $('#login-form').remove();
-        $('.masquee').show(); // ou .fadeIn()?
+        $('.cache-infos-joueurs').show(); // ou .fadeIn()?
         $('#welcome').html('<h1 style="font-size: 3em">Bienvenue ' + infos.pseudo + ' <img src="' + infos.avatar + '" width="75px"/></h1>');
     });
 
