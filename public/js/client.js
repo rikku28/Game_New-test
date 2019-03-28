@@ -22,6 +22,7 @@
 /******************************************* Actions côté client ********************************************/
         log('Coucou côté client');
 // On masque toutes les balises sauf celles du formulaire de connexion
+        $('.cache-quizz').hide();
         $('.cache-infos-joueurs').hide(); // à la place de .fadeOut()
 
 // Formulaire de connnexion : Récupération, puis envoi des infos de connexion au serveur
@@ -43,6 +44,8 @@
         $('#login-form').remove();
         $('.cache-infos-joueurs').show(); // ou .fadeIn()?
         $('#welcome').html('<h1 style="font-size: 3em">Bienvenue ' + infos.pseudo + ' <img src="' + infos.avatar + '" width="75px"/></h1>');
+        players.push(infos.pseudo);
+        log(players);
     });
 
     socket.on('newPlayer', function(infos){
@@ -52,6 +55,7 @@
         // players
     });
 
+// Affichage des joueurs en ligne
     socket.on('onlinePlayers', function(infos){
         $('#online-scores').empty();
         // $('#online-players').append('<h2>Question du quiz</h2>');
@@ -86,12 +90,36 @@
         $('#zone-infos').prepend('<p><strong>' + msg.pseudo + '</strong> : ' + msg.msg + '</p>');
     });
 
-    // var i = 0;
-    // var questionEnCours = i;
-    // var tabQuestions = [];
-    // socket.on('newQuestion', function(mongoDatas){
-    //     log(mongoDatas);
-    // });
+
+    socket.on('attenteJoueur', function(){
+        $('#zone-infos').prepend('<p><em>Attente d\'un autre joueur.</em></p>');
+    });
+
+    socket.on('startGame', function(){
+        $('#zone-infos').prepend('<p><em>La partie commence! ^__^ </em></p>');
+        currentQuestion();
+        $('.cache-quizz').show();
+    });
+
+
+/*********************************** Affichage de la question en cours *******************************************/
+var currentQuestion = function(questionEnCours){
+
+// Affichage de la question et ses indices
+    $('div#questions>h2').text('Question n°' + questionEnCours.nb);
+    $('#indice-img').removeAttr('src');
+    $('#indice-img').attr('src', questionEnCours.img);
+    if(questionEnCours.commentaire){
+        $('#indice-txt').text('<em>' + questionEnCours.commentaire + '</em>');
+    };
+
+//  Affichage des réponses
+    $('input#rep1 + label').text(questionEnCours.reponses[1]);
+    $('input#rep2 + label').text(questionEnCours.reponses[2]);
+    $('input#rep3 + label').text(questionEnCours.reponses[3]);
+    $('input#rep4 + label').text(questionEnCours.reponses[4]);
+};
+ 
 
 
 /***********************************************************************/

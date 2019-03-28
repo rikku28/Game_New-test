@@ -26,9 +26,11 @@ const dbName = 'jeuBackEnd';
 /************* Constante de raccourci pour "console.log" + déclaration des variables globales **************/
 const log = console.log;
 var players = {};  // Tableau ou objet, à convertir ensuite?
+var nbPlayers = 0;
+var startGame = false;
 var tour = 0;
 var listeQuestions;
-var attenteJoueur;
+var attenteJoueur = true;
 
 /********************************** Création du serveur HTTP avec Express **********************************/
 app.get('/', function(req, res){
@@ -70,7 +72,30 @@ var Player = function(pseudo, urlImg, socketId){
     this.score = 0;
     this.avatar = urlImg;
     this.socketId = socketId;
-}
+};
+
+/*********************************** Vérification du nombre de joueur *******************************************/
+var checkNbPlayers = function(){
+   if(nbPlayers >= 2 && tour === 0){
+        startGame = true;
+        log('Nb de questions : ' + listeQuestions.length);
+        log(listeQuestions[tour]);
+        io.emit('startGame', listeQuestions[tour]);
+
+    } else{
+        io.emit('attenteJoueur');
+    }
+};
+
+
+/*********************************** Vérification du nombre de joueur *******************************************/
+var checkAnswer = function(answer){
+
+
+
+
+};
+ 
 
 /*********************************** On établie la connexion *******************************************/
 io.on('connection', function(socket){
@@ -90,11 +115,15 @@ io.on('connection', function(socket){
         socket.playerId = players[socket.id].identifiant;
         // players.push(newPlayer);
         // players(newPlayer.pseudo) = newPlayer;
+        nbPlayers++;
+        log(`Nb joueurs : ${nbPlayers}`);
         socket.emit('loginOK', newPlayer);
         socket.broadcast.emit('newPlayer', newPlayer);
         log(players);
-        // io.emit('onlinePlayers', newPlayer);
         io.emit('onlinePlayers', players);
+
+        checkNbPlayers();
+        // io.emit('onlinePlayers', newPlayer);
     });
 
     // Echange de messages entre joueurs

@@ -33,10 +33,10 @@
             <h1 style="text-align: center; font-size: 3em">Bienvenue</h1>
             <div>
                 <form id="login-form">
-                    <input type="text" name="pseudo" id="login-form-pseudo" placeholder="Choisissez un pseudonyme" minlength="4" maxlength="10" size="25">
+                    <input type="text" name="pseudo" id="login-form-pseudo" placeholder="Choisissez un pseudonyme" minlength="4" maxlength="10" size="25" required>
                     <!-- pattern="/^[a-zA-Z0-9_-]{4,10}$"  -->
                     <!-- <input type="email" name="mail" id="login-form-email" placeholder="Entrez votre adresse email" size="25"> pattern attend une expression réglière. testée sur regex101.com, ok en JS : pattern="^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[fr|com|eu|lu|de]{2,4}$" -> erreur sur Chrome -->
-                    <input type="password" name="mdp" id="login-form-mdp" placeholder="Saisissez votre mot de passe" minlength="6" maxlength="12" size="25">
+                    <input type="password" name="mdp" id="login-form-mdp" placeholder="Saisissez votre mot de passe" minlength="6" maxlength="12" size="25" required>
                     <!-- pattern="/^[a-zA-Z0-9_-]{6,12}$" -->
                     <input type="text" name="avatar" id="login-form-avatar" placeholder="Entrez l'url de votre avatar" size="25">
                     <input type="submit" value="Envoyer">       
@@ -44,11 +44,11 @@
             </div>
         </section>
         <section id="quiz" class="cache-quizz">
-            <h2>Question du quiz</h2>
             <div id="questions">
-                <p>Question n° </p>
+                <h2>Question du quiz</h2>
+                <p id="num-question">Question n° </p>
                 <div id="indices">
-                    <img id="indice-img" src="https://www.nautiljon.com/images/actualite/00/17/selon_les_concepteurs_de_la_serie_pokemon_pikachu_n_est_pas_une_souris_9271.jpg?1525335621" alt="Pikachu">
+                    <img id="indice-img" alt="indice en image" src="https://www.nautiljon.com/images/actualite/00/17/selon_les_concepteurs_de_la_serie_pokemon_pikachu_n_est_pas_une_souris_9271.jpg?1525335621">
                     <p id="indice-txt"></p>
                 </div>
             </div>
