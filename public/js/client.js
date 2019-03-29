@@ -99,10 +99,12 @@
         log(q0);
         $('#zone-infos').prepend('<p><em>La partie commence! ^__^ </em></p>');
         $('.cache-quizz').show();
-        currentQuestion(q0);
+        currentQuestion(question);
+        // showQuestion(q0);    // setTimeout qui se déclenche avant "l'écoute" de "startGame".
     });
 
     $('#question-form').click(function(e){
+        clearTimeout(premQuestion);
         e.preventDefault();
         var reponseSelectionnee = $('input[name=q1]:checked').val();
         log(reponseSelectionnee);
@@ -110,11 +112,19 @@
         // if($('input[name=q1]:checked').val())
     });
 
-
+    // socket.on('bravo', function(question){
+    //     log(question);
+    //     $('#zone-infos').prepend('<p><em>La partie commence! ^__^ </em></p>');
+    //     showQuestion(q0);
+    // });
 
 /*********************************** Affichage de la question en cours *******************************************/
-var currentQuestion = function(questionEnCours){
+    // var showQuestion = setTimeout(function(question){
+    //     $('.cache-quizz').show();
+    //     currentQuestion(question);
+    // }, 5000);
 
+    var currentQuestion = function(questionEnCours){
 // Affichage de la question et ses indices
     $('div#questions>h2').text('Question n°' + questionEnCours.identifiant);
     $('question-en-cours').text(questionEnCours.question);
@@ -125,12 +135,12 @@ var currentQuestion = function(questionEnCours){
     };
 
 //  Affichage des réponses
-    $('input#rep1 + label').text(questionEnCours.reponses[1]);
-    $('input#rep2 + label').text(questionEnCours.reponses[2]);
-    $('input#rep3 + label').text(questionEnCours.reponses[3]);
-    $('input#rep4 + label').text(questionEnCours.reponses[4]);
-};
- 
+        $('input#rep1 + label').text(questionEnCours.reponses[1]);
+        $('input#rep2 + label').text(questionEnCours.reponses[2]);
+        $('input#rep3 + label').text(questionEnCours.reponses[3]);
+        $('input#rep4 + label').text(questionEnCours.reponses[4]);
+    };
+    
 
 
 /***********************************************************************/

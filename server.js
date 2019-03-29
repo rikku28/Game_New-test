@@ -48,8 +48,9 @@ app.get('/', function(req, res){
 const io = socketIo(httpServer);
 
 // Cheatsheet : 
-    // io.emit => On envoie le message / les infos à tout le monde
-    // socket.emit => On envoie le message / les infos au joueur correspond
+    // io.emit => On envoie le message / les infos à tout le monde.
+    // socket.emit => On envoie le message / les infos au joueur correspond.
+    // socket.broadcast.emit => On envoie le message / les infos à tous les joueurs, sauf celui correspondant à la "socket".
 
 /**************************** Récupération des questions du quiz dans la BDD ****************************/
 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
@@ -90,48 +91,49 @@ var checkNbPlayers = function(){
     }
 };
 
-
-/*********************************** Vérification de la réponse sélectionnée *******************************************/
-var checkAnswer = function(answer){
-    // let rep = answer.toLowerCase();
-    let repOK = listeQuestions[tour].bonneRep;
-    let repOk2 = listeQuestions[tour].reponses[repOK];
-    log('Réponse à la question : ' + repOk2);
-    if(answer === repOk2){
-        let scorePlayer = players[socket.id].score;
-        scorePlayer++;
-        log(players[socket.id]);
-        socket.emit('gg');
-        io.emit('bravo', {
-            id: socket.playerId,
-            pseudo: socket.pseudo,
-            score: scorePlayer,
-            msg: 'Bonne réponse! :)'
-        });
-        return true;
-    } else{
-        socket.emit('dommage', {
-            id: socket.playerId,
-            pseudo: socket.pseudo,
-            msg: 'Mauvaise réponse! :( Veuillez sélectionner une autre réponse.'
-        });
-        return false;
-    }
-};
-
-/*********************************** Question suivante *******************************************/
-var nextQuestion = function(){
-    tour++;
-    // let questionEnCours = listeQuestions[tour];
-    log(listeQuestions[tour]);
-    // socket.emit('', {
-
-    // });
-};
-
-/*********************************** On établie la connexion *******************************************/
+/*********************************** On établie la connexion socket.io *******************************************/
 io.on('connection', function(socket){
     log('Coucou depuis le serveur!');
+
+/*********************************** Vérification de la réponse sélectionnée *******************************************/
+    var checkAnswer = function(answer){
+        // let rep = answer.toLowerCase();
+        let repOK = listeQuestions[tour].bonneRep;
+        let repOk2 = listeQuestions[tour].reponses[repOK];
+        log('Réponse à la question : ' + repOk2);
+        log(socket);
+        if(answer === repOk2){
+            let scorePlayer = players[socket.id].score;
+            scorePlayer++;
+            log(players[socket.id]);
+            socket.emit('gg');
+            io.emit('bravo', {
+                id: socket.playerId,
+                pseudo: socket.pseudo,
+                score: scorePlayer,
+                msg: 'Bonne réponse! :)'
+            });
+            return true;
+        } else{
+            socket.emit('dommage', {
+                id: socket.playerId,
+                pseudo: socket.pseudo,
+                msg: 'Mauvaise réponse! :( Veuillez sélectionner une autre réponse.'
+            });
+            return false;
+        }
+    };
+
+/*********************************** Question suivante *******************************************/
+    var nextQuestion = function(){
+        tour++;
+        // let questionEnCours = listeQuestions[tour];
+        log(listeQuestions[tour]);
+        // socket.emit('', {
+
+        // });
+    };
+
 
     // Connexion d'un utilisateur
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
@@ -196,9 +198,9 @@ io.on('connection', function(socket){
 
         // socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: players[socket.id].identifiant});
         socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: socket.playerId});
-        delete players[socket.id];
         nbPlayers--;
         log(nbplayers);
+        delete players[socket.id];
         // if(players[socket.id].socketId == socket.id){
         //     log('Son pseudo : ' + players[socket.id].pseudo + ' et son id : ' + players[socket.id].identifiant);
         //     // let playerDisPseudo = players[socket.id].pseudo;
