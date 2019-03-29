@@ -95,22 +95,33 @@
         $('#zone-infos').prepend('<p><em>Attente d\'un autre joueur.</em></p>');
     });
 
-    socket.on('startGame', function(){
+    socket.on('startGame', function(q0){
+        log(q0);
         $('#zone-infos').prepend('<p><em>La partie commence! ^__^ </em></p>');
-        currentQuestion();
         $('.cache-quizz').show();
+        currentQuestion(q0);
     });
+
+    $('#question-form').click(function(e){
+        e.preventDefault();
+        var reponseSelectionnee = $('input[name=q1]:checked').val();
+        log(reponseSelectionnee);
+        socket.emit('answer', reponseSelectionnee);
+        // if($('input[name=q1]:checked').val())
+    });
+
 
 
 /*********************************** Affichage de la question en cours *******************************************/
 var currentQuestion = function(questionEnCours){
 
 // Affichage de la question et ses indices
-    $('div#questions>h2').text('Question n°' + questionEnCours.nb);
+    $('div#questions>h2').text('Question n°' + questionEnCours.identifiant);
+    $('question-en-cours').text(questionEnCours.question);
     $('#indice-img').removeAttr('src');
-    $('#indice-img').attr('src', questionEnCours.img);
-    if(questionEnCours.commentaire){
-        $('#indice-txt').text('<em>' + questionEnCours.commentaire + '</em>');
+    $('#indice-img').attr('src', questionEnCours.indiceImg);
+    if(questionEnCours.indiceTxt){
+        $('#indice-txt').text(questionEnCours.indiceTxt);
     };
 
 //  Affichage des réponses

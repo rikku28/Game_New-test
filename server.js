@@ -31,6 +31,7 @@ var startGame = false;
 var tour = 0;
 var listeQuestions;
 var attenteJoueur = true;
+var finPartie = false;
 
 /********************************** Création du serveur HTTP avec Express **********************************/
 app.get('/', function(req, res){
@@ -77,25 +78,56 @@ var Player = function(pseudo, urlImg, socketId){
 /*********************************** Vérification du nombre de joueur *******************************************/
 var checkNbPlayers = function(){
    if(nbPlayers >= 2 && tour === 0){
+        attenteJoueur = false;
         startGame = true;
         log('Nb de questions : ' + listeQuestions.length);
-        log(listeQuestions[tour]);
-        io.emit('startGame', listeQuestions[tour]);
+        listeQuestions[tour].tour = tour;
+        log('Question en cour : ', listeQuestions[tour]);
 
+        io.emit('startGame', listeQuestions[tour]);
     } else{
         io.emit('attenteJoueur');
     }
 };
 
 
-/*********************************** Vérification du nombre de joueur *******************************************/
+/*********************************** Vérification de la réponse sélectionnée *******************************************/
 var checkAnswer = function(answer){
-
-
-
-
+    // let rep = answer.toLowerCase();
+    let repOK = listeQuestions[tour].bonneRep;
+    let repOk2 = listeQuestions[tour].reponses[repOK];
+    log('Réponse à la question : ' + repOk2);
+    if(answer === repOk2){
+        let scorePlayer = players[socket.id].score;
+        scorePlayer++;
+        log(players[socket.id]);
+        socket.emit('gg');
+        io.emit('bravo', {
+            id: socket.playerId,
+            pseudo: socket.pseudo,
+            score: scorePlayer,
+            msg: 'Bonne réponse! :)'
+        });
+        return true;
+    } else{
+        socket.emit('dommage', {
+            id: socket.playerId,
+            pseudo: socket.pseudo,
+            msg: 'Mauvaise réponse! :( Veuillez sélectionner une autre réponse.'
+        });
+        return false;
+    }
 };
- 
+
+/*********************************** Question suivante *******************************************/
+var nextQuestion = function(){
+    tour++;
+    // let questionEnCours = listeQuestions[tour];
+    log(listeQuestions[tour]);
+    // socket.emit('', {
+
+    // });
+};
 
 /*********************************** On établie la connexion *******************************************/
 io.on('connection', function(socket){
@@ -140,6 +172,16 @@ io.on('connection', function(socket){
         io.emit('afficheChatMsg',  {pseudo: players[socket.id].pseudo, msg: message});
     });
 
+    socket.on('answer', function(reponse){
+
+        if(checkAnswer(reponse)){
+            nextQuestion();
+        }
+    
+    });
+
+
+
     //Faire une fonction "newQuestion"
 
     // Faire une fonction "nextQuestion"
@@ -152,8 +194,11 @@ io.on('connection', function(socket){
         log('Déconnexion : ', socket.id, reason);
         log('Joueur qui vient de se déconnecter : ', players[socket.id]);
 
-        socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: players[socket.id].identifiant});
+        // socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: players[socket.id].identifiant});
+        socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: socket.playerId});
         delete players[socket.id];
+        nbPlayers--;
+        log(nbplayers);
         // if(players[socket.id].socketId == socket.id){
         //     log('Son pseudo : ' + players[socket.id].pseudo + ' et son id : ' + players[socket.id].identifiant);
         //     // let playerDisPseudo = players[socket.id].pseudo;
