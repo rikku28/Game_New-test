@@ -4,7 +4,7 @@ Node.js. Configuration du proxy avec [[express](https://github.com/strongloop/ex
 
 ## TITRE
 
-Proxy `/api` requests to `http://10.53.43.142:3333/`
+Proxy `/api` requests to `http://localhost:3333/`
 
 ```javascript
 var express = require('express')
@@ -12,10 +12,10 @@ var proxy = require('Game_New-test')
 
 var app = express()
 
-app.use('/api', proxy({ target: 'http://10.53.43.142:3333/', changeOrigin: true }))
+app.use('/api', proxy({ target: 'http://localhost/', changeOrigin: true }))
 app.listen(3000)
 
-// http://localhost:3000/ -> http://10.53.43.142:3333/
+// http://localhost:3000/ -> http:// *l'IP en question* :3333/
 ```
 
 
