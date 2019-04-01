@@ -12,7 +12,8 @@
         const log = console.log;
 // On déclare l'ip et le port auxquels le socket sera relié.
         // var socket = io('http://192.168.0.122:3333');
-        var socket = io('http://10.53.43.142:3333');
+        // var socket = io('http://10.53.43.142:3333');
+        var socket = io('http://10.53.42.8:3333');
 
 // Date et timestamp de la date du jour
         var dateJour = new Date();
@@ -112,10 +113,21 @@
         socket.emit('answer', reponseSelectionnee);
         // if($('input[name=q1]:checked').val())
     });
+    
+    socket.on('gg', function(infos){
+        log(infos);
+        $('#zone-infos').prepend('<p><em> Bravo ' + infos.pseudo + '! Vous avez ' + infos.score + ' points. </em></p>');
+    });
 
     socket.on('bravo', function(infos){
         log(infos);
-        $('#zone-infos').prepend('<p><em>' + infos.pseudo + 'La partie commence! ^__^ </em></p>');
+        $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' remporte le point. </em></p>');
+        // showQuestion(q0);
+    });
+
+    socket.on('dommage', function(infos){
+        log(infos);
+        $('#zone-infos').prepend('<p><em> Ce n\'est pas la bonne réponse ' + infos.pseudo + '. Réessayez.</em></p>');
         // showQuestion(q0);
     });
 

@@ -46,6 +46,7 @@ app.get('/', function(req, res){
 
 /**************************** On rattache le serveur HTTP à socket.io ************************************/
 const io = socketIo(httpServer);
+// log(io);
 
 // Cheatsheet : 
     // io.emit => On envoie le message / les infos à tout le monde.
@@ -94,6 +95,7 @@ var checkNbPlayers = function(){
 
 /*********************************** On établie la connexion socket.io *******************************************/
 io.on('connection', function(socket){
+    // log(socket);
     log('Coucou depuis le serveur!');
     log(`Nombre de joueurs connectés : ${nbPlayers}`);
     if(!startGame && (players.length > nbPlayers)){
@@ -109,7 +111,7 @@ io.on('connection', function(socket){
         log('Réponse BDD : ' + repOk2 + ' ' + typeof repOK2);
         log('Réponse reçue ', answer, typeof answer);
         // log(socket);
-        if(answer === repOk2){
+        if(answer == repOk2){
             log('Bonne réponse!');
             let scorePlayer = players[socket.id].score;
             scorePlayer++;
@@ -132,6 +134,14 @@ io.on('connection', function(socket){
             return false;
         }
     };
+
+// Logs serveur :
+// Réponse BDD : 151 undefined
+// Réponse reçue  null object
+// Mauvaise réponse!
+// Réponse BDD : 151 undefined
+// Réponse reçue  151 string
+// Bonne réponse!
 
 /*********************************** Question suivante *******************************************/
     var nextQuestion = function(){
