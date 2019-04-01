@@ -78,7 +78,8 @@ var Player = function(pseudo, urlImg, socketId){
 
 /*********************************** Vérification du nombre de joueur *******************************************/
 var checkNbPlayers = function(){
-   if(nbPlayers >= 2 && tour === 0){
+    log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
+    if(nbPlayers >= 2 && tour === 0){
         attenteJoueur = false;
         startGame = true;
         log('Nb de questions : ' + listeQuestions.length);
@@ -94,15 +95,22 @@ var checkNbPlayers = function(){
 /*********************************** On établie la connexion socket.io *******************************************/
 io.on('connection', function(socket){
     log('Coucou depuis le serveur!');
-
+    log(`Nombre de joueurs connectés : ${nbPlayers}`);
+    if(!startGame && (players.length > nbPlayers)){
+        nbPlayers = players.length;
+    }
+    log(`Nombre de joueurs connectés (après nouvelle connexion): ${nbPlayers}`);
+    
 /*********************************** Vérification de la réponse sélectionnée *******************************************/
     var checkAnswer = function(answer){
         // let rep = answer.toLowerCase();
         let repOK = listeQuestions[tour].bonneRep;
         let repOk2 = listeQuestions[tour].reponses[repOK];
-        log('Réponse à la question : ' + repOk2);
-        log(socket);
+        log('Réponse BDD : ' + repOk2 + ' ' + typeof repOK2);
+        log('Réponse reçue ', answer, typeof answer);
+        // log(socket);
         if(answer === repOk2){
+            log('Bonne réponse!');
             let scorePlayer = players[socket.id].score;
             scorePlayer++;
             log(players[socket.id]);
@@ -115,6 +123,7 @@ io.on('connection', function(socket){
             });
             return true;
         } else{
+            log('Mauvaise réponse!');
             socket.emit('dommage', {
                 id: socket.playerId,
                 pseudo: socket.pseudo,
@@ -199,8 +208,11 @@ io.on('connection', function(socket){
         // socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: players[socket.id].identifiant});
         socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: socket.playerId});
         nbPlayers--;
-        log(nbplayers);
+        log(`Nombre de joueurs connectés : ${nbPlayers}`);
         delete players[socket.id];
+        if(nbPlayers = undefined || nbPlayers < 0){
+            nbPlayers = 0;
+        }
         // if(players[socket.id].socketId == socket.id){
         //     log('Son pseudo : ' + players[socket.id].pseudo + ' et son id : ' + players[socket.id].identifiant);
         //     // let playerDisPseudo = players[socket.id].pseudo;
