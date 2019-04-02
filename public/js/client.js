@@ -98,7 +98,7 @@
 
     socket.on('startGame', function(q0){
         log(q0);
-        $('#zone-infos').prepend('<p><em>La partie commence! ^__^ </em></p>');
+        $('#zone-infos').prepend('<p><strong><em>La partie commence! ^__^ </em></strong></p>');
         $('.cache-quizz').show();
         currentQuestion(q0);
         // showQuestion(q0);    // setTimeout qui se déclenche avant "l'écoute" de "startGame".
@@ -114,22 +114,33 @@
         // if($('input[name=q1]:checked').val())
     });
     
-    socket.on('gg', function(infos){
-        log(infos);
-        $('#zone-infos').prepend('<p><em> Bravo ' + infos.pseudo + '! Vous avez ' + infos.score + ' points. </em></p>');
+    socket.on('nextQuestion', function(qEnCours){
+        log(qEnCours);
+        $('#zone-infos').prepend('<p><em>Question n°' + qEnCours.tour +'!</em></p>');
+        $('.cache-quizz').show();
+        currentQuestion(qEnCours);
     });
 
     socket.on('bravo', function(infos){
         log(infos);
         $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' remporte le point. </em></p>');
-        // showQuestion(q0);
     });
 
     socket.on('dommage', function(infos){
         log(infos);
         $('#zone-infos').prepend('<p><em> Ce n\'est pas la bonne réponse ' + infos.pseudo + '. Réessayez.</em></p>');
-        // showQuestion(q0);
     });
+
+
+    socket.on('endGame', function(msg){
+        log(infos);
+        $('#zone-infos').prepend('<p><strong><em>' + msg + '</em></strong></p>');
+    });
+
+    // socket.on('gg', function(infos){
+    //     log(infos);
+    //     $('#zone-infos').prepend('<p><strong><em> Bravo ' + infos.pseudo + '! Vous avez ' + infos.score + ' gagné la partie. </em></strong></p>');
+    // });
 
 /*********************************** Affichage de la question en cours *******************************************/
     // var showQuestion = setTimeout(function(question){
@@ -139,8 +150,9 @@
 
     var currentQuestion = function(questionEnCours){
 // Affichage de la question et ses indices
-        $('div#questions>h2').text('Question n°' + questionEnCours.identifiant);
-        $('question-en-cours').text(questionEnCours.question);
+        $('div#questions>h2').text('Question n°' + questionEnCours.tour);
+        log('Question n°' + questionEnCours.identifiant);
+        $('#question-en-cours').text(questionEnCours.question);
         $('#indice-img').removeAttr('src');
         $('#indice-img').attr('src', questionEnCours.indiceImg);
         if(questionEnCours.indiceTxt){

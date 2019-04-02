@@ -80,14 +80,13 @@ var Player = function(pseudo, urlImg, socketId){
 /*********************************** Vérification du nombre de joueur *******************************************/
 var checkNbPlayers = function(){
     log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
-    if(nbPlayers >= 2 && tour === 0){
+    if(nbPlayers >= 2 && tour === 0 && !startGame){
         attenteJoueur = false;
         startGame = true;
         log('Nb de questions : ' + listeQuestions.length);
         listeQuestions[tour].tour = tour;
         log('Question en cour : ', listeQuestions[tour]);
-
-        io.emit('startGame', listeQuestions[tour]);
+         io.emit('startGame', listeQuestions[tour]);
     } else{
         io.emit('attenteJoueur');
     }
@@ -102,61 +101,10 @@ io.on('connection', function(socket){
         nbPlayers = players.length;
     }
     log(`Nombre de joueurs connectés (après nouvelle connexion): ${nbPlayers}`);
-    
-/*********************************** Vérification de la réponse sélectionnée *******************************************/
-    var checkAnswer = function(answer){
-        // let rep = answer.toLowerCase();
-        let repOK = listeQuestions[tour].bonneRep;
-        let repOk2 = listeQuestions[tour].reponses[repOK];
-        log('Réponse BDD : ' + repOk2 + ' ' + typeof repOK2);
-        log('Réponse reçue ', answer, typeof answer);
-        // log(socket);
-        if(answer == repOk2){
-            log('Bonne réponse!');
-            let scorePlayer = players[socket.id].score;
-            scorePlayer++;
-            log(players[socket.id]);
-            socket.emit('gg');
-            io.emit('bravo', {
-                id: socket.playerId,
-                pseudo: socket.pseudo,
-                score: scorePlayer,
-                msg: 'Bonne réponse! :)'
-            });
-            return true;
-        } else{
-            log('Mauvaise réponse!');
-            socket.emit('dommage', {
-                id: socket.playerId,
-                pseudo: socket.pseudo,
-                msg: 'Mauvaise réponse! :( Veuillez sélectionner une autre réponse.'
-            });
-            return false;
-        }
-    };
 
-// Logs serveur :
-// Réponse BDD : 151 undefined
-// Réponse reçue  null object
-// Mauvaise réponse!
-// Réponse BDD : 151 undefined
-// Réponse reçue  151 string
-// Bonne réponse!
-
-/*********************************** Question suivante *******************************************/
-    var nextQuestion = function(){
-        tour++;
-        // let questionEnCours = listeQuestions[tour];
-        log(listeQuestions[tour]);
-        // socket.emit('', {
-
-        // });
-    };
-
-
-    // Connexion d'un utilisateur
+// Connexion d'un utilisateur
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
-    
+        
     socket.on('login', function(infosUser){
         log('infosUser : ', infosUser);
         socket.pseudo = infosUser.pseudo;
@@ -179,8 +127,7 @@ io.on('connection', function(socket){
         // io.emit('onlinePlayers', newPlayer);
     });
 
-    // Echange de messages entre joueurs
-
+// Echange de messages entre joueurs
     socket.on('chatMsg', function (message){
         log(message);
         message = message;
@@ -193,23 +140,93 @@ io.on('connection', function(socket){
         io.emit('afficheChatMsg',  {pseudo: players[socket.id].pseudo, msg: message});
     });
 
-    socket.on('answer', function(reponse){
 
-        if(checkAnswer(reponse)){
-            nextQuestion();
+/*********************************** Vérification de la réponse sélectionnée *******************************************/
+    var checkAnswer = function(answer){
+        // let rep = answer.toLowerCase();
+        let repOK = listeQuestions[tour].bonneRep;
+        let repOk2 = listeQuestions[tour].reponses[repOK];
+        log('Réponse BDD : ' + repOk2 + ' ' + typeof repOK2);
+        let repString = (repOk2).toString();
+        log('Réponse BDD - convertie en chaîne de caractère? : ' + repString + ' ' + typeof repString);
+        log('Réponse reçue ', answer, typeof answer);
+        // log(socket);
+        if(answer == repString){
+        // if(answer == repOk2){
+            log('Bonne réponse!');
+            let scorePlayer = players[socket.id].score;
+            scorePlayer++;
+            log(players[socket.id]);
+            io.emit('bravo', {
+                id: socket.playerId,
+                pseudo: socket.pseudo,
+                score: scorePlayer,
+                msg: 'Bonne réponse! :)'
+            });
+            return true;
+        } else{
+            log('Mauvaise réponse!');
+            socket.emit('dommage', {
+                id: socket.playerId,
+                pseudo: socket.pseudo,
+                msg: 'Mauvaise réponse! :( Veuillez sélectionner une autre réponse.'
+            });
+            return false;
         }
-    
-    });
+    };
+
+socket.on('answer', function(reponse){
+
+    if(checkAnswer(reponse)){
+        nextQuestion();
+    }
+
+});
+
+// Logs serveur :
+    // Réponse BDD : 151 undefined
+    // Réponse reçue  null object
+    // Mauvaise réponse!
+    // Réponse BDD : 151 undefined
+    // Réponse reçue  151 string
+    // Bonne réponse!
+
+/*********************************** Question suivante *******************************************/
+    var nextQuestion = function(){
+        if(tour > listeQuestions.length){
+            let msgEndGame = 'Fin de partie!';
+            startGame = false;
+            io.emit('endGame', msgEndGame);
+        } else{
+            tour++;
+            log(`Tour n° ${tour}`);
+            listeQuestions[tour].tour = tour;
+            log('Question en cour : ', listeQuestions[tour]);
+
+            io.emit('nextQuestion', listeQuestions[tour]);
+        }
+
+    };
+
+/*********************************** Fin de partie *******************************************/
+    // var theWinnerIs = function(){
+    //     let scores = [];
+    //     let winner;
+
+// checkScores
+    //     for (var p in players){
+            
+    //     }
+    //     log(scores);
+
+    //     socket.emit('gg', {
+    //         id: socket.playerId,
+    //         pseudo: socket.pseudo}
+    //     );
+    // }
 
 
-
-    //Faire une fonction "newQuestion"
-
-    // Faire une fonction "nextQuestion"
-
-    // Faire une fonction "checkScore"
-
-
+/*********************************** Déconnexion d'un utilisateur *******************************************/
 // Déconnexion d'un utilisateur
     socket.on('disconnect', function(reason){
         log('Déconnexion : ', socket.id, reason);
@@ -241,7 +258,6 @@ io.on('connection', function(socket){
         // let playerDis = players['socket.id'].pseudo;
         // log(playerDis);
         // socket.broadcast.emit('decoPlayer', playerDis);   // Envoyé à touts les autres
-
     });
 
 
