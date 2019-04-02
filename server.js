@@ -29,6 +29,7 @@ var players = {};  // Tableau ou objet, à convertir ensuite?
 var nbPlayers = 0;
 var startGame = false;
 var tour = 0;
+var tourMax = 10;
 var listeQuestions;
 var attenteJoueur = true;
 var finPartie = false;
@@ -57,10 +58,12 @@ const io = socketIo(httpServer);
 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
     const db = client.db(dbName);
     const collection = db.collection('questions');
-    collection.find({}).toArray(function(error,datas) {
+    collection.find({}).limit(10).toArray(function(error,datas) {
         client.close();
         log('Nombre de questions : ', datas.length);
+        log('Il y a ' + datas.length + ' questions récupérées en BDD.');
         listeQuestions = datas;
+        tourMax = datas.length;
         // log(listeQuestions);
         // Transmission des données :
         // res.render('utilisateurs', {title:'Liste des utilisateurs en base', liste: datas});
@@ -80,6 +83,7 @@ var Player = function(pseudo, urlImg, socketId){
 /*********************************** Vérification du nombre de joueur *******************************************/
 var checkNbPlayers = function(){
     log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
+    log(`${players}`);
     if(nbPlayers >= 2 && tour === 0 && !startGame){
         attenteJoueur = false;
         startGame = true;
@@ -154,8 +158,9 @@ io.on('connection', function(socket){
         if(answer == repString){
         // if(answer == repOk2){
             log('Bonne réponse!');
-            let scorePlayer = players[socket.id].score;
-            scorePlayer++;
+            // let scorePlayer = players[socket.id].score;
+            // scorePlayer++;
+            players[socket.id].score++;
             log(players[socket.id]);
             io.emit('bravo', {
                 id: socket.playerId,
@@ -193,12 +198,17 @@ socket.on('answer', function(reponse){
 
 /*********************************** Question suivante *******************************************/
     var nextQuestion = function(){
-        if(tour > listeQuestions.length){
+        tour++;
+        log(`Tour n° ${tour} vs ${tourMax} questions MAX!`);
+        // if(tour > listeQuestions.length){
+        if(tour === tourMax){
             let msgEndGame = 'Fin de partie!';
             startGame = false;
-            io.emit('endGame', msgEndGame);
+            tour = 0;
+            io.emit('endGame', {
+                players : players,
+                msg : msgEndGame});
         } else{
-            tour++;
             log(`Tour n° ${tour}`);
             listeQuestions[tour].tour = tour;
             log('Question en cour : ', listeQuestions[tour]);

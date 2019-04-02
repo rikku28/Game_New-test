@@ -47,6 +47,7 @@
         $('#welcome').html('<h1 style="font-size: 3em">Bienvenue ' + infos.pseudo + ' <img src="' + infos.avatar + '" width="75px"/></h1>');
         players.push(infos.pseudo);
         log(players);
+        $('section#quizz').append('<p>Répondez à 10 questions plus vite que votre adversaire pour gagner des points.</p>')
     });
 
     socket.on('newPlayer', function(infos){
@@ -98,7 +99,7 @@
 
     socket.on('startGame', function(q0){
         log(q0);
-        $('#zone-infos').prepend('<p><strong><em>La partie commence! ^__^ </em></strong></p>');
+        $('#zone-infos').prepend('<p><strong><em>La partie commence : Question n°0!</em></strong></p>');
         $('.cache-quizz').show();
         currentQuestion(q0);
         // showQuestion(q0);    // setTimeout qui se déclenche avant "l'écoute" de "startGame".
@@ -132,10 +133,19 @@
     });
 
 
-    socket.on('endGame', function(msg){
+    socket.on('endGame', function(infos){
         log(infos);
-        $('#zone-infos').prepend('<p><strong><em>' + msg + '</em></strong></p>');
+        $('.cache-quizz').hide();
+        let joueurs = infos.players;
+        $('#online-scores').empty();
+        for (var player in joueurs){
+            $('#online-scores').append('<p class="fin-partie" id="end-' + joueurs[player].identifiant + '"><img src="' + joueurs[player].avatar + '" width="50px"/> ' + joueurs[player].pseudo + ' - Score : <span class="score">' + joueurs[player].score + '</span></p>');
+            // A voir pour utiliser infos[player].identifiant à la place.
+        }
+
+        $('#zone-infos').prepend('<p><strong><em>' + infos.msg + '</em></strong></p>');
     });
+    
 
     // socket.on('gg', function(infos){
     //     log(infos);
@@ -150,6 +160,7 @@
 
     var currentQuestion = function(questionEnCours){
 // Affichage de la question et ses indices
+        // $('div#questions>h2').text('Question n°' + questionEnCours.identifiant);
         $('div#questions>h2').text('Question n°' + questionEnCours.tour);
         log('Question n°' + questionEnCours.identifiant);
         $('#question-en-cours').text(questionEnCours.question);
