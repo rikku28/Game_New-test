@@ -14,10 +14,6 @@ const httpServer = require('http').Server(app);
 app.use(express.static('public'));
 // app.use('/public', express.static(__dirname + '/public'));
 // app.use('/assets', express.static(__dirname + '/public/assets'));
-// app.use('assets', express.static(__dirname + '/public/assets'));
-// app.use('js', express.static(__dirname + '/public/assets/js'));
-// app.use('css', express.static(__dirname + '/public/assets/css'));
-// app.use('img', express.static(__dirname + '/public/assets/img'));
 
 /************************** Ajout du module Node de socket.io + config du port HTTP **************************/
 const socketIo = require('socket.io');
@@ -43,16 +39,15 @@ var finPartie = false;
 /********************************** Création du serveur HTTP avec Express **********************************/
 app.get('/', function(req, res){
     // log(req);
-    console.log('Dirname : ' + __dirname);
-    console.log('Filename : ' + __filename);
-    console.log(`Current directory: ${process.cwd()}`);
-    console.log('process.arg : ' + process.argv);
+    // console.log('Dirname : ' + __dirname);
+    // console.log('Filename : ' + __filename);
+    // console.log(`Current directory: ${process.cwd()}`);
+    // console.log('process.arg : ' + process.argv);
     let htmlFile = path.normalize(__dirname + '/public/index-projet-back.html');
     log(htmlFile);
     // Créer user en bdd ou vérifier qu'il existe en base, puis récupérer son session id
     //Doc Express pour le traitement des erreurs : https://expressjs.com/fr/guide/error-handling.html
     res.sendFile(htmlFile);
-    // log(path.dirname);
 });
 
 /**************************** On rattache le serveur HTTP à socket.io ************************************/
@@ -90,10 +85,28 @@ var Player = function(pseudo, urlImg, socketId){
     this.socketId = socketId;
 };
 
+/*********************************** On établie la connexion socket.io *******************************************/
+io.on('connection', function(socket){
+    // log(socket);
+    log('Coucou depuis le serveur!');
+    log(`Nombre de joueurs connectés : ${nbPlayers}`);
+    if(!startGame && (players.length > nbPlayers)){
+        nbPlayers = players.length;
+        log(nbPlayers);
+    }
+    log(`Nombre de joueurs connectés (après nouvelle connexion): ${nbPlayers}`);
+
+
 /*********************************** Vérification du nombre de joueur *******************************************/
 var checkNbPlayers = function(){
     log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
-    log(`${players}`);
+    // log(`Joueurs connectés : ${players}`);
+    log(players);
+    if(nbPlayers < players.length){
+        nbPlayers = players.length;
+        log(`nbPlayers plus petit que players, on repasse nbPlayers à : ${nbPlayers}`);
+    }
+
     if(nbPlayers >= 2 && tour === 0 && !startGame){
         attenteJoueur = false;
         startGame = true;
@@ -105,17 +118,6 @@ var checkNbPlayers = function(){
         io.emit('attenteJoueur');
     }
 };
-
-/*********************************** On établie la connexion socket.io *******************************************/
-io.on('connection', function(socket){
-    // log(socket);
-    log('Coucou depuis le serveur!');
-    log(`Nombre de joueurs connectés : ${nbPlayers}`);
-    if(!startGame && (players.length > nbPlayers)){
-        nbPlayers = players.length;
-    }
-    log(`Nombre de joueurs connectés (après nouvelle connexion): ${nbPlayers}`);
-
 // Connexion d'un utilisateur
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
         
@@ -171,12 +173,14 @@ io.on('connection', function(socket){
             // let scorePlayer = players[socket.id].score;
             // scorePlayer++;
             players[socket.id].score++;
+            // log(`Score du joueur : ${players[socket.id]}`);
             log(players[socket.id]);
             io.emit('bravo', {
                 id: socket.playerId,
                 pseudo: socket.pseudo,
-                score: scorePlayer,
-                msg: 'Bonne réponse! :)'
+                score: players[socket.id].score,
+                img : players[socket.id].avatar,
+                msg: 'Bonne réponse!'
             });
             return true;
         } else{
@@ -255,32 +259,16 @@ socket.on('answer', function(reponse){
         // socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: players[socket.id].identifiant});
         socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: socket.playerId});
         nbPlayers--;
-        log(`Nombre de joueurs connectés : ${nbPlayers}`);
+        log(`Nombre de joueurs connectés (après une déconnexion) : ${nbPlayers}`);
         delete players[socket.id];
-        if(nbPlayers = undefined || nbPlayers < 0){
+        if(nbPlayers == undefined || nbPlayers < 0){
             nbPlayers = 0;
+            startGame = false;
+            attenteJoueur = true;
+            tour = 0;
+            log(`En cas de -1 ou undefined, nbPlayers passe à 0 : ${nbPlayers}`);
         }
-        // if(players[socket.id].socketId == socket.id){
-        //     log('Son pseudo : ' + players[socket.id].pseudo + ' et son id : ' + players[socket.id].identifiant);
-        //     // let playerDisPseudo = players[socket.id].pseudo;
-        //     socket.broadcast.emit('decoPlayer', {pseudo: players[socket.id].pseudo, id: players[socket.id].identifiant});
-        //     delete players[socket.id];
-        // } else{
-        //     log('Serait-ce un joueur inconnu?');
-        // }
-        // const idPlayerDis = players[socket.id].identifiant;
-   // Envoyé à touts les autres
-        // let playerDis = {
-        //     id: players['socket.id'].identifiant,
-        //     pseudo: players['socket.id'].pseudo,
-        //     avatar: players['socket.id'].avatar
-        // };
-        // let playerDis = players['socket.id'].pseudo;
-        // log(playerDis);
-        // socket.broadcast.emit('decoPlayer', playerDis);   // Envoyé à touts les autres
     });
-
-
 
 });
 

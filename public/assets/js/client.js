@@ -106,13 +106,12 @@
     });
 
     $('#question-form').click(function(e){
-        // clearTimeout(premQuestion);
         e.preventDefault();
-        // var reponseSelectionnee = $('input[name=q1]:checked').val();
+        // clearTimeout(premQuestion);
+
         var reponseSelectionnee = $('input[name=q1]:checked').val();
         log(reponseSelectionnee);
         socket.emit('answer', reponseSelectionnee);
-        // if($('input[name=q1]:checked').val())
     });
     
     socket.on('nextQuestion', function(qEnCours){
@@ -125,6 +124,9 @@
     socket.on('bravo', function(infos){
         log(infos);
         $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' remporte le point. </em></p>');
+        let laDivDuJoueur = document.getElementById(infos.id);
+        $(laDivDuJoueur).remove();
+        $('#online-scores').append('<p class="infos-joueurs" id="' + infos.id + '"><img src="' + infos.img + '" width="50px"/> ' + infos.pseudo + ' - Score : <span class="score">' + infos.score + '</span></p>');
     });
 
     socket.on('dommage', function(infos){

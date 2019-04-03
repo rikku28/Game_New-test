@@ -40,6 +40,7 @@
                       <div class="form-row">
                             <div class="col-md-3 mb-3">
                                 <label for="validationTooltip01">Pseudonyme</label>
+                                <!-- <input type="text" class="form-control" name="pseudo" id="login-form-pseudo" placeholder="Pseudonyme" value="Pika" minlength="4" maxlength="10" required /> -->
                                 <input type="text" class="form-control" name="pseudo" id="login-form-pseudo" placeholder="Pseudonyme" value="Pika" minlength="4" maxlength="10" required />
                               <div class="valid-tooltip">
                                 Parfait !
@@ -47,7 +48,9 @@
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="validationTooltip02">Mot de Passe</label>
-                                <input type="password" name="mdp" id="login-form-mdp" class="form-control" placeholder="Mot de Passe" value="***" minlength="6" maxlength="12" required />
+                                <!-- <input type="password" name="mdp" id="login-form-mdp" class="form-control" placeholder="Mot de Passe" value="***" minlength="6" maxlength="12" required /> -->
+                                <input type="password" name="mdp" id="login-form-mdp" class="form-control" placeholder="Mot de Passe" minlength="6" maxlength="12" required />
+
                                 <div class="valid-tooltip">
                                     Excellent choix !
                                 </div>
@@ -58,7 +61,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="validationTooltipUsernamePrepend">url</span>
                                     </div>
-                                    <input type="text" class="form-control" name="avatar" id="login-form-avatar" placeholder="Avatar" aria-describedby="validationTooltipUsernamePrepend" required>
+                                    <input type="text" class="form-control" name="avatar" id="login-form-avatar" placeholder="URL de ton avatar" aria-describedby="validationTooltipUsernamePrepend" required>
                                     <div class="invalid-tooltip">
                                         Très jolie photo
                                     </div>
@@ -74,60 +77,75 @@
             </div>
         </section>
         <section id="quiz" class="cache-quizz">
-                    <div id="questions">
-                        <h2>Question du quiz</h2>
-                        <p id="question-en-cours">-</p>
-                        <div id="indices">
-                            <img id="indice-img" alt="indice en image" src="https://www.nautiljon.com/images/actualite/00/17/selon_les_concepteurs_de_la_serie_pokemon_pikachu_n_est_pas_une_souris_9271.jpg">
-                            <p id="indice-txt">-</p>
+            <div id="questions">
+                <h2>Question du quiz</h2>
+                <p id="question-en-cours">-</p>
+                <div id="indices">
+                    <img id="indice-img" alt="indice en image" src="https://www.nautiljon.com/images/actualite/00/17/selon_les_concepteurs_de_la_serie_pokemon_pikachu_n_est_pas_une_souris_9271.jpg">
+                    <p id="indice-txt">-</p>
+                </div>
+            </div>
+            <div class="reponses" class="cache-quizz">
+                <form id="question-form">
+                    <fieldset>
+                        <legend>Choisissez la bonne réponse :</legend>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="rep1" name="q1">
+                            <label class="form-check-label" for="rep1">-</label>
                         </div>
-                    </div>
-                    <div class="reponses" class="cache-quizz">
-                        <form id="question-form">
-                            <fieldset>
-                                <legend>Choisissez la bonne réponse :</legend>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" id="rep1" name="q1" class="custom-control-input">
-                                  <label class="custom-control-label" for="rep1">Pikachu</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" id="rep2" name="q1" class="custom-control-input">
-                                  <label class="custom-control-label" for="rep2">Mélofée</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" id="rep3" name="q1" class="custom-control-input">
-                                  <label class="custom-control-label" for="rep3">Évoli</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                  <input type="radio" id="rep4" name="q1" class="custom-control-input">
-                                  <label class="custom-control-label" for="rep4">Chétiflor</label>
-                                </div>
-                                <div class="custom-control custom-radio custom-control-inline">
-                                  <button class="btn btn-primary" type="submit">Envoyer</button>
-                                </div>
-                            </fieldset>
-                            
-                        </form>
-                    </div>
-                </section>
-                <section id="chat" class="cache-infos-joueurs col-md-12">
-                    <div id="zone-infos"></div>
-                    <form id="chat-form">
-                        <div class="form-row">
-                            <div class="col-md-6 mb-3">
-                                <input type="text" class="form-control" name="msg" id="chat-message" placeholder="Hello" value="Hello" minlength="4" maxlength="10" />
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <button class="btn btn-primary" type="submit" id="send-msg">Envoyer</button>
-                            </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="rep2" name="q1">
+                            <label class="form-check-label" for="rep2">-</label>
                         </div>
-                    </form>
-                </section>
-                <section id="online-players" class="cache-infos-joueurs col-md-12">
-                    <h2>Joueurs en ligne</h2>
-                    <div id="online-scores">
-    
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="rep3" name="q1">
+                            <label class="form-check-label" for="rep3">-</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="rep4" name="q1">
+                            <label class="form-check-label" for="rep4">-</label>
+                        </div>
+<!-- 
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="rep1" name="q1" class="custom-control-input">
+                            <label class="custom-control-label" for="rep1">-</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="rep2" name="q1" class="custom-control-input">
+                            <label class="custom-control-label" for="rep2">-</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="rep3" name="q1" class="custom-control-input">
+                            <label class="custom-control-label" for="rep3">-</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="rep4" name="q1" class="custom-control-input">
+                            <label class="custom-control-label" for="rep4">-</label>
+                        </div>
+                     -->
+                        <!-- <div class="custom-control custom-radio custom-control-inline">
+                            <button class="btn btn-primary" id="btn-reponses" type="submit">Envoyer</button>
+                        </div> -->
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+        <section id="chat" class="cache-infos-joueurs col-md-12">
+            <div id="zone-infos"></div>
+            <form id="chat-form">
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                        <input type="text" class="form-control" name="msg" id="chat-message" placeholder="Hello" value="Hello" minlength="4" maxlength="10" />
                     </div>
+                    <div class="col-md-6 mb-3">
+                        <button class="btn btn-primary" type="submit" id="send-msg">Envoyer</button>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section id="online-players" class="cache-infos-joueurs col-md-12">
+            <h2>Joueurs en ligne</h2>
+            <div id="online-scores"></div>
         </section>
     </main>
     <footer>
