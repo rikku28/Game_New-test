@@ -15,74 +15,125 @@
         <!-- Font pour le texte des paragraphes, span, ...-->
     <link href="https://fonts.googleapis.com/css?family=BenchNine" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed" rel="stylesheet">
-    <link href="./public/css/quiz-style.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/quiz-style.css" rel="stylesheet" type="text/css">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
 <!-- Chargement des scripts et librairies -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- <script src="./public/libs/jquery/jquery-3.3.1.min.js" type="text/javascript"></script> -->
     <script src="../socket.io/socket.io.js"></script>
-    <script src="./public/js/client.js" type="text/javascript"></script>
+    <script src="assets/js/client.js" type="text/javascript"></script>
     <title>Quiz Pokémon</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png" />
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png" />
+	<link rel="shortcut icon" href="favicon.ico" />
 </head>
 <body>
-
+    <header></header>
 <!-- <main> ou <section> ? <header> avant?-->
     <main> 
-
         <section id="welcome">
-            <h1 style="text-align: center; font-size: 3em">Bienvenue</h1>
-            <div>
-                <form id="login-form">
-                    <input type="text" name="pseudo" id="login-form-pseudo" placeholder="Choisissez un pseudonyme" minlength="4" maxlength="10" size="25" required>
-                    <!-- pattern="/^[a-zA-Z0-9_-]{4,10}$"  -->
-                    <!-- <input type="email" name="mail" id="login-form-email" placeholder="Entrez votre adresse email" size="25"> pattern attend une expression réglière. testée sur regex101.com, ok en JS : pattern="^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[fr|com|eu|lu|de]{2,4}$" -> erreur sur Chrome -->
-                    <input type="password" name="mdp" id="login-form-mdp" placeholder="Saisissez votre mot de passe" minlength="6" maxlength="12" size="25" required>
-                    <!-- pattern="/^[a-zA-Z0-9_-]{6,12}$" -->
-                    <input type="text" name="avatar" id="login-form-avatar" placeholder="Entrez l'url de votre avatar" size="25">
-                    <input type="submit" value="Envoyer">       
+            <div class="container">
+                <h1>Bienvenue</h1>
+                <form class="needs-validation" novalidate id="login-form">
+                      <div class="form-row">
+                            <div class="col-md-3 mb-3">
+                                <label for="validationTooltip01">Pseudonyme</label>
+                                <input type="text" class="form-control" name="pseudo" id="login-form-pseudo" placeholder="Pseudonyme" value="Pika" minlength="4" maxlength="10" required />
+                              <div class="valid-tooltip">
+                                Parfait !
+                              </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="validationTooltip02">Mot de Passe</label>
+                                <input type="password" name="mdp" id="login-form-mdp" class="form-control" placeholder="Mot de Passe" value="***" minlength="6" maxlength="12" required />
+                                <div class="valid-tooltip">
+                                    Excellent choix !
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="validationTooltipUsername">Avatar</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="validationTooltipUsernamePrepend">url</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="avatar" id="login-form-avatar" placeholder="Avatar" aria-describedby="validationTooltipUsernamePrepend" required>
+                                    <div class="invalid-tooltip">
+                                        Très jolie photo
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                              <div class="input-group">
+                                    <button class="btn btn-primary" type="submit">Valider</button>
+                              </div>
+                            </div>
+                      </div>	  
                 </form>
             </div>
         </section>
-        <section id="quizz" class="cache-quizz">
-            <div id="questions">
-                <h2>Question du quiz</h2>
-                <p id="question-en-cours">-</p>
-                <div id="indices">
-                    <img id="indice-img" alt="indice en image" src="https://www.nautiljon.com/images/actualite/00/17/selon_les_concepteurs_de_la_serie_pokemon_pikachu_n_est_pas_une_souris_9271.jpg?1525335621">
-                    <p id="indice-txt">-</p>
-                </div>
-            </div>
-            <div class="reponses" class="cache-quizz">
-                <form id="question-form">
-                    <fieldset>
-                        <legend>Choisissez la bonne réponse :</legend>
-                        <input type="radio" id="rep1" name="q1">
-                        <label for="rep1">-</label><br/>
-                        <input type="radio" id="rep2" name="q1">
-                        <label for="rep2">-</label><br/>
-                        <input type="radio" id="rep3" name="q1">
-                        <label for="rep3">-</label><br/>
-                        <input type="radio" id="rep4" name="q1">
-                        <label for="rep4">-</label><br/>
-                    </fieldset>
-                    <!-- <input type="submit" value="Envoyer"> -->
-                </form>
-            </div>
-        </section>
-        <section id="chat" class="cache-infos-joueurs">
-            <div id="zone-infos"></div>
-            <form id="chat-form">
-                <input type="text" name="msg" id="chat-message" placeholder="Hello" size="50"/>
-                <input type="submit" id="send-msg" value="Envoyer" />
-            </form>
-        </section>
-        <section id="online-players" class="cache-infos-joueurs">
-            <h2>Joueurs en ligne</h2>
-            <div id="online-scores"></div>
+        <section id="quiz" class="cache-quizz">
+                    <div id="questions">
+                        <h2>Question du quiz</h2>
+                        <p id="question-en-cours">-</p>
+                        <div id="indices">
+                            <img id="indice-img" alt="indice en image" src="https://www.nautiljon.com/images/actualite/00/17/selon_les_concepteurs_de_la_serie_pokemon_pikachu_n_est_pas_une_souris_9271.jpg">
+                            <p id="indice-txt">-</p>
+                        </div>
+                    </div>
+                    <div class="reponses" class="cache-quizz">
+                        <form id="question-form">
+                            <fieldset>
+                                <legend>Choisissez la bonne réponse :</legend>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" id="rep1" name="q1" class="custom-control-input">
+                                  <label class="custom-control-label" for="rep1">Pikachu</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" id="rep2" name="q1" class="custom-control-input">
+                                  <label class="custom-control-label" for="rep2">Mélofée</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" id="rep3" name="q1" class="custom-control-input">
+                                  <label class="custom-control-label" for="rep3">Évoli</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                  <input type="radio" id="rep4" name="q1" class="custom-control-input">
+                                  <label class="custom-control-label" for="rep4">Chétiflor</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                  <button class="btn btn-primary" type="submit">Envoyer</button>
+                                </div>
+                            </fieldset>
+                            
+                        </form>
+                    </div>
+                </section>
+                <section id="chat" class="cache-infos-joueurs col-md-12">
+                    <div id="zone-infos"></div>
+                    <form id="chat-form">
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" name="msg" id="chat-message" placeholder="Hello" value="Hello" minlength="4" maxlength="10" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <button class="btn btn-primary" type="submit" id="send-msg">Envoyer</button>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+                <section id="online-players" class="cache-infos-joueurs col-md-12">
+                    <h2>Joueurs en ligne</h2>
+                    <div id="online-scores">
+    
+                    </div>
         </section>
     </main>
     <footer>
         <p id="date-jour" class="gras"></p>
     </footer>
+<!-- Bootstrap JS -->
+<script src="assets/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -11,7 +11,13 @@ const fileSys = require('fs');
 const express = require('express');
 const app = express();
 const httpServer = require('http').Server(app);
-app.use('/public', express.static(__dirname + '/public'));
+app.use(express.static('public'));
+// app.use('/public', express.static(__dirname + '/public'));
+// app.use('/assets', express.static(__dirname + '/public/assets'));
+// app.use('assets', express.static(__dirname + '/public/assets'));
+// app.use('js', express.static(__dirname + '/public/assets/js'));
+// app.use('css', express.static(__dirname + '/public/assets/css'));
+// app.use('img', express.static(__dirname + '/public/assets/img'));
 
 /************************** Ajout du module Node de socket.io + config du port HTTP **************************/
 const socketIo = require('socket.io');
@@ -37,6 +43,10 @@ var finPartie = false;
 /********************************** Création du serveur HTTP avec Express **********************************/
 app.get('/', function(req, res){
     // log(req);
+    console.log('Dirname : ' + __dirname);
+    console.log('Filename : ' + __filename);
+    console.log(`Current directory: ${process.cwd()}`);
+    console.log('process.arg : ' + process.argv);
     let htmlFile = path.normalize(__dirname + '/public/index-projet-back.html');
     log(htmlFile);
     // Créer user en bdd ou vérifier qu'il existe en base, puis récupérer son session id

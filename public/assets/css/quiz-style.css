@@ -4,12 +4,13 @@
 body{
     background-color: white;
     /* width: 800px; */
-    background-image: url(../../public/img/pattern-pokemon.png);
+    background-image: url(../img/pattern-pokemon.png);
     background-repeat: repeat;
 }
 
 main{
-    width: 800px;
+    max-width: 960px;
+	margin : 10px auto;
 }
 
 h1{
