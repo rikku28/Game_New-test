@@ -63,7 +63,7 @@ const io = socketIo(httpServer);
 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
     const db = client.db(dbName);
     const collection = db.collection('questions');
-    collection.find({}).limit(10).toArray(function(error,datas) {
+    collection.find({}).limit(15).toArray(function(error,datas) {
         client.close();
         log('Nombre de questions : ', datas.length);
         log('Il y a ' + datas.length + ' questions récupérées en BDD.');
@@ -110,6 +110,7 @@ var checkNbPlayers = function(){
     if(nbPlayers >= 2 && tour === 0 && !startGame){
         attenteJoueur = false;
         startGame = true;
+        players[socket.id].score = 0;
         log('Nb de questions : ' + listeQuestions.length);
         listeQuestions[tour].tour = tour;
         log('Question en cour : ', listeQuestions[tour]);
@@ -123,24 +124,31 @@ var checkNbPlayers = function(){
         
     socket.on('login', function(infosUser){
         log('infosUser : ', infosUser);
-        socket.pseudo = infosUser.pseudo;
-        let newPlayer = new Player(infosUser.pseudo, infosUser.img, socket.id);
-        log('Nouveau joueur : ', newPlayer);
-        let pseudo = infosUser.pseudo;
-        // players[infosUser.pseudo] = newPlayer;
-        players[socket.id] = newPlayer;
-        socket.playerId = players[socket.id].identifiant;
-        // players.push(newPlayer);
-        // players(newPlayer.pseudo) = newPlayer;
-        nbPlayers++;
-        log(`Nb joueurs : ${nbPlayers}`);
-        socket.emit('loginOK', newPlayer);
-        socket.broadcast.emit('newPlayer', newPlayer);
-        log(players);
-        io.emit('onlinePlayers', players);
 
-        checkNbPlayers();
-        // io.emit('onlinePlayers', newPlayer);
+        // if(){
+
+        // } else{
+            socket.pseudo = infosUser.pseudo;
+            let newPlayer = new Player(infosUser.pseudo, infosUser.img, socket.id);
+            log('Nouveau joueur : ', newPlayer);
+            let pseudo = infosUser.pseudo;
+            // players[infosUser.pseudo] = newPlayer;
+            players[socket.id] = newPlayer;
+            socket.playerId = players[socket.id].identifiant;
+            // players.push(newPlayer);
+            // players(newPlayer.pseudo) = newPlayer;
+            nbPlayers++;
+            log(`Nb joueurs : ${nbPlayers}`);
+            socket.emit('loginOK', newPlayer);
+            socket.broadcast.emit('newPlayer', newPlayer);
+            log(players);
+            io.emit('onlinePlayers', players);
+
+            checkNbPlayers();
+            // io.emit('onlinePlayers', newPlayer);
+            
+        // }
+        
     });
 
 // Echange de messages entre joueurs
@@ -185,9 +193,11 @@ var checkNbPlayers = function(){
             return true;
         } else{
             log('Mauvaise réponse!');
+            let indice = listeQuestions[tour].indiceTxt;
             socket.emit('dommage', {
                 id: socket.playerId,
                 pseudo: socket.pseudo,
+                indiceTxt : indice,
                 msg: 'Mauvaise réponse! :( Veuillez sélectionner une autre réponse.'
             });
             return false;

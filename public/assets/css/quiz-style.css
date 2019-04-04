@@ -33,10 +33,15 @@ h3{
 
 p, span{
     font-family: 'BenchNine', 'Saira Extra Condensed', sans-serif;
+    font-size: 1.2em;
 }
 .gras{
     /* font-weight: bold; */
     color: #7c3a01;
     font-family: 'Bangers', 'Boogaloo', cursive;
     font-size: 1em;
+}
+
+#indice-img{
+    max-width: 960px;
 }

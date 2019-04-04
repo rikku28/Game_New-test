@@ -99,6 +99,11 @@
 
     socket.on('startGame', function(q0){
         log(q0);
+
+        // for (var player in infos){
+        //     $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
+        // }
+
         $('#zone-infos').prepend('<p><strong><em>La partie commence : Question n°0!</em></strong></p>');
         $('.cache-quizz').show();
         currentQuestion(q0);
@@ -132,6 +137,9 @@
     socket.on('dommage', function(infos){
         log(infos);
         $('#zone-infos').prepend('<p><em> Ce n\'est pas la bonne réponse ' + infos.pseudo + '. Réessayez.</em></p>');
+        // if(questionEnCours.indiceTxt){
+        $('#indice-txt').text(infos.indiceTxt);
+        // };
     });
 
 
@@ -148,7 +156,6 @@
         $('#zone-infos').prepend('<p><strong><em>' + infos.msg + '</em></strong></p>');
     });
     
-
     // socket.on('gg', function(infos){
     //     log(infos);
     //     $('#zone-infos').prepend('<p><strong><em> Bravo ' + infos.pseudo + '! Vous avez ' + infos.score + ' gagné la partie. </em></strong></p>');
@@ -163,14 +170,15 @@
     var currentQuestion = function(questionEnCours){
 // Affichage de la question et ses indices
         // $('div#questions>h2').text('Question n°' + questionEnCours.identifiant);
+        $('#indice-txt').empty();
         $('div#questions>h2').text('Question n°' + questionEnCours.tour);
         log('Question n°' + questionEnCours.identifiant);
         $('#question-en-cours').text(questionEnCours.question);
         $('#indice-img').removeAttr('src');
-        $('#indice-img').attr('src', questionEnCours.indiceImg);
-        if(questionEnCours.indiceTxt){
-            $('#indice-txt').text(questionEnCours.indiceTxt);
-        };
+        let indiceEnImage = 'assets/img/indices/' + questionEnCours.indiceImg;
+        log(indiceEnImage);
+        $('#indice-img').attr('src', indiceEnImage);
+        // $('#indice-img').attr('src', questionEnCours.indiceImg);
 
 //  Affichage des réponses
         $('input[name=q1]:radio').removeAttr('value');
