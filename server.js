@@ -93,6 +93,7 @@ io.on('connection', function(socket){
     if(!startGame && (players.length > nbPlayers)){
         nbPlayers = players.length;
         log(nbPlayers);
+        checkNbPlayers();
     }
     log(`Nombre de joueurs connectés (après nouvelle connexion): ${nbPlayers}`);
 
@@ -101,7 +102,7 @@ io.on('connection', function(socket){
 var checkNbPlayers = function(){
     log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
     // log(`Joueurs connectés : ${players}`);
-    log(players);
+    log(players.length);      // => Renvoi "undefined"?
     if(nbPlayers < players.length){
         nbPlayers = players.length;
         log(`nbPlayers plus petit que players, on repasse nbPlayers à : ${nbPlayers}`);
@@ -121,7 +122,7 @@ var checkNbPlayers = function(){
 };
 // Connexion d'un utilisateur
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
-        
+    log(`Le jeu est-il en cours? ${startGame}`);
     socket.on('login', function(infosUser){
         log('infosUser : ', infosUser);
 
@@ -146,7 +147,7 @@ var checkNbPlayers = function(){
 
             checkNbPlayers();
             // io.emit('onlinePlayers', newPlayer);
-            
+
         // }
         
     });
