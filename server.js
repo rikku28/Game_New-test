@@ -286,7 +286,7 @@ socket.on('answer', function(reponse){
 });
 
 /************************************** Démarrage du serveur HTTP **************************************/
-httpServer.listen(process.env.PORT || port){
+httpServer.listen(process.env.PORT || port, function(error)){
 // httpServer.listen(port, function(error){
     if(error){
         console.log(`Impossible d'associer le serveur HTTP au port ${port}.`);
