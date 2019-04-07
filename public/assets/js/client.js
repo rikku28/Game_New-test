@@ -139,7 +139,7 @@
         log(infos);
         $('#zone-infos').prepend('<p><em> Ce n\'est pas la bonne réponse ' + infos.pseudo + '. Réessayez.</em></p>');
         // if(questionEnCours.indiceTxt){
-        $('#indice-txt').text(infos.indiceTxt);
+        $('#indice-txt').text('Indice : ' + infos.indiceTxt);
         // };
     });
 
@@ -174,7 +174,7 @@
         $('#indice-txt').empty();
         $('div#questions>h2').text('Question n°' + questionEnCours.tour);
         log('Question n°' + questionEnCours.identifiant);
-        $('#question-en-cours').text(questionEnCours.question);
+        $('#question-en-cours').text('Question : '+ questionEnCours.question);
         $('#indice-img').removeAttr('src');
         let indiceEnImage = 'assets/img/indices/' + questionEnCours.indiceImg;
         log(indiceEnImage);
