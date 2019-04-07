@@ -22,8 +22,10 @@ const port = 3333;
 /************************************* Configuration du module MongoDB *************************************/
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
-const url = 'mongodb://localhost:27017';
-const dbName = 'jeuBackEnd';
+const url = process.env.MONGODB_URI;
+// const url = 'mongodb://localhost:27017';
+const dbName = 'heroku_rm2b81xl';
+// const dbName = 'jeuBackEnd';
 
 /************* Constante de raccourci pour "console.log" + déclaration des variables globales **************/
 const log = console.log;
@@ -284,7 +286,8 @@ socket.on('answer', function(reponse){
 });
 
 /************************************** Démarrage du serveur HTTP **************************************/
-httpServer.listen(port, function(error){
+httpServer.listen(process.env.PORT || port){
+// httpServer.listen(port, function(error){
     if(error){
         console.log(`Impossible d'associer le serveur HTTP au port ${port}.`);
     } else{
