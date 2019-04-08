@@ -52,6 +52,8 @@ p, span, label{
 }
 
 #question-form{
-    padding: 15px;
-    background-image: url(../img/border-orange_2x.png);
+    background-image: url(../img/pattern-pokeball.png);
+    background-repeat: repeat;
+    /* padding: 15px; */
+    /* background-image: url(../img/border-orange_2x.png); */
 }

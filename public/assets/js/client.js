@@ -23,9 +23,24 @@
 
 /******************************************* Actions côté client ********************************************/
         log('Coucou côté client');
-// On masque toutes les balises sauf celles du formulaire de connexion
+// On masque toutes les balises sauf celles du formulaire de connexion.
+        $('#form-login').hide();
         $('.cache-quizz').hide();
         $('.cache-infos-joueurs').hide(); // à la place de .fadeOut()
+
+// Joueur déjà inscrit :
+        $('#welcomeBack').click(function(e){
+            // e.preventDefault();
+            $('#form-login').show();
+            $('#login-form-avatar').hide();
+            $('#btn-connexion').remove();
+        });
+
+        $('#firstConnexion').click(function(e){
+            // e.preventDefault();
+            $('#form-login').show();
+            $('#btn-connexion').remove();
+        });
 
 // Formulaire de connnexion : Récupération, puis envoi des infos de connexion au serveur
     let loginForm = document.getElementById('login-form');
