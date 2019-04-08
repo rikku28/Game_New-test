@@ -31,14 +31,14 @@
 // Joueur déjà inscrit :
         $('#welcomeBack').click(function(e){
             // e.preventDefault();
-            $('cache-login-form').show();
+            $('.cache-login-form').show();
             $('.img-avatar').hide();
             $('#btn-connexion').remove();
         });
 
         $('#firstConnexion').click(function(e){
             // e.preventDefault();
-            $('cache-login-form').show();
+            $('.cache-login-form').show();
             $('#btn-connexion').remove();
         });
 
