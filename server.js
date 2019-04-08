@@ -279,7 +279,7 @@ socket.on('answer', function(reponse){
         nbPlayers--;
         log(`Nombre de joueurs connectés (après une déconnexion) : ${nbPlayers}`);
         delete players[socket.id];
-        if(nbPlayers === undefined || nbPlayers =< 0){
+        if(nbPlayers === undefined || nbPlayers <= 0){
             log(`On est dans le "if" de la déconnexion`);
             nbPlayers = 0;
             startGame = false;
