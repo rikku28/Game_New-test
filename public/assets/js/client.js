@@ -24,21 +24,21 @@
 /******************************************* Actions côté client ********************************************/
         log('Coucou côté client');
 // On masque toutes les balises sauf celles du formulaire de connexion.
-        $('#form-login').hide();
+        $('.cache-login-form').hide();
         $('.cache-quizz').hide();
         $('.cache-infos-joueurs').hide(); // à la place de .fadeOut()
 
 // Joueur déjà inscrit :
         $('#welcomeBack').click(function(e){
             // e.preventDefault();
-            $('#form-login').show();
-            $('#login-form-avatar').hide();
+            $('cache-login-form').show();
+            $('.img-avatar').hide();
             $('#btn-connexion').remove();
         });
 
         $('#firstConnexion').click(function(e){
             // e.preventDefault();
-            $('#form-login').show();
+            $('cache-login-form').show();
             $('#btn-connexion').remove();
         });
 
