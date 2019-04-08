@@ -93,6 +93,8 @@ io.on('connection', function(socket){
     // log(socket);
     log('Coucou depuis le serveur!');
     log(`Nombre de joueurs connectés : ${nbPlayers}`);
+    log('Connexion - players contient :' + players.length + ' objets.');
+    log('Avec object.keys : ' + Object.keys(players).length);
     if(!startGame && (players.length > nbPlayers)){
         nbPlayers = players.length;
         log(nbPlayers);
@@ -105,7 +107,8 @@ io.on('connection', function(socket){
 var checkNbPlayers = function(){
     log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
     // log(`Joueurs connectés : ${players}`);
-    log(players.length);      // => Renvoi "undefined"?
+    log('checkNbPlayers - players contient : ' + players.length  + ' objets.');      // => Renvoi "undefined"?
+    log('Avec object.keys : ' + Object.keys(players).length);
     if(nbPlayers < players.length){
         nbPlayers = players.length;
         log(`nbPlayers plus petit que players, on repasse nbPlayers à : ${nbPlayers}`);

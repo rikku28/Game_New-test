@@ -150,7 +150,7 @@
         let joueurs = infos.players;
         log(joueurs);
         joueurs.sort(function(a, b){return b.score - a.score});
-        log(joueurs);
+        // log(joueurs);
         $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + infos.pseudo + '. Vous remportez la partie.</strong></p>');
         $('#online-scores').empty();
         for (var player in joueurs){

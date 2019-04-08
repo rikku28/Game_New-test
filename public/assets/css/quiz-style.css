@@ -2,7 +2,7 @@
 /***************************************** Feuille de style du qui Pokémon *****************************************/
 /******************************************************************************************************************/
 body{
-    background-color: white;
+    /* background-color: white; */
     /* width: 800px; */
     background-image: url(../img/pattern-pokemon.png);
     background-repeat: repeat;
@@ -33,7 +33,7 @@ h3{
 
 p, span{
     font-family: 'BenchNine', 'Saira Extra Condensed', sans-serif;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 .gras{
     /* font-weight: bold; */
@@ -45,4 +45,9 @@ p, span{
 #indice-img{
     max-width: 600px;
     /* max-width: 960px; */
+}
+
+#question-form{
+    padding: 15px;
+    background-image: url(../img/border-orange_2x.png);
 }
