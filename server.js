@@ -33,7 +33,7 @@ var players = {};  // Tableau ou objet, à convertir ensuite?
 var nbPlayers = 0;
 var startGame = false;
 var tour = 0;
-var tourMax = 10;
+var tourMax = 15;
 var listeQuestions;
 var attenteJoueur = true;
 var finPartie = false;
@@ -65,7 +65,7 @@ const io = socketIo(httpServer);
 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
     const db = client.db(dbName);
     const collection = db.collection('questions');
-    collection.find({}).limit(15).toArray(function(error,datas) {
+    collection.find({}).limit(tourMax).toArray(function(error,datas) {
         client.close();
         log('Nombre de questions : ', datas.length);
         log('Il y a ' + datas.length + ' questions récupérées en BDD.');
@@ -93,9 +93,9 @@ io.on('connection', function(socket){
     // log(socket);
     log('Coucou depuis le serveur!');
     log(`Nombre de joueurs connectés : ${nbPlayers}`);
-    log('Connexion - players contient :' + players.length + ' objets.');
+    // log('Connexion - players contient :' + players.length + ' objets.');  // Renvoi "undefined"
     log('Avec object.keys : ' + Object.keys(players).length);
-    if(!startGame && (players.length > nbPlayers)){
+    if(!startGame && (Object.keys(players).length > nbPlayers)){
         nbPlayers = players.length;
         log(nbPlayers);
         checkNbPlayers();
@@ -108,9 +108,10 @@ var checkNbPlayers = function(){
     log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
     // log(`Joueurs connectés : ${players}`);
     log('checkNbPlayers - players contient : ' + players.length  + ' objets.');      // => Renvoi "undefined"?
+    let playersLength = Object.keys(players).length;
     log('Avec object.keys : ' + Object.keys(players).length);
-    if(nbPlayers < players.length){
-        nbPlayers = players.length;
+    if(nbPlayers < playersLength){
+        nbPlayers = playersLength;
         log(`nbPlayers plus petit que players, on repasse nbPlayers à : ${nbPlayers}`);
     }
 
@@ -278,7 +279,7 @@ socket.on('answer', function(reponse){
         nbPlayers--;
         log(`Nombre de joueurs connectés (après une déconnexion) : ${nbPlayers}`);
         delete players[socket.id];
-        if(nbPlayers == undefined || nbPlayers < 0){
+        if(nbPlayers === undefined || nbPlayers =< 0){
             log(`On est dans le "if" de la déconnexion`);
             nbPlayers = 0;
             startGame = false;
