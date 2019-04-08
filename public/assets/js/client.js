@@ -64,7 +64,7 @@
         // $('#online-players').append('<h2>Question du quiz</h2>');
         log('Joueurs en ligne', infos);
         for (var player in infos){
-            $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
+            $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" class="rounded" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
             // A voir pour utiliser infos[player].identifiant à la place.
         }
     });
@@ -129,7 +129,7 @@
 
     socket.on('bravo', function(infos){
         log(infos);
-        $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' remporte le point. </em></p>');
+        $('#zone-infos').prepend('<p class="text-success"><em>' + infos.pseudo + ' remporte le point. </em></p>');
         let laDivDuJoueur = document.getElementById(infos.id);
         $(laDivDuJoueur).remove();
         $('#online-scores').append('<p class="infos-joueurs" id="' + infos.id + '"><img src="' + infos.img + '" width="50px"/> ' + infos.pseudo + ' - Score : <span class="score">' + infos.score + '</span></p>');
@@ -137,7 +137,7 @@
 
     socket.on('dommage', function(infos){
         log(infos);
-        $('#zone-infos').prepend('<p><em> Ce n\'est pas la bonne réponse ' + infos.pseudo + '. Réessayez.</em></p>');
+        $('#zone-infos').prepend('<p class="text-danger"><em> Ce n\'est pas la bonne réponse ' + infos.pseudo + '. Réessayez.</em></p>');
         // if(questionEnCours.indiceTxt){
         $('#indice-txt').text('Indice : ' + infos.indiceTxt);
         // };
@@ -148,10 +148,13 @@
         log(infos);
         $('.cache-quizz').hide();
         let joueurs = infos.players;
+        log(joueurs);
+        joueurs.sort(function(a, b){return b.score - a.score});
+        log(joueurs);
+        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + infos.pseudo + '. Vous remportez la partie.</strong></p>');
         $('#online-scores').empty();
         for (var player in joueurs){
-            $('#online-scores').append('<p class="fin-partie" id="end-' + joueurs[player].identifiant + '"><img src="' + joueurs[player].avatar + '" width="50px"/> ' + joueurs[player].pseudo + ' - Score : <span class="score">' + joueurs[player].score + '</span></p>');
-            // A voir pour utiliser infos[player].identifiant à la place.
+            $('#online-scores').append('<p class="fin-partie" id="end-' + joueurs[player].identifiant + '"><img src="' + joueurs[player].avatar + '" class="rounded" width="50px"/> ' + joueurs[player].pseudo + ' - Score : <span class="score">' + joueurs[player].score + '</span></p>');
         }
 
         $('#zone-infos').prepend('<p><strong><em>' + infos.msg + '</em></strong></p>');

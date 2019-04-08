@@ -78,10 +78,11 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
 });
 
 /************************************** Création de joueurs **********************************************/
-var Player = function(pseudo, urlImg, socketId){
+var Player = function(pseudo, pwd, urlImg, socketId){
     this.dateCrea = Date.now();
     this.pseudo = pseudo;
     this.identifiant = this.pseudo + this.dateCrea;
+    this.password = pwd;
     this.score = 0;
     this.avatar = urlImg;
     this.socketId = socketId;
@@ -132,7 +133,7 @@ var checkNbPlayers = function(){
 
         // } else{
             socket.pseudo = infosUser.pseudo;
-            let newPlayer = new Player(infosUser.pseudo, infosUser.img, socket.id);
+            let newPlayer = new Player(infosUser.pseudo, infosUser.mdp, infosUser.img, socket.id);
             log('Nouveau joueur : ', newPlayer);
             let pseudo = infosUser.pseudo;
             // players[infosUser.pseudo] = newPlayer;
@@ -275,6 +276,7 @@ socket.on('answer', function(reponse){
         log(`Nombre de joueurs connectés (après une déconnexion) : ${nbPlayers}`);
         delete players[socket.id];
         if(nbPlayers == undefined || nbPlayers < 0){
+            log(`On est dans le "if" de la déconnexion`);
             nbPlayers = 0;
             startGame = false;
             attenteJoueur = true;
