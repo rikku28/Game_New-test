@@ -20,6 +20,7 @@
         var dateJour = new Date();
         var timestamp=dateJour.getTime(dateJour);
         var players = [];
+        var premiereConnexion = false;
 
 /******************************************* Actions côté client ********************************************/
         log('Coucou côté client');
@@ -39,8 +40,13 @@
         $('#firstConnexion').click(function(e){
             // e.preventDefault();
             $('.cache-login-form').show();
+            premiereConnexion = true;
             $('#btn-connexion').remove();
         });
+
+
+
+
 
 // Formulaire de connnexion : Récupération, puis envoi des infos de connexion au serveur
     let loginForm = document.getElementById('login-form');
@@ -48,6 +54,7 @@
         event.preventDefault();
 
         socket.emit('login', {
+            firstLogin: premiereConnexion,
             pseudo : $('#login-form-pseudo').val(),
             // mail: $('#"login-form-email').val(),
             mdp: $('#login-form-mdp').val(),

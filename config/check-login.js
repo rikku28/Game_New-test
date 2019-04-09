@@ -2,7 +2,7 @@
 const urlRegex = new RegExp('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$', ig);
 
 let verifPseudo = function(pseudo){
-    if(pseudo === ("" || null || undefined || Infinity )){
+    if(pseudo === ("" || null || undefined || Infinity)){
         socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
         log(`Pseudo non valide!`);
         return false;
@@ -13,7 +13,7 @@ let verifPseudo = function(pseudo){
 };
 
 let verifPwd  = function(pwd){
-    if(pwd === ("" || null || undefined || Infinity )){
+    if(pwd === ("" || null || undefined || Infinity)){
         socket.emit('badMdp', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'})
         return false;
     } else{
@@ -33,12 +33,16 @@ let verifUrl = function(url){
     }
 };
 
+let checkVerifs = function(a, b, c, firstLogin){
+    if(a && b && c && firstLogin){
 
-
+    } else
+}
 
 // Connexion d'un utilisateur
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
     log(`Le jeu est-il en cours? ${startGame}`);
+
     socket.on('login', function(infosUser){
         log('infosUser : ', infosUser);
 
@@ -46,7 +50,7 @@ let verifUrl = function(url){
         verifPwd(infosUser.mdp);
         verifUrl(infosUser.img);
 
-        if(infosUser.pseudo === ("" || null || undefined)){
+        if(() === false){
             
 
         } else{
