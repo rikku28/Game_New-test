@@ -33,11 +33,42 @@ let verifUrl = function(url){
     }
 };
 
-let checkVerifs = function(a, b, c, firstLogin){
-    if(a && b && c && firstLogin){
+let findPseudoBDD = function(aPseudo){
+    // Si ça ne fonctionne pas comme ça, passer le pseudo en "toLowerCase", puis retirer les //i autour de la variable du pseudo modifiée dans la recherche ci-dessous. Ca nécessitera d'enregistrer tous les pseudos de la même manière, donc idéalement en miniscules.
 
-    } else
-}
+    MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+        const db = client.db(dbName);
+        const collection = db.collection('users');
+        collection.find({pseudo: /aPseudo/i}).toArray(function(error,datas){
+            client.close();
+            log('Pseudo trouvé? : ', datas.length);
+            // let longueur = datas.length;
+            // return longueur;
+            return datas;
+        });
+    });
+};
+
+let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
+    if(aPseudo && bPwd && cAvatar && firstLogin){
+        findPseudoBDD(aPseudo);
+        if(findPseudoBDD.length === (0 || null || undefined)){
+            log(`Le pseudonyme n'existe pas en base.`);
+            MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
+                const db = client.db(dbName);
+                const collection = db.collection('users');
+                collection.insertOne({pseudo: aPseudo, pwd: bPwd, avatar: cAvatar}).toArray(function(error,datas){
+                    client.close();
+                    log('Nombre de questions : ', datas.length);
+                });
+            });
+        } else{
+            if ((a && b) && (!c && !firstLogin)){
+                findPseudoBDD(aPseudo);
+            }
+        }
+    }
+};
 
 // Connexion d'un utilisateur
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);

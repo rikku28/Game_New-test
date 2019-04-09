@@ -104,30 +104,32 @@ io.on('connection', function(socket){
 
 
 /*********************************** Vérification du nombre de joueur *******************************************/
-var checkNbPlayers = function(){
-    log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
-    // log(`Joueurs connectés : ${players}`);
-    log('checkNbPlayers - players contient : ' + players.length  + ' objets.');      // => Renvoi "undefined"?
-    let playersLength = Object.keys(players).length;
-    log('Avec object.keys : ' + Object.keys(players).length);
-    if(nbPlayers < playersLength){
-        nbPlayers = playersLength;
-        log(`nbPlayers plus petit que players, on repasse nbPlayers à : ${nbPlayers}`);
-    }
+    var checkNbPlayers = function(){
+        log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
+        // log(`Joueurs connectés : ${players}`);
+        log('checkNbPlayers - players contient : ' + players.length  + ' objets.');      // => Renvoi "undefined"?
+        let playersLength = Object.keys(players).length;
+        log('Avec object.keys : ' + Object.keys(players).length);
+        if(nbPlayers < playersLength){
+            nbPlayers = playersLength;
+            log(`nbPlayers plus petit que players, on repasse nbPlayers à : ${nbPlayers}`);
+        }
 
-    if(nbPlayers >= 2 && tour === 0 && !startGame){
-        attenteJoueur = false;
-        startGame = true;
-        players[socket.id].score = 0;
-        log('Nb de questions : ' + listeQuestions.length);
-        listeQuestions[tour].tour = tour;
-        log('Question en cour : ', listeQuestions[tour]);
-         io.emit('startGame', listeQuestions[tour]);
-    } else{
-        io.emit('attenteJoueur');
-    }
-};
-// Connexion d'un utilisateur
+        if(nbPlayers >= 2 && tour === 0 && !startGame){
+            attenteJoueur = false;
+            startGame = true;
+            players[socket.id].score = 0;
+            log('Nb de questions : ' + listeQuestions.length);
+            listeQuestions[tour].tour = tour;
+            log('Question en cour : ', listeQuestions[tour]);
+            io.emit('startGame', listeQuestions[tour]);
+        } else{
+            io.emit('attenteJoueur');
+        }
+    };
+
+/*********************************** Connexion d'un utilisateur *******************************************/
+
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
     log(`Le jeu est-il en cours? ${startGame}`);
     socket.on('login', function(infosUser){
