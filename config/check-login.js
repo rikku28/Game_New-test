@@ -1,4 +1,4 @@
-// const log = console.log();
+const log = console.log();
 log(`Bienvenue dans le module check-login.js!`);
 var exports = module.exports = {};
 
