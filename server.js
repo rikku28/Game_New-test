@@ -138,9 +138,9 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
     if(aPseudo && bPwd && cAvatar && firstLogin){
         log(1);
         log(`Pseudo reçu : ${aPseudo}`);
-        findUserInDB(aPseudo, bPwd);
+        exports.findUserInDB(aPseudo, bPwd);
 
-        if(findUserInDB.length === (0 || null || undefined)){
+        if(exports.findUserInDB.length === (0 || null || undefined)){
             log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
             log(2);
             MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
@@ -183,9 +183,9 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
     } else{
         if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
             log(5);
-            findUserInDB(aPseudo);
+            exports.findUserInDB(aPseudo);
             
-            if(findUserInDB.pseudo === aPseudo && findUserInDB.pwd === bPwd){
+            if(exports.findUserInDB.pseudo === aPseudo && exports.findUserInDB.pwd === bPwd){
                 log(6);
                 
                 socket.pseudo = aPseudo;
