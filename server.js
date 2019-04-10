@@ -19,6 +19,9 @@ app.use(express.static('public'));
 const socketIo = require('socket.io');
 const port = 3333;
 
+/************************************* Modularisation de la vérification des identifants *************************************/
+const checkLogin = require('../config/check-login.js');
+
 /************************************* Configuration du module MongoDB *************************************/
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
@@ -130,36 +133,59 @@ io.on('connection', function(socket){
 
 /*********************************** Connexion d'un utilisateur *******************************************/
 
-    log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
-    log(`Le jeu est-il en cours? ${startGame}`);
-    socket.on('login', function(infosUser){
-        log('infosUser : ', infosUser);
+log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
+log(`Le jeu est-il en cours? ${startGame}`);
 
-        // if(){
+socket.on('login', function(infosUser){
+    log('infosUser : ', infosUser);
 
-        // } else{
-            socket.pseudo = infosUser.pseudo;
-            let newPlayer = new Player(infosUser.pseudo, infosUser.mdp, infosUser.img, socket.id);
-            log('Nouveau joueur : ', newPlayer);
-            let pseudo = infosUser.pseudo;
-            // players[infosUser.pseudo] = newPlayer;
-            players[socket.id] = newPlayer;
-            socket.playerId = players[socket.id].identifiant;
-            // players.push(newPlayer);
-            // players(newPlayer.pseudo) = newPlayer;
-            nbPlayers++;
-            log(`Nb joueurs : ${nbPlayers}`);
-            socket.emit('loginOK', newPlayer);
-            socket.broadcast.emit('newPlayer', newPlayer);
-            log(players);
-            io.emit('onlinePlayers', players);
+    checkLogin.verifPseudo(infosUser.pseudo);
+    log(checkLogin.verifPseudo(infosUser.pseudo));
 
-            checkNbPlayers();
-            // io.emit('onlinePlayers', newPlayer);
+    checkLogin.verifPwd(infosUser.mdp);
+    log(checkLogin.verifPwd(infosUser.mdp));
 
-        // }
+    checkLogin.verifUrl(infosUser.img);
+    log(checkLogin.verifUrl(infosUser.img));
+
+    log(infosUser.firstLogin);
+
+    checkLogin.checkVerifs(verifPseudo, verifPwd, verifUrl);
+
+    checkNbPlayers();
+    
+});
+
+    // log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
+    // log(`Le jeu est-il en cours? ${startGame}`);
+    // socket.on('login', function(infosUser){
+    //     log('infosUser : ', infosUser);
+
+    //     // if(){
+
+    //     // } else{
+    //         socket.pseudo = infosUser.pseudo;
+    //         let newPlayer = new Player(infosUser.pseudo, infosUser.mdp, infosUser.img, socket.id);
+    //         log('Nouveau joueur : ', newPlayer);
+    //         let pseudo = infosUser.pseudo;
+    //         // players[infosUser.pseudo] = newPlayer;
+    //         players[socket.id] = newPlayer;
+    //         socket.playerId = players[socket.id].identifiant;
+    //         // players.push(newPlayer);
+    //         // players(newPlayer.pseudo) = newPlayer;
+    //         nbPlayers++;
+    //         log(`Nb joueurs : ${nbPlayers}`);
+    //         socket.emit('loginOK', newPlayer);
+    //         socket.broadcast.emit('newPlayer', newPlayer);
+    //         log(players);
+    //         io.emit('onlinePlayers', players);
+
+    //         checkNbPlayers();
+    //         // io.emit('onlinePlayers', newPlayer);
+
+    //     // }
         
-    });
+    // });
 
 // Echange de messages entre joueurs
     socket.on('chatMsg', function (message){
