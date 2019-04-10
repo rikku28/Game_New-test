@@ -219,18 +219,18 @@ log(`Le jeu est-il en cours? ${startGame}`);
 socket.on('login', function(infosUser){
     log('infosUser : ', infosUser);
 
-    checkLogin.verifPseudo(infosUser.pseudo);
-    log(checkLogin.verifPseudo(infosUser.pseudo));
+    let checkPseudo = checkLogin.verifPseudo(infosUser.pseudo);
+    log(checkPseudo);
 
-    checkLogin.verifPwd(infosUser.mdp);
-    log(checkLogin.verifPwd(infosUser.mdp));
+    let checkPwd = checkLogin.verifPwd(infosUser.mdp);
+    log(checkPwd);
 
-    checkLogin.verifUrl(infosUser.img);
-    log(checkLogin.verifUrl(infosUser.img));
+    let checkUrl = checkLogin.verifUrl(infosUser.img);
+    log(checkUrl);
 
     log(`First login vaut : ${infosUser.firstLogin}`);
 
-    checkVerifs(checkLogin.verifPseudo, checkLogin.verifPwd, checkLogin.verifUrl, infosUser.firstLogin);
+    checkVerifs(checkPseudo, checkPwd, checkLogin.verifUrl, infosUser.firstLogin);
 
     checkNbPlayers();
 
