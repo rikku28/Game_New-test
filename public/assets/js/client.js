@@ -66,6 +66,11 @@ socket.on('badPseudo', function(info){
     $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badPseudo"><strong>' + info.msg + '</strong></p>');
 });
 
+socket.on('alreadyUsedPseudo', function(info){
+    $('#login-form').append('<p class="text-warning msg-login-incorrect" id="alreadyUsedPseudo"><strong>' + info.msg + '</strong></p>');
+});
+
+
 socket.on('badPwd', function(info){
     $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badPwd"><strong>' + info.msg + '</strong></p>');
 });
