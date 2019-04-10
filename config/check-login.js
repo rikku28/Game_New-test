@@ -1,6 +1,8 @@
-const log = console.log();
-log(`Bienvenue dans le module check-login.js!`);
+// const log = console.log();
+console.log(`Bienvenue dans le module check-login.js!`);
 var exports = module.exports = {};
+
+exports.log = console.log();
 
 // Expression régulière pour vérifier l'url de l'avatar
 // const urlRegex = new RegExp('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$', ig);
