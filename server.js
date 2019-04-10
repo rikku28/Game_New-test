@@ -149,9 +149,9 @@ socket.on('login', function(infosUser){
     checkLogin.verifUrl(infosUser.img);
     log(checkLogin.verifUrl(infosUser.img));
 
-    log(infosUser.firstLogin);
+    log(`First login vaut : ${infosUser.firstLogin}`);
 
-    checkLogin.checkVerifs(verifPseudo, verifPwd, verifUrl);
+    checkLogin.checkVerifs(checkLogin.verifPseudo, checkLogin.verifPwd, checkLogin.verifUrl);
 
     checkNbPlayers();
     
