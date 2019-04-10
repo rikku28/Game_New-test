@@ -175,3 +175,5 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
         // }
         
     });
+
+// let module.exports = 

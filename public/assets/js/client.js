@@ -76,6 +76,7 @@ socket.on('badAvatar', function(info){
 
 socket.on('userUnknown', function(info){
     $('#login-form').append('<p class="text-danger msg-login-incorrect" id="userUnknown"><strong> Joueur introuvable. Veuillez vous connecter avec les bons identifiants, ou vous inscrire si c\'est la 1ère fois que vous participez au quizz Pokémon.</strong></p>');
+    $('.cache-login-form').hide();
     $('#btn-connexion').fadeIn();
 });
 
