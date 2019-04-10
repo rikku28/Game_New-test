@@ -19,8 +19,8 @@ app.use(express.static('public'));
 const socketIo = require('socket.io');
 const port = 3333;
 
-/************************************* Modularisation de la vérification des identifants *************************************/
-console.log('Dirname : ' + __dirname);
+/************************************* Modularisation de la vérification des identifants du joueur qui se connecte *************************************/
+// console.log('Dirname : ' + __dirname);
 const checkLogin = require('./config/check-login.js');
 
 /************************************* Configuration du module MongoDB *************************************/
