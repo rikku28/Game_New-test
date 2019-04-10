@@ -106,7 +106,6 @@ io.on('connection', function(socket){
     }
     log(`Nombre de joueurs connectés (après nouvelle connexion): ${nbPlayers}`);
 
-
 /*********************************** Vérification du nombre de joueur *******************************************/
     var checkNbPlayers = function(){
         log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
@@ -132,6 +131,86 @@ io.on('connection', function(socket){
         }
     };
 
+/*********************************** Fonction globale de vérification des identifiants du joueur qui se connecte *******************************************/
+    let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
+        console.log(`On est dans la fonction "checkVerifs".`);
+    
+        if(aPseudo && bPwd && cAvatar && firstLogin){
+            console.log(1);
+            console.log(`Pseudo reçu : ${infosUser.pseudo}`);
+            findUserInDB(infosUser.pseudo, infosUser.mdp);
+    
+            if(findUserInDB.length === (0 || null || undefined)){
+                console.log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
+                console.log(2);
+                MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
+                    if(error){
+                        console.log(`Connexion à Mongo impossible!`);
+                    } else{
+                        const db = client.db(dbName);
+                        const collection = db.collection('users');
+                        collection.insertOne({pseudo: infosUser.pseudo, pwd: infosUser.mdp, avatar: infosUser.img}).toArray(function(error,datas){
+                            client.close();
+                            console.log('Nombre de questions : ', datas.length);
+                        });
+                    }
+                });
+    
+                console.log(3);
+                socket.pseudo = infosUser.pseudo;
+                let newPlayer = new Player(infosUser.pseudo, infosUser.mdp, infosUser.img, socket.id);
+                console.log('Nouveau joueur : ', newPlayer);
+                let pseudo = infosUser.pseudo;
+                players[socket.id] = newPlayer;
+                socket.playerId = players[socket.id].identifiant;
+                nbPlayers++;
+    
+                console.log(`Nb joueurs : ${nbPlayers}`);
+                socket.emit('loginOK', newPlayer);
+                socket.broadcast.emit('newPlayer', newPlayer);
+                console.log(players);
+                io.emit('onlinePlayers', players);
+    
+                // checkNbPlayers();
+    
+            } else{
+                console.log(4);
+                let message = `Le pseudo ${infosUser.pseudo} est déjà pris!`;
+                socket.emit('alreadyUsedPseudo', {msg: message});
+                console.log(`Pseudo déjà utilisé!`);
+            }
+    
+        } else{
+            if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
+                console.log(5);
+                findUserInDB(aPseudo);
+                
+                if(findUserInDB.pseudo === infosUser.pseudo && findUserInDB.pwd === infosUser.mdp){
+                    console.log(6);
+                    
+                    socket.pseudo = infosUser.pseudo;
+                    let newPlayer = new Player(infosUser.pseudo, infosUser.mdp, infosUser.img, socket.id);
+                    console.log('Nouveau joueur : ', newPlayer);
+                    let pseudo = infosUser.pseudo;
+                    players[socket.id] = newPlayer;
+                    socket.playerId = players[socket.id].identifiant;
+                    nbPlayers++;
+        
+                    console.log(`Nb joueurs : ${nbPlayers}`);
+                    socket.emit('loginOK', newPlayer);
+                    socket.broadcast.emit('newPlayer', newPlayer);
+                    console.log(players);
+                    io.emit('onlinePlayers', players);
+        
+                    // checkNbPlayers();
+                }
+            } else{
+                console.log(7);
+                socket.emit('userUnknown');
+            }
+        }
+    };
+
 /*********************************** Connexion d'un utilisateur *******************************************/
 
 log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
@@ -151,7 +230,7 @@ socket.on('login', function(infosUser){
 
     log(`First login vaut : ${infosUser.firstLogin}`);
 
-    checkLogin.checkVerifs(checkLogin.verifPseudo, checkLogin.verifPwd, checkLogin.verifUrl);
+    checkVerifs(checkLogin.verifPseudo, checkLogin.verifPwd, checkLogin.verifUrl, infosUser.firstLogin);
 
     checkNbPlayers();
     
