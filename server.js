@@ -20,7 +20,8 @@ const socketIo = require('socket.io');
 const port = 3333;
 
 /************************************* Modularisation de la vérification des identifants *************************************/
-const checkLogin = require('../config/check-login.js');
+console.log('Dirname : ' + __dirname);
+const checkLogin = require('./config/check-login.js');
 
 /************************************* Configuration du module MongoDB *************************************/
 const MongoClient = require('mongodb').MongoClient;
@@ -44,7 +45,7 @@ var finPartie = false;
 /********************************** Création du serveur HTTP avec Express **********************************/
 app.get('/', function(req, res){
     // log(req);
-    // console.log('Dirname : ' + __dirname);
+    console.log('Dirname : ' + __dirname);
     // console.log('Filename : ' + __filename);
     // console.log(`Current directory: ${process.cwd()}`);
     // console.log('process.arg : ' + process.argv);
