@@ -132,15 +132,15 @@ io.on('connection', function(socket){
     };
 
 /*********************************** Fonction globale de vérification des identifiants du joueur qui se connecte *******************************************/
-let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
+let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
     log(`On est dans la fonction "checkVerifs".`);
 
-    if(aPseudo && bPwd && cAvatar && firstLogin){
+    if(aPseudo && bPwd && cAvatar && dInfosJoueur.firstLogin){
         log(1);
-        log(`Pseudo reçu : ${aPseudo}`);
-        exports.findUserInDB(aPseudo, bPwd);
+        log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
+        let joueurEnBdd = exports.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
 
-        if(exports.findUserInDB.length === (0 || null || undefined)){
+        if(joueurEnBdd.length === (0 || null || undefined)){
             log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
             log(2);
             MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
@@ -149,7 +149,7 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
                 } else{
                     const db = client.db(dbName);
                     const collection = db.collection('users');
-                    collection.insertOne({pseudo: aPseudo, pwd: bPwd, avatar: infosUser.img}).toArray(function(error,datas){
+                    collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img}).toArray(function(error,datas){
                         client.close();
                         log('Nombre de questions : ', datas.length);
                     });
@@ -157,10 +157,10 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
             });
 
             log(3);
-            socket.pseudo = aPseudo;
-            let newPlayer = new Player(aPseudo, bPwd, cAvatar, socket.id);
+            socket.pseudo = dInfosJoueur.pseudo;
+            let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, dInfosJoueur.img, socket.id);
             log('Nouveau joueur : ', newPlayer);
-            let pseudo = aPseudo;
+            let pseudo = dInfosJoueur.pseudo;
             players[socket.id] = newPlayer;
             socket.playerId = players[socket.id].identifiant;
             nbPlayers++;
@@ -175,7 +175,7 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
 
         } else{
             log(4);
-            let message = `Le pseudo ${aPseudo} est déjà pris!`;
+            let message = `Le pseudo ${dInfosJoueur.pseudo} est déjà pris!`;
             socket.emit('alreadyUsedPseudo', {msg: message});
             log(`Pseudo déjà utilisé!`);
         }
@@ -183,15 +183,15 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, firstLogin){
     } else{
         if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
             log(5);
-            exports.findUserInDB(aPseudo);
+            let joueurEnBdd = exports.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
             
-            if(exports.findUserInDB.pseudo === aPseudo && exports.findUserInDB.pwd === bPwd){
+            if(joueurEnBdd.pseudo === dInfosJoueur.pseudo && joueurEnBdd.pwd === dInfosJoueur.mdp){
                 log(6);
                 
-                socket.pseudo = aPseudo;
-                let newPlayer = new Player(aPseudo, bPwd, cAvatar, socket.id);
+                socket.pseudo = dInfosJoueur.pseudo;
+                let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, dInfosJoueur.img, socket.id);
                 log('Nouveau joueur : ', newPlayer);
-                let pseudo = aPseudo;
+                let pseudo = dInfosJoueur.pseudo;
                 players[socket.id] = newPlayer;
                 socket.playerId = players[socket.id].identifiant;
                 nbPlayers++;
@@ -230,7 +230,7 @@ socket.on('login', function(infosUser){
 
     log(`First login vaut : ${infosUser.firstLogin}`);
 
-    checkVerifs(checkPseudo, checkPwd, checkLogin.verifUrl, infosUser.firstLogin);
+    checkVerifs(checkPseudo, checkPwd, checkLogin.verifUrl, infosUser);
 
     checkNbPlayers();
 
