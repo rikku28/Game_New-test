@@ -34,20 +34,19 @@
             // e.preventDefault();
             $('.cache-login-form').show();
             $('.img-avatar').hide();
-            $('#btn-connexion').remove();
+            // $('#btn-connexion').remove();
+            $('#btn-connexion').hide();
         });
 
         $('#firstConnexion').click(function(e){
             // e.preventDefault();
             $('.cache-login-form').show();
             premiereConnexion = true;
-            $('#btn-connexion').remove();
+            // $('#btn-connexion').remove();
+            $('#btn-connexion').hide();
         });
 
-
-
-
-
+       
 // Formulaire de connnexion : Récupération, puis envoi des infos de connexion au serveur
     let loginForm = document.getElementById('login-form');
     loginForm.addEventListener('submit', function(event){
@@ -61,6 +60,24 @@
             img: $('#login-form-avatar').val()
         });
     });
+
+// Evènements liés à la vérification en BDD des infos de connextion
+socket.on('badPseudo', function(info){
+    $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badPseudo"><strong>' + info.msg + '</strong></p>');
+});
+
+socket.on('badPwd', function(info){
+    $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badPwd"><strong>' + info.msg + '</strong></p>');
+});
+
+socket.on('badAvatar', function(info){
+    $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badAvatar"><strong>' + info.msg + '</strong></p>');
+});
+
+socket.on('userUnknown', function(info){
+    $('#login-form').append('<p class="text-danger msg-login-incorrect" id="userUnknown"><strong> Joueur introuvable. Veuillez vous connecter avec les bons identifiants, ou vous inscrire si c\'est la 1ère fois que vous participez au quizz Pokémon.</strong></p>');
+    $('#btn-connexion').fadeIn();
+});
 
 // Nouveau joueur connecté
     socket.on('loginOK', function(infos){
