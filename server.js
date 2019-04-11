@@ -175,7 +175,7 @@ io.on('connection', function(socket){
             log(1);
             log(typeof dInfosJoueur.pseudo);
             log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
-            let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
+            let joueurEnBdd = findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
             log('Infos récupérées : ' + joueurEnBdd);
             // log(typeof(joueurEnBdd.pseudo));
             // log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
@@ -220,7 +220,7 @@ io.on('connection', function(socket){
         } else{
             if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
                 log(5);
-                let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
+                let joueurEnBdd = findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
                 
                 if(joueurEnBdd.pseudo === dInfosJoueur.pseudo && joueurEnBdd.pwd === dInfosJoueur.mdp){
                     log(6);
