@@ -166,10 +166,6 @@ io.on('connection', function(socket){
                         const db = client.db(dbName);
                         const collection = db.collection('users');
                         collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img});
-                        // collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img}).toArray(function(error,datas){
-                        //     client.close();
-                        //     log('Nombre de questions : ', datas.length);
-                        // });
                     }
                 });
 
