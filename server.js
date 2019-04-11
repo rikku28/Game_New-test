@@ -78,7 +78,7 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
             log('Nombre de questions : ', datas.length);
             log('Il y a ' + datas.length + ' questions récupérées en BDD.');
             listeQuestions = datas;
-            log(datas);
+            // log(datas);
             tourMax = datas.length;
             // log(listeQuestions);
             // res.render('utilisateurs', {title:'Liste des utilisateurs en base', liste: datas});
@@ -159,7 +159,7 @@ var findUserInDB = function(aPseudo, bPwd){
             log(`aPseudo vaut ${aPseudo} et bPwd vaut ${bPwd}`);
             const db = client.db(dbName);
             const collection = db.collection('users');
-            collection.findOne({pseudo: aPseudo, mdp: bPwd}, function(error,datas){
+            collection.findOne({}, function(error,datas){
                 client.close();
                 log('Infos récupérées : ', datas);
                 infosJoueursBDD = datas;
@@ -177,9 +177,9 @@ var findUserInDB = function(aPseudo, bPwd){
             log(1);
             log(typeof dInfosJoueur.pseudo);
             log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
-            let joueurEnBdd = findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
+            findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
             log(`Datas récupérées en base : ${infosJoueursBDD}`);
-            log('Pseudo récupéré : ' + infosJoueursBDD.pseudo);
+            // log('Pseudo récupéré : ' + infosJoueursBDD.pseudo);
             // log(typeof(joueurEnBdd.pseudo));
             // log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
 
