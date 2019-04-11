@@ -70,7 +70,7 @@ exports.findUserInDB = function(aPseudo, bPwd){
             const collection = db.collection('users');
             // collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
                 var test = collection.findOne();
-                console.log(tojson(test));
+                console.log(toJSON(test));
             //     .toArray(function(error,datas){
             //     console.log(datas);
             //     // console.log('Pseudo trouvé ' + aPseudo + ' ? : ', datas.length);
