@@ -102,7 +102,7 @@ let findUserInDB = function(aPseudo, bPwd){
             //     return datas;
         });
     }
-};
+});
 
 /************************************** Création de joueurs **********************************************/
 var Player = function(pseudo, pwd, urlImg, socketId){
