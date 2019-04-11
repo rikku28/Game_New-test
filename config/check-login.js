@@ -49,6 +49,10 @@ exports.verifUrl = function(url){
 // Fonction pour récupérer les infos de l'utilisateur en base
 // let findUserInDB = function(aPseudo, bPwd){
 exports.findUserInDB = function(aPseudo, bPwd){
+    const MongoClient = require('mongodb').MongoClient;
+    const url = process.env.MONGODB_URI;
+    const dbName = 'heroku_rm2b81xl';
+    
     console.log(`On est dans la fonction "findUserInDB".`);
     MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
         if(error){
