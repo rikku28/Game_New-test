@@ -95,7 +95,7 @@ var findUserInDB = function(aPseudo, bPwd){
             console.log(`On est dans le "else" de la fonction "findUserInDB".`);
             const db = client.db(dbName);
             const collection = db.collection('users');
-            collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
+            collection.findOne({pseudo: aPseudo, mdp: bPwd}, function(error,datas){
                 log('Infos récupérées : ', datas);
                 infosJoueursBDD = datas;
                 client.close();
