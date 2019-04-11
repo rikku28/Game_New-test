@@ -55,54 +55,30 @@ exports.verifUrl = function(url){
 
 // Fonction pour récupérer les infos de l'utilisateur en base
 // let findUserInDB = function(aPseudo, bPwd){
-exports.findUserInDB = function(aPseudo, bPwd){
-    const MongoClient = require('mongodb').MongoClient;
-    const url = process.env.MONGODB_URI;
-    const dbName = 'heroku_rm2b81xl';
+// exports.findUserInDB = function(aPseudo, bPwd){
+//     const MongoClient = require('mongodb').MongoClient;
+//     const url = process.env.MONGODB_URI;
+//     const dbName = 'heroku_rm2b81xl';
     
-    console.log(`On est dans la fonction "findUserInDB".`);
-    MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
-        if(error){
-            console.log(`Connexion à Mongo impossible!`);
-        } else{
-            console.log(`On est dans le "else" de la fonction "findUserInDB".`);
-            const db = client.db(dbName);
-            const collection = db.collection('users');
-            // collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
-                var test = collection.findOne();
-                console.log(toJSON(test));
-            //     .toArray(function(error,datas){
-            //     console.log(datas);
-            //     // console.log('Pseudo trouvé ' + aPseudo + ' ? : ', datas.length);
-            //     client.close();
-            //     // let longueur = datas.length;
-            //     // return longueur;
-            //     return datas;
-            // });
-        }
-    });
-};
-
-// Connexion d'un utilisateur
-    // console.log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
-    // console.log(`Le jeu est-il en cours? ${startGame}`);
-
-    // socket.on('login', function(infosUser){
-    //     console.log('infosUser : ', infosUser);
-
-    //     verifPseudo(infosUser.pseudo);
-    //     console.log(verifPseudo(infosUser.pseudo));
-
-    //     verifPwd(infosUser.mdp);
-    //     console.log(verifPwd(infosUser.mdp));
-
-    //     verifUrl(infosUser.img);
-    //     console.log(verifUrl(infosUser.img));
-
-    //     console.log(infosUser.firstLogin);
-
-    //     checkVerifs(verifPseudo, verifPwd, verifUrl);
-
-    //     checkNbPlayers();
-        
-    // });
+//     console.log(`On est dans la fonction "findUserInDB".`);
+//     MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+//         if(error){
+//             console.log(`Connexion à Mongo impossible!`);
+//         } else{
+//             console.log(`On est dans le "else" de la fonction "findUserInDB".`);
+//             const db = client.db(dbName);
+//             const collection = db.collection('users');
+//             // collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
+//                 var test = collection.findOne();
+//                 console.log(toJSON(test));
+//             //     .toArray(function(error,datas){
+//             //     console.log(datas);
+//             //     // console.log('Pseudo trouvé ' + aPseudo + ' ? : ', datas.length);
+//             //     client.close();
+//             //     // let longueur = datas.length;
+//             //     // return longueur;
+//             //     return datas;
+//             // });
+//         }
+//     });
+// };

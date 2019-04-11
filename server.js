@@ -39,6 +39,7 @@ var startGame = false;
 var tour = 0;
 var tourMax = 15;
 var listeQuestions;
+var infosJoueursBDD;
 var attenteJoueur = true;
 var finPartie = false;
 
@@ -67,19 +68,41 @@ const io = socketIo(httpServer);
 
 /**************************** Récupération des questions du quiz dans la BDD ****************************/
 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
-    const db = client.db(dbName);
-    const collection = db.collection('questions');
-    collection.find({}).limit(tourMax).toArray(function(error,datas) {
-        client.close();
-        log('Nombre de questions : ', datas.length);
-        log('Il y a ' + datas.length + ' questions récupérées en BDD.');
-        listeQuestions = datas;
-        tourMax = datas.length;
-        // log(listeQuestions);
-        // Transmission des données :
-        // res.render('utilisateurs', {title:'Liste des utilisateurs en base', liste: datas});
-    });
+    if(error){
+        console.log(`Connexion à Mongo impossible!`);
+    } else{
+        const db = client.db(dbName);
+        const collection = db.collection('questions');
+        collection.find({}).limit(tourMax).toArray(function(error,datas) {
+            client.close();
+            log('Nombre de questions : ', datas.length);
+            log('Il y a ' + datas.length + ' questions récupérées en BDD.');
+            listeQuestions = datas;
+            tourMax = datas.length;
+            // log(listeQuestions);
+            // res.render('utilisateurs', {title:'Liste des utilisateurs en base', liste: datas});
+        });
+    }
 });
+
+/**************************** Récupération des infos pour vérifier si le joueur existe en base ****************************/
+let findUserInDB = function(aPseudo, bPwd){
+    console.log(`On est dans la fonction "findUserInDB".`);
+    MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+        if(error){
+            console.log(`Connexion à Mongo impossible!`);
+        } else{
+            console.log(`On est dans le "else" de la fonction "findUserInDB".`);
+            const db = client.db(dbName);
+            const collection = db.collection('users');
+            collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
+                log('Infos récupérées : ', datas);
+                infosJoueursBDD = datas;
+                client.close();
+            //     return datas;
+        });
+    }
+};
 
 /************************************** Création de joueurs **********************************************/
 var Player = function(pseudo, pwd, urlImg, socketId){
@@ -131,7 +154,6 @@ io.on('connection', function(socket){
         }
     };
     
-
 /*********************************** Fonction pour vérifier que le pseudo n'est pas vide *******************************************/
     let verifPseudo = function(pseudo){
         if(pseudo === '' || pseudo.length === 0 || pseudo ===null || pseudo === undefined || pseudo === Infinity){
@@ -143,7 +165,6 @@ io.on('connection', function(socket){
             return true;
         }
     };
-
 
 /*********************************** Fonction globale de vérification des identifiants du joueur qui se connecte *******************************************/
     let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
@@ -157,6 +178,7 @@ io.on('connection', function(socket){
             log('Infos récupérées : ' + joueurEnBdd);
             // log(typeof(joueurEnBdd.pseudo));
             // log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
+
             if(joueurEnBdd === undefined || joueurEnBdd === null){
                 log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                 log(2);
