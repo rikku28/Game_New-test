@@ -100,9 +100,10 @@ let findUserInDB = function(aPseudo, bPwd){
                 infosJoueursBDD = datas;
                 client.close();
             //     return datas;
-        });
-    }
-});
+            });
+        }
+    });
+};
 
 /************************************** Création de joueurs **********************************************/
 var Player = function(pseudo, pwd, urlImg, socketId){
