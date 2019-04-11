@@ -78,32 +78,13 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
             log('Nombre de questions : ', datas.length);
             log('Il y a ' + datas.length + ' questions récupérées en BDD.');
             listeQuestions = datas;
+            log(datas);
             tourMax = datas.length;
             // log(listeQuestions);
             // res.render('utilisateurs', {title:'Liste des utilisateurs en base', liste: datas});
         });
     }
 });
-
-/**************************** Récupération des infos pour vérifier si le joueur existe en base ****************************/
-var findUserInDB = function(aPseudo, bPwd){
-    console.log(`On est dans la fonction "findUserInDB".`);
-    MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
-        if(error){
-            console.log(`Connexion à Mongo impossible!`);
-        } else{
-            console.log(`On est dans le "else" de la fonction "findUserInDB".`);
-            const db = client.db(dbName);
-            const collection = db.collection('users');
-            collection.findOne({pseudo: aPseudo, mdp: bPwd}, function(error,datas){
-                log('Infos récupérées : ', datas);
-                infosJoueursBDD = datas;
-                client.close();
-            //     return datas;
-            });
-        }
-    });
-};
 
 /************************************** Création de joueurs **********************************************/
 var Player = function(pseudo, pwd, urlImg, socketId){
@@ -166,6 +147,27 @@ io.on('connection', function(socket){
 //             return true;
 //         }
 //     };
+
+/**************************** Récupération des infos pour vérifier si le joueur existe en base ****************************/
+var findUserInDB = function(aPseudo, bPwd){
+    console.log(`On est dans la fonction "findUserInDB".`);
+    MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+        if(error){
+            log(`Connexion à Mongo impossible!`);
+        } else{
+            log(`On est dans le "else" de la fonction "findUserInDB".`);
+            log(`aPseudo vaut ${aPseudo} et bPwd vaut ${bPwd}`);
+            const db = client.db(dbName);
+            const collection = db.collection('users');
+            collection.findOne({pseudo: aPseudo, mdp: bPwd}, function(error,datas){
+                client.close();
+                log('Infos récupérées : ', datas);
+                infosJoueursBDD = datas;
+            //     return datas;
+            });
+        }
+    });
+};
 
 /*********************************** Fonction globale de vérification des identifiants du joueur qui se connecte *******************************************/
     let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
