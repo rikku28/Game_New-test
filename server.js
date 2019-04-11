@@ -33,7 +33,7 @@ const dbName = 'heroku_rm2b81xl';
 
 /************* Constante de raccourci pour "console.log" + déclaration des variables globales **************/
 const log = console.log;
-var players = {};  // Tableau ou objet, à convertir ensuite?
+var players = {};
 var nbPlayers = 0;
 var startGame = false;
 var tour = 0;
@@ -52,7 +52,7 @@ app.get('/', function(req, res){
     // console.log('process.arg : ' + process.argv);
     let htmlFile = path.normalize(__dirname + '/public/index-projet-back.html');
     log(htmlFile);
-    // Créer user en bdd ou vérifier qu'il existe en base, puis récupérer son session id
+
     //Doc Express pour le traitement des erreurs : https://expressjs.com/fr/guide/error-handling.html
     res.sendFile(htmlFile);
 });
@@ -134,9 +134,9 @@ io.on('connection', function(socket){
     var checkNbPlayers = function(){
         log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
         // log(`Joueurs connectés : ${players}`);
-        log('checkNbPlayers - players contient : ' + players.length  + ' objets.');      // => Renvoi "undefined"?
+        // log('checkNbPlayers - players contient : ' + players.length  + ' objets.');      // => Renvoi "undefined"?
         let playersLength = Object.keys(players).length;
-        log('Avec object.keys : ' + Object.keys(players).length);
+        log('Avec object.keys - checkNbPlayers contient : ' + Object.keys(players).length + ' entrées');
         if(nbPlayers < playersLength){
             nbPlayers = playersLength;
             log(`nbPlayers plus petit que players, on repasse nbPlayers à : ${nbPlayers}`);
@@ -155,17 +155,17 @@ io.on('connection', function(socket){
         }
     };
     
-/*********************************** Fonction pour vérifier que le pseudo n'est pas vide *******************************************/
-    let verifPseudo = function(pseudo){
-        if(pseudo === '' || pseudo.length === 0 || pseudo ===null || pseudo === undefined || pseudo === Infinity){
-            socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
-            console.log(`Pseudo non valide!`);
-            return false;
-        } else{
-            console.log(`Pseudo valide! -> A chercher en BDD!`);
-            return true;
-        }
-    };
+// /*********************************** Fonction pour vérifier que le pseudo n'est pas vide *******************************************/   // Déplacée dans le module
+//     let verifPseudo = function(pseudo){
+//         if(pseudo === '' || pseudo.length === 0 || pseudo ===null || pseudo === undefined || pseudo === Infinity){
+//             socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+//             console.log(`Pseudo non valide!`);
+//             return false;
+//         } else{
+//             console.log(`Pseudo valide! -> A chercher en BDD!`);
+//             return true;
+//         }
+//     };
 
 /*********************************** Fonction globale de vérification des identifiants du joueur qui se connecte *******************************************/
     let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
@@ -177,11 +177,15 @@ io.on('connection', function(socket){
             log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
             let joueurEnBdd = findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
             log(`Datas récupérées en base : ${infosJoueursBDD}`);
-            log('Infos récupérées : ' + joueurEnBdd);
+            log('Pseudo récupéré : ' + infosJoueursBDD.pseudo);
             // log(typeof(joueurEnBdd.pseudo));
             // log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
 
-            if(joueurEnBdd === undefined || joueurEnBdd === null){
+            let pseudoString = (infosJoueursBDD.pseudo).toString();
+            log('Pseudo BDD - convertie en chaîne de caractère : ' + pseudoString + ' ' + typeof pseudoString);
+
+            // if(pseudoString === undefined || pseudoString === null){
+            if(!pseudoString)
                 log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                 log(2);
                 MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
