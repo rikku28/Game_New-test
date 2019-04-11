@@ -67,9 +67,10 @@ exports.findUserInDB = function(aPseudo, bPwd){
         } else{
             const db = client.db(dbName);
             const collection = db.collection('users');
-            collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
+            // collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
+                collection.findOne().toArray(function(error,datas){
                 console.log(datas);
-                console.log('Pseudo trouvé ' + aPseudo + ' ? : ', datas.length);
+                // console.log('Pseudo trouvé ' + aPseudo + ' ? : ', datas.length);
                 client.close();
                 // let longueur = datas.length;
                 // return longueur;
