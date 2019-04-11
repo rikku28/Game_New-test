@@ -19,7 +19,7 @@ app.use(express.static('public'));
 const socketIo = require('socket.io');
 const port = 3333;
 
-/************************************* Modularisation de la vérification des identifants du joueur qui se connecte *************************************/
+/************************************* Données pour server.js : Modularisation de la vérification des identifants du joueur qui se connecte *************************************/
 // console.log('Dirname : ' + __dirname);
 const checkLogin = require('./config/check-login.js');
 
@@ -130,64 +130,47 @@ io.on('connection', function(socket){
             io.emit('attenteJoueur');
         }
     };
+    
+
+/*********************************** Fonction pour vérifier que le pseudo n'est pas vide *******************************************/
+    let verifPseudo = function(pseudo){
+        if(pseudo === '' || pseudo.length === 0 || pseudo ===null || pseudo === undefined || pseudo === Infinity){
+            socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+            console.log(`Pseudo non valide!`);
+            return false;
+        } else{
+            console.log(`Pseudo valide! -> A chercher en BDD!`);
+            return true;
+        }
+    };
+
 
 /*********************************** Fonction globale de vérification des identifiants du joueur qui se connecte *******************************************/
-let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
-    log(`On est dans la fonction "checkVerifs".`);
+    let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
+        log(`On est dans la fonction "checkVerifs".`);
 
-    if(aPseudo && bPwd && cAvatar && dInfosJoueur.firstLogin){
-        log(1);
-        log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
-        let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
-
-        if(joueurEnBdd === undefined || joueurEnBdd === null){
-            log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
-            log(2);
-            MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
-                if(error){
-                    log(`Connexion à Mongo impossible!`);
-                } else{
-                    const db = client.db(dbName);
-                    const collection = db.collection('users');
-                    collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img}).toArray(function(error,datas){
-                        client.close();
-                        log('Nombre de questions : ', datas.length);
-                    });
-                }
-            });
-
-            log(3);
-            socket.pseudo = dInfosJoueur.pseudo;
-            let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, dInfosJoueur.img, socket.id);
-            log('Nouveau joueur : ', newPlayer);
-            let pseudo = dInfosJoueur.pseudo;
-            players[socket.id] = newPlayer;
-            socket.playerId = players[socket.id].identifiant;
-            nbPlayers++;
-
-            log(`Nb joueurs : ${nbPlayers}`);
-            socket.emit('loginOK', newPlayer);
-            socket.broadcast.emit('newPlayer', newPlayer);
-            log(players);
-            io.emit('onlinePlayers', players);
-
-            // checkNbPlayers();
-
-        } else{
-            log(4);
-            let message = `Le pseudo ${dInfosJoueur.pseudo} est déjà pris!`;
-            socket.emit('alreadyUsedPseudo', {msg: message});
-            log(`Pseudo déjà utilisé!`);
-        }
-
-    } else{
-        if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
-            log(5);
+        if(aPseudo && bPwd && cAvatar && dInfosJoueur.firstLogin){
+            log(1);
+            log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
             let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
-            
-            if(joueurEnBdd.pseudo === dInfosJoueur.pseudo && joueurEnBdd.pwd === dInfosJoueur.mdp){
-                log(6);
-                
+
+            if(joueurEnBdd === undefined || joueurEnBdd === null){
+                log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
+                log(2);
+                MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
+                    if(error){
+                        log(`Connexion à Mongo impossible!`);
+                    } else{
+                        const db = client.db(dbName);
+                        const collection = db.collection('users');
+                        collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img}).toArray(function(error,datas){
+                            client.close();
+                            log('Nombre de questions : ', datas.length);
+                        });
+                    }
+                });
+
+                log(3);
                 socket.pseudo = dInfosJoueur.pseudo;
                 let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, dInfosJoueur.img, socket.id);
                 log('Nouveau joueur : ', newPlayer);
@@ -195,21 +178,52 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
                 players[socket.id] = newPlayer;
                 socket.playerId = players[socket.id].identifiant;
                 nbPlayers++;
-    
+
                 log(`Nb joueurs : ${nbPlayers}`);
                 socket.emit('loginOK', newPlayer);
                 socket.broadcast.emit('newPlayer', newPlayer);
                 log(players);
                 io.emit('onlinePlayers', players);
-    
+
                 // checkNbPlayers();
+
+            } else{
+                log(4);
+                let message = `Le pseudo ${dInfosJoueur.pseudo} est déjà pris!`;
+                socket.emit('alreadyUsedPseudo', {msg: message});
+                log(`Pseudo déjà utilisé!`);
             }
+
         } else{
-            log(7);
-            socket.emit('userUnknown');
+            if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
+                log(5);
+                let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
+                
+                if(joueurEnBdd.pseudo === dInfosJoueur.pseudo && joueurEnBdd.pwd === dInfosJoueur.mdp){
+                    log(6);
+                    
+                    socket.pseudo = dInfosJoueur.pseudo;
+                    let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, dInfosJoueur.img, socket.id);
+                    log('Nouveau joueur : ', newPlayer);
+                    let pseudo = dInfosJoueur.pseudo;
+                    players[socket.id] = newPlayer;
+                    socket.playerId = players[socket.id].identifiant;
+                    nbPlayers++;
+        
+                    log(`Nb joueurs : ${nbPlayers}`);
+                    socket.emit('loginOK', newPlayer);
+                    socket.broadcast.emit('newPlayer', newPlayer);
+                    log(players);
+                    io.emit('onlinePlayers', players);
+        
+                    // checkNbPlayers();
+                }
+            } else{
+                log(7);
+                socket.emit('userUnknown');
+            }
         }
-    }
-};
+    };
 
 /*********************************** Connexion d'un utilisateur *******************************************/
 
@@ -221,12 +235,24 @@ socket.on('login', function(infosUser){
 
     let checkPseudo = checkLogin.verifPseudo(infosUser.pseudo);
     log(checkPseudo);
+    if(!checkPseudo){
+        socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+        console.log(`Pseudo non valide!`);
+    }
 
     let checkPwd = checkLogin.verifPwd(infosUser.mdp);
     log(checkPwd);
+    if(!checkPwd){
+        socket.emit('badPwd', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+        console.log(`Mot de passe non valide!`);
+    }
 
     let checkUrl = checkLogin.verifUrl(infosUser.img);
     log(checkUrl);
+    if(!checkUrl){
+        socket.emit('badAvatar', {msg: 'L\'url du lien vers votre avatar est vide ou non valide. Cela doit commencer par \'http://\' ou \'https://\''});
+        console.log(`Url non valide!`);
+    }
 
     log(`First login vaut : ${infosUser.firstLogin}`);
 
