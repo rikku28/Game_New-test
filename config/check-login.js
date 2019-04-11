@@ -68,8 +68,9 @@ exports.findUserInDB = function(aPseudo, bPwd){
             const db = client.db(dbName);
             const collection = db.collection('users');
             collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
-                client.close();
+                console.log(datas);
                 console.log('Pseudo trouvé ' + aPseudo + ' ? : ', datas.length);
+                client.close();
                 // let longueur = datas.length;
                 // return longueur;
                 return datas;

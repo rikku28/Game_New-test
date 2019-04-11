@@ -151,10 +151,11 @@ io.on('connection', function(socket){
 
         if(aPseudo && bPwd && cAvatar && dInfosJoueur.firstLogin){
             log(1);
+            log(typeof dInfosJoueur.pseudo);
             log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
             let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
-            log(joueurEnBdd);
-            log(typeof(joueurEnBdd.pseudo));
+            log('Infos récupérées : ' + joueurEnBdd);
+            // log(typeof(joueurEnBdd.pseudo));
             log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
             if(joueurEnBdd === undefined || joueurEnBdd === null){
                 log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
