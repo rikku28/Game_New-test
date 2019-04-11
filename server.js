@@ -138,7 +138,7 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
     if(aPseudo && bPwd && cAvatar && dInfosJoueur.firstLogin){
         log(1);
         log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
-        let joueurEnBdd = exports.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
+        let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
 
         if(joueurEnBdd.length === (0 || null || undefined)){
             log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
@@ -183,7 +183,7 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
     } else{
         if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
             log(5);
-            let joueurEnBdd = exports.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
+            let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
             
             if(joueurEnBdd.pseudo === dInfosJoueur.pseudo && joueurEnBdd.pwd === dInfosJoueur.mdp){
                 log(6);
@@ -230,7 +230,7 @@ socket.on('login', function(infosUser){
 
     log(`First login vaut : ${infosUser.firstLogin}`);
 
-    checkVerifs(checkPseudo, checkPwd, checkLogin.verifUrl, infosUser);
+    checkVerifs(checkPseudo, checkPwd, checkUrl, infosUser);
 
     checkNbPlayers();
 
