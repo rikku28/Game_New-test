@@ -65,17 +65,20 @@ exports.findUserInDB = function(aPseudo, bPwd){
         if(error){
             console.log(`Connexion à Mongo impossible!`);
         } else{
+            console.log(`On est dans le "else" de la fonction "findUserInDB".`);
             const db = client.db(dbName);
             const collection = db.collection('users');
             // collection.findOne({pseudo: aPseudo, mdp: bPwd}).toArray(function(error,datas){
-                collection.findOne().toArray(function(error,datas){
-                console.log(datas);
-                // console.log('Pseudo trouvé ' + aPseudo + ' ? : ', datas.length);
-                client.close();
-                // let longueur = datas.length;
-                // return longueur;
-                return datas;
-            });
+                var test = collection.findOne();
+                console.log(tojson(test));
+            //     .toArray(function(error,datas){
+            //     console.log(datas);
+            //     // console.log('Pseudo trouvé ' + aPseudo + ' ? : ', datas.length);
+            //     client.close();
+            //     // let longueur = datas.length;
+            //     // return longueur;
+            //     return datas;
+            // });
         }
     });
 };

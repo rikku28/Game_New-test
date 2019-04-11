@@ -156,7 +156,7 @@ io.on('connection', function(socket){
             let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
             log('Infos récupérées : ' + joueurEnBdd);
             // log(typeof(joueurEnBdd.pseudo));
-            log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
+            // log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
             if(joueurEnBdd === undefined || joueurEnBdd === null){
                 log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                 log(2);
