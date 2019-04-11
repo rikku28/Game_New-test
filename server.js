@@ -185,7 +185,7 @@ io.on('connection', function(socket){
             log('Pseudo BDD - convertie en chaîne de caractère : ' + pseudoString + ' ' + typeof pseudoString);
 
             // if(pseudoString === undefined || pseudoString === null){
-            if(!pseudoString)
+            if(infosJoueursBDD){
                 log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                 log(2);
                 MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
