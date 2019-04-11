@@ -6,7 +6,7 @@ var exports = module.exports = {};
 // Fonction pour vérifier que le pseudo n'est pas vide
 // let verifPseudo = function(pseudo){
 exports.verifPseudo = function(pseudo){
-    if(pseudo === ("" || null || undefined || Infinity)){
+    if(pseudo === '' || pseudo.length === 0 || pseudo ===null || pseudo === undefined || pseudo === Infinity)){
         socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
         console.log(`Pseudo non valide!`);
         return false;
@@ -19,7 +19,7 @@ exports.verifPseudo = function(pseudo){
 // Fonction pour vérifier que le mot de passe n'est pas vide
 // let verifPwd  = function(pwd){
 exports.verifPwd  = function(pwd){
-    if(pwd === ("" || null || undefined || Infinity)){
+    if(pwd === '' || pwd === null || pwd.length === 0 || pwd === undefined || pwd === Infinity)){
         socket.emit('badPwd', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'})
         return false;
     } else{

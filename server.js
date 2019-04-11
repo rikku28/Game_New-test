@@ -140,7 +140,7 @@ let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
         log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
         let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
 
-        if(joueurEnBdd.length === (0 || null || undefined)){
+        if(joueurEnBdd === undefined || joueurEnBdd === null){
             log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
             log(2);
             MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
