@@ -183,11 +183,11 @@ var findUserInDB = function(aPseudo, bPwd){
             // log(typeof(joueurEnBdd.pseudo));
             // log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
 
-            let pseudoString = (infosJoueursBDD.pseudo).toString();
+            // let pseudoString = (infosJoueursBDD.pseudo).toString();
             log('Pseudo BDD - convertie en chaîne de caractère : ' + pseudoString + ' ' + typeof pseudoString);
 
-            // if(pseudoString === undefined || pseudoString === null){
-            if(infosJoueursBDD){
+            if(pseudoString === undefined || pseudoString === null){
+            // if(infosJoueursBDD){
                 log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                 log(2);
                 MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
