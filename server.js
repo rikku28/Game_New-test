@@ -86,7 +86,7 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
 });
 
 /**************************** Récupération des infos pour vérifier si le joueur existe en base ****************************/
-let findUserInDB = function(aPseudo, bPwd){
+var findUserInDB = function(aPseudo, bPwd){
     console.log(`On est dans la fonction "findUserInDB".`);
     MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
         if(error){
@@ -176,6 +176,7 @@ io.on('connection', function(socket){
             log(typeof dInfosJoueur.pseudo);
             log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
             let joueurEnBdd = findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
+            log(`Datas récupérées en base : ${infosJoueursBDD}`);
             log('Infos récupérées : ' + joueurEnBdd);
             // log(typeof(joueurEnBdd.pseudo));
             // log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
