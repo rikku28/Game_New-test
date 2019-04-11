@@ -153,7 +153,9 @@ io.on('connection', function(socket){
             log(1);
             log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
             let joueurEnBdd = checkLogin.findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
-
+            log(joueurEnBdd);
+            log(typeof(joueurEnBdd.pseudo));
+            log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
             if(joueurEnBdd === undefined || joueurEnBdd === null){
                 log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                 log(2);
@@ -163,10 +165,11 @@ io.on('connection', function(socket){
                     } else{
                         const db = client.db(dbName);
                         const collection = db.collection('users');
-                        collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img}).toArray(function(error,datas){
-                            client.close();
-                            log('Nombre de questions : ', datas.length);
-                        });
+                        collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img});
+                        // collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img}).toArray(function(error,datas){
+                        //     client.close();
+                        //     log('Nombre de questions : ', datas.length);
+                        // });
                     }
                 });
 

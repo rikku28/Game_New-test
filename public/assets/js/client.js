@@ -67,20 +67,20 @@ socket.on('badPseudo', function(info){
 });
 
 socket.on('alreadyUsedPseudo', function(info){
-    $('#login-form').append('<p class="text-warning msg-login-incorrect" id="alreadyUsedPseudo"><strong>' + info.msg + '</strong></p>');
+    $('#date-jour').prepend('<p class="text-warning msg-login-incorrect" id="alreadyUsedPseudo"><strong>' + info.msg + '</strong></p>');
 });
 
 
 socket.on('badPwd', function(info){
-    $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badPwd"><strong>' + info.msg + '</strong></p>');
+    $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badPwd"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('badAvatar', function(info){
-    $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badAvatar"><strong>' + info.msg + '</strong></p>');
+    $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badAvatar"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('userUnknown', function(info){
-    $('#login-form').append('<p class="text-danger msg-login-incorrect" id="userUnknown"><strong> Joueur introuvable. Veuillez vous connecter avec les bons identifiants, ou vous inscrire si c\'est la 1ère fois que vous participez au quizz Pokémon.</strong></p>');
+    $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="userUnknown"><strong> Joueur introuvable. Veuillez vous connecter avec les bons identifiants, ou vous inscrire si c\'est la 1ère fois que vous participez au quizz Pokémon.</strong></p>');
     $('.cache-login-form').hide();
     $('#btn-connexion').fadeIn();
 });
