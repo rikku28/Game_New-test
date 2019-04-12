@@ -182,7 +182,6 @@ io.on('connection', function(socket){
             log(1);
             log(typeof dInfosJoueur.pseudo);
             log(`Pseudo reçu : ${dInfosJoueur.pseudo}`);
-            log(`Datas récupérées en base : ${infosJoueursBDD}`);
             // log('Pseudo récupéré : ' + infosJoueursBDD.pseudo);
             // log(typeof(joueurEnBdd.pseudo));
             // log(joueurEnBdd.pseudo === dInfosJoueur.pseudo);
@@ -195,7 +194,7 @@ io.on('connection', function(socket){
                     log(`On est dans le "else" de la fonction "findUserInDB".`);
                     const db = client.db(dbName);
                     const collection = db.collection('users');
-                    collection.findOne({pseudo: dInfosJoueur.pseudo, p}, function(error,datas){
+                    collection.findOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp}, function(error,datas){
                         log(`On rentre dans la fonction de callback.`);
                         if(error){
                             log(`Que se passe-t-il? ${error}`);
@@ -205,20 +204,21 @@ io.on('connection', function(socket){
                             log('Infos récupérées : ', datas);
             let pseudoString = (infosJoueursBDD.pseudo).toString();
             log('Pseudo BDD - convertie en chaîne de caractère : ' + pseudoString + ' ' + typeof pseudoString);
-
+            log(`Datas récupérées en base : ${infosJoueursBDD}`);
             if(pseudoString === undefined || pseudoString === null){
             // if(infosJoueursBDD){
                 log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                 log(2);
-                MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
-                    if(error){
-                        log(`Connexion à Mongo impossible!`);
-                    } else{
-                        const db = client.db(dbName);
-                        const collection = db.collection('users');
+                // MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
+                //     if(error){
+                //         log(`Connexion à Mongo impossible!`);
+                //     } else{
+                //         log(`On va intégrer les données en base`);
+                //         const db = client.db(dbName);
+                //         const collection = db.collection('users');
                         collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img});
-                    }
-                });
+                //     }
+                // });
 
                 log(3);
                 socket.pseudo = dInfosJoueur.pseudo;
@@ -249,9 +249,6 @@ io.on('connection', function(socket){
                     });
                 }
             });
-
-
-
         } else{
             if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
                 log(5);
