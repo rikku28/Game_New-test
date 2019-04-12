@@ -118,9 +118,8 @@ io.on('connection', function(socket){
 
 /*********************************** Vérification du nombre de joueur *******************************************/
     var checkNbPlayers = function(){
+        log(`(checkNbPlayers) Le jeu est-il en cours? ${startGame}`);
         log(`Nombre de joueurs connectés (checkNbPlayers): ${nbPlayers}`);
-        // log(`Joueurs connectés : ${players}`);
-        // log('checkNbPlayers - players contient : ' + players.length  + ' objets.');      // => Renvoi "undefined"?
         let playersLength = Object.keys(players).length;
         log('Avec object.keys - checkNbPlayers contient : ' + Object.keys(players).length + ' entrées');
         if(nbPlayers < playersLength){
@@ -362,6 +361,7 @@ socket.on('login', function(infosUser){
         log(players);
         // log('Pseudo : ', players[socket.id].pseudo);
         io.emit('afficheChatMsg',  {pseudo: players[socket.id].pseudo, msg: message});
+        checkNbPlayers();
     });
 
 
