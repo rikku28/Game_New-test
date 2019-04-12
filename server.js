@@ -210,16 +210,16 @@ io.on('connection', function(socket){
                         // if(infosJoueursBDD){
                             log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                             log(2);
-                            // MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
-                            //     if(error){
-                            //         log(`Connexion à Mongo impossible!`);
-                            //     } else{
-                            //         log(`On va intégrer les données en base`);
-                            //         const db = client.db(dbName);
-                            //         const collection = db.collection('users');
+                            MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
+                                if(error){
+                                    log(`Connexion à Mongo impossible!`);
+                                } else{
+                                    log(`On va intégrer les données en base`);
+                                    const db = client.db(dbName);
+                                    const collection = db.collection('users');
                             collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img});
-                            //     }
-                            // });
+                                }
+                            });
 
                             log(3);
                             socket.pseudo = dInfosJoueur.pseudo;
