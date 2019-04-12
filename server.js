@@ -202,8 +202,8 @@ io.on('connection', function(socket){
                             infosJoueursBDD = datas;
                             client.close();
                             log('Infos récupérées : ', datas);
-                        let pseudoString = (infosJoueursBDD.pseudo).toString();
-                        log('Pseudo BDD - convertie en chaîne de caractère : ' + pseudoString + ' ' + typeof pseudoString);
+                        // let pseudoString = (infosJoueursBDD.pseudo).toString();
+                        // log('Pseudo BDD - convertie en chaîne de caractère : ' + pseudoString + ' ' + typeof pseudoString);
                         log(`Datas récupérées en base : ${infosJoueursBDD}`);
                         // if(datas === undefined || datas === null){
                         if(!datas){
