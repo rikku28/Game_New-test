@@ -202,50 +202,50 @@ io.on('connection', function(socket){
                             infosJoueursBDD = datas;
                             client.close();
                             log('Infos récupérées : ', datas);
-            let pseudoString = (infosJoueursBDD.pseudo).toString();
-            log('Pseudo BDD - convertie en chaîne de caractère : ' + pseudoString + ' ' + typeof pseudoString);
-            log(`Datas récupérées en base : ${infosJoueursBDD}`);
-            if(pseudoString === undefined || pseudoString === null){
-            // if(infosJoueursBDD){
-                log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
-                log(2);
-                // MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
-                //     if(error){
-                //         log(`Connexion à Mongo impossible!`);
-                //     } else{
-                //         log(`On va intégrer les données en base`);
-                //         const db = client.db(dbName);
-                //         const collection = db.collection('users');
-                        collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img});
-                //     }
-                // });
+                        let pseudoString = (infosJoueursBDD.pseudo).toString();
+                        log('Pseudo BDD - convertie en chaîne de caractère : ' + pseudoString + ' ' + typeof pseudoString);
+                        log(`Datas récupérées en base : ${infosJoueursBDD}`);
+                        // if(datas === undefined || datas === null){
+                        if(!datas){
+                        // if(infosJoueursBDD){
+                            log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
+                            log(2);
+                            // MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
+                            //     if(error){
+                            //         log(`Connexion à Mongo impossible!`);
+                            //     } else{
+                            //         log(`On va intégrer les données en base`);
+                            //         const db = client.db(dbName);
+                            //         const collection = db.collection('users');
+                            collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img});
+                            //     }
+                            // });
 
-                log(3);
-                socket.pseudo = dInfosJoueur.pseudo;
-                let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, dInfosJoueur.img, socket.id);
-                log('Nouveau joueur : ', newPlayer);
-                let pseudo = dInfosJoueur.pseudo;
-                players[socket.id] = newPlayer;
-                socket.playerId = players[socket.id].identifiant;
-                nbPlayers++;
+                            log(3);
+                            socket.pseudo = dInfosJoueur.pseudo;
+                            let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, dInfosJoueur.img, socket.id);
+                            log('Nouveau joueur : ', newPlayer);
+                            let pseudo = dInfosJoueur.pseudo;
+                            players[socket.id] = newPlayer;
+                            socket.playerId = players[socket.id].identifiant;
+                            nbPlayers++;
 
-                log(`Nb joueurs : ${nbPlayers}`);
-                socket.emit('loginOK', newPlayer);
-                socket.broadcast.emit('newPlayer', newPlayer);
-                log(players);
-                io.emit('onlinePlayers', players);
+                            log(`Nb joueurs : ${nbPlayers}`);
+                            socket.emit('loginOK', newPlayer);
+                            socket.broadcast.emit('newPlayer', newPlayer);
+                            log(players);
+                            io.emit('onlinePlayers', players);
 
-                // checkNbPlayers();
+                            // checkNbPlayers();
 
-            } else{
-                log(4);
-                let message = `Le pseudo ${dInfosJoueur.pseudo} est déjà pris!`;
-                socket.emit('alreadyUsedPseudo', {msg: message});
-                log(`Pseudo déjà utilisé!`);
-            }
+                            } else{
+                                log(4);
+                                let message = `Le pseudo ${dInfosJoueur.pseudo} est déjà pris!`;
+                                socket.emit('alreadyUsedPseudo', {msg: message});
+                                log(`Pseudo déjà utilisé!`);
+                            }
                             // return datas;
                         }
-
                     });
                 }
             });
