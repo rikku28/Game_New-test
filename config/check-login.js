@@ -62,6 +62,7 @@ exports.verifUrl = function(url){
     
 //     console.log(`On est dans la fonction "findUserInDB".`);
 //     MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+        // log(`On rentre dans la fonction de callback.`);
 //         if(error){
 //             console.log(`Connexion à Mongo impossible!`);
 //         } else{
