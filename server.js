@@ -33,6 +33,7 @@ const dbName = 'heroku_rm2b81xl';
 
 /************* Constante de raccourci pour "console.log" + déclaration des variables globales **************/
 const log = console.log;
+var logged = false;
 var players = {};
 var nbPlayers = 0;
 var startGame = false;
@@ -210,6 +211,8 @@ io.on('connection', function(socket){
                         // if(infosJoueursBDD){
                             log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                             log(2);
+
+// Connexion a Mongo décommantée - erreur : Unhandled Promise Rejection Warning. C'est sûrement dû au "client.close()" plus haut.
                             MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
                                 if(error){
                                     log(`Connexion à Mongo impossible!`);
@@ -235,8 +238,8 @@ io.on('connection', function(socket){
                             socket.broadcast.emit('newPlayer', newPlayer);
                             log(players);
                             io.emit('onlinePlayers', players);
-
-                            // checkNbPlayers();
+                            logged = true;
+                            checkNbPlayers();
 
                             } else{
                                 log(4);
@@ -462,12 +465,16 @@ socket.on('answer', function(reponse){
     socket.on('disconnect', function(reason){
         log('Déconnexion : ', socket.id, reason);
         log('Joueur qui vient de se déconnecter : ', players[socket.id]);
-
+        
+        if(logged){
+            socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: socket.playerId});
+            nbPlayers--;
+            log(`Nombre de joueurs connectés (après une déconnexion logguée) : ${nbPlayers}`);
+            delete players[socket.id];
+        }
         // socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: players[socket.id].identifiant});
-        socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: socket.playerId});
-        nbPlayers--;
-        log(`Nombre de joueurs connectés (après une déconnexion) : ${nbPlayers}`);
-        delete players[socket.id];
+        log(`Nombre de joueurs connectés (après une déconnexion logguée) : ${nbPlayers}`);
+
         if(nbPlayers === undefined || nbPlayers <= 0){
             log(`On est dans le "if" de la déconnexion`);
             nbPlayers = 0;
