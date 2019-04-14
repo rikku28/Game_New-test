@@ -223,7 +223,7 @@ socket.on('userUnknown', function(info){
             //   log(ranking);
             // ranking++;
 
-        $.each(tabRanking, function(index, value) {
+        $.each(tabPlayers, function(index, value) {
             log(index + ' ' + value);
             log('Pseudo : ' + tabPlayers[i][i+1].pseudo);
 
