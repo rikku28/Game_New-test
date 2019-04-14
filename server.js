@@ -335,7 +335,7 @@ var classement = function(){
         log('Pseudo : ' + checkPseudo);
         if(!checkPseudo){
             log(`On est dans la condition !checkPseudo`);
-            socket.emit('badPseudo', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+            socket.emit('badPseudo');
             // socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
             log(`Pseudo non valide!`);
         }

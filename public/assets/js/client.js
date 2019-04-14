@@ -65,7 +65,7 @@
 // Evènements liés à la vérification en BDD des infos de connextion
 socket.on('badPseudo', function(info){
     log(`badPseudo`);
-    $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badPseudo"><strong>' + info.msg + '</strong></p>');
+    $('#login-form').prepend('<p class="text-danger msg-login-incorrect" id="badPseudo"><strong>Votre mot de passe est vide ou invalide.</strong></p>');
 });
 
 socket.on('alreadyUsedPseudo', function(info){
