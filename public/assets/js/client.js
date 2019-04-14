@@ -218,26 +218,12 @@ socket.on('userUnknown', function(info){
 
         $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0][1].pseudo + '. Vous remportez la partie.</strong></p>');
 
-        // let ranking = 1;
-        // for (var i = 0; i < tabPlayers.length; i++) {
-            // tabPlayers[i].rank = ranking;
-            // if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
-            //   log(ranking);
-            // ranking++;
-
         $.each(tabPlayers, function(index, value) {
             log(index + ' ' + value);
             log('Pseudo : ' + tabPlayers[index][1].pseudo);
 
             $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index][1].identifiant + '"><img src="' + tabPlayers[index][1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index][1].pseudo + ' - Score : <span class="score">' + tabPlayers[index][1].score + '</span></p>');
         });
-
-            // }
-        // };
-
-        // for (var player in tabPlayers){
-        //     $('#online-scores').append('<p class="fin-partie" id="end-' + joueurs[player].identifiant + '"><img src="' + joueurs[player].avatar + '" class="rounded" width="50px"/> ' + joueurs[player].pseudo + ' - Score : <span class="score">' + joueurs[player].score + '</span></p>');
-        // }
     });
 
     socket.on('classement', function(infos){
