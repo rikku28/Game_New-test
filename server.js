@@ -312,7 +312,7 @@ var classement = function(){
                                     checkNbPlayers();
                                 }
                             }
-                        })
+                        });
                     }
                     client.close();
                 });
@@ -322,7 +322,7 @@ var classement = function(){
             }
         }
     };
-};
+// };
 /*********************************** Connexion d'un utilisateur *******************************************/
 
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
