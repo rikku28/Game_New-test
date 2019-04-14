@@ -43,7 +43,7 @@ var listeQuestions;
 var infosJoueursBDD;
 var attenteJoueur = true;
 var finPartie = false;
-var bestScores = {};
+var bestScores = [];
 
 /********************************** Création du serveur HTTP avec Express **********************************/
 app.get('/', function(req, res, next){
@@ -75,7 +75,7 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
     } else{
         const db = client.db(dbName);
         const collection = db.collection('questions');
-        collection.find({}).limit(tourMax).toArray(function(error,datas) {
+        collection.find({}).limit(tourMax).toArray(function(error,datas){
             if(error){
                 log(`Impossible de récupérer la liste de questions.`);
             } else{
@@ -99,13 +99,14 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
     } else{
         const db = client.db(dbName);
         const collection = db.collection('users');
-        collection.find({}, {projection:{pseudo:1, avatar:1, lastScore:1, bestScore:1, _id:0}}, function(error,datas) {
+        // collection.find({}, {projection:{pseudo:1, avatar:1, lastScore:1, bestScore:1, _id:0}}, function(error,datas){
+        collection.find({}).sort({bestScores: -1}).toArray(function(error,datas) {
             if(error){
                 log(`Impossible de récupérer la liste des meilleurs scores.`);
             } else{
                 log(datas);
                 bestScores = datas;
-                log('Nombre de scores récupérés : ' + Object.keys(bestScores).length);
+                log('Nombre de scores récupérés : ' + bestScores.length);
             }
             client.close();
         });
