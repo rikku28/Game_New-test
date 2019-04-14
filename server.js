@@ -276,7 +276,7 @@ var classement = function(){
                 }
             });
         } else{
-            if (aPseudo && bPwd && !firstLogin){
+            if (aPseudo && bPwd && !dInfosJoueur.firstLogin){
                 log(5);
                 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                     if(error){
