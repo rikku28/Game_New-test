@@ -332,14 +332,14 @@ var classement = function(){
         log('infosUser : ', infosUser);
 
         let checkPseudo = checkLogin.verifPseudo(infosUser.pseudo);
-        log(checkPseudo);
+        log('Pseudo : ' + checkPseudo);
         if(!checkPseudo){
             socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
             console.log(`Pseudo non valide!`);
         }
 
         let checkPwd = checkLogin.verifPwd(infosUser.mdp);
-        log(checkPwd);
+        log('Pass : ' + checkPwd);
         if(!checkPwd){
             socket.emit('badPwd', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
             console.log(`Mot de passe non valide!`);
@@ -347,6 +347,7 @@ var classement = function(){
 
         log(`First login vaut : ${infosUser.firstLogin}`);
         let checkUrl = checkLogin.verifUrl(infosUser.img);
+        log('URL : ' + checkUrl);
         // let checkUrl = checkLogin.verifUrl(infosUser.img, infosUser.firstLogin);
         if(infosUser.firstLogin){
             log(checkUrl);
