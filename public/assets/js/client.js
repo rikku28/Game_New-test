@@ -64,27 +64,33 @@
 
 // Evènements liés à la vérification en BDD des infos de connextion
 socket.on('badPseudo', function(info){
+    log(`badPseudo`);
     $('#login-form').append('<p class="text-danger msg-login-incorrect" id="badPseudo"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('alreadyUsedPseudo', function(info){
+    log(`alreadyUsedPseudo`);
     $('#date-jour').prepend('<p class="text-warning msg-login-incorrect" id="alreadyUsedPseudo"><strong>' + info.msg + '</strong></p>');
 });
 
 
 socket.on('badPwd', function(info){
+    log(`badPwd`);
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badPwd"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('badAvatar', function(info){
+    log(`badAvatar`);
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badAvatar"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('badInfos', function(info){
+    log(`badInfos`);
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badInfos"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('userUnknown', function(info){
+    log(`userUnknown`);
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="userUnknown"><strong> Joueur introuvable. Veuillez vous connecter avec les bons identifiants, ou vous inscrire si c\'est la 1ère fois que vous participez au quiz Pokémon.</strong></p>');
     $('.cache-login-form').hide();
     $('#btn-connexion').fadeIn();
