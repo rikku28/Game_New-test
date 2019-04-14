@@ -235,17 +235,30 @@ socket.on('userUnknown', function(info){
 
     socket.on('classement', function(infos){
         log(`On est dans le classement des joueurs.`);
-        let tabRanking = Object.entries(infos);
+        // let tabRanking = Object.entries(infos);
+        let tabRanking = infos;
         log(tabRanking);
 
-        tabRanking.sort(function(a, b){
-            return b.bestScore - a.bestScore
+        $.each(tabRanking, function(index, value) {
+            log(index + ' ' + value);
+            $('#all-best-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[index].identifiant + '"><img src="' + tabRanking[index].avatar + '" class="rounded" width="40px"/> ' + tabRanking[index].pseudo + ' - Score : <span class="score">' + tabRanking[index].bestScore + '</span></p>');
         });
-        log(tabRanking);
+
+        // let i = 0;
+        // tabRanking.forEach(function(rank){
+        //     log(i);
+        //     $('#all-best-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[rank].identifiant + '"><img src="' + tabRanking[rank].avatar + '" class="rounded" width="40px"/> ' + tabRanking[rank].pseudo + ' - Score : <span class="score">' + tabRanking[rank].bestScore + '</span></p>');
+        //     i++
+        // });
+
+        // tabRanking.sort(function(a, b){
+        //     return b.bestScore - a.bestScore
+        // });
+        // log(tabRanking);
         
-        for (var rank in tabRanking){
-            $('#online-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[rank].identifiant + '"><img src="' + tabRanking[rank].avatar + '" class="rounded" width="40px"/> ' + tabRanking[rank].pseudo + ' - Score : <span class="score">' + tabRanking[rank].bestScore + '</span></p>');
-        }
+        // for (var rank in tabRanking){
+        //     $('#online-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[rank].identifiant + '"><img src="' + tabRanking[rank].avatar + '" class="rounded" width="40px"/> ' + tabRanking[rank].pseudo + ' - Score : <span class="score">' + tabRanking[rank].bestScore + '</span></p>');
+        // }
     });
 
 /*********************************** Affichage de la question en cours *******************************************/
