@@ -10,7 +10,7 @@ var exports = module.exports = {};
 // Fonction pour vérifier que le pseudo n'est pas vide
 exports.verifPseudo = function(pseudo){
 // let verifPseudo = function(pseudo){
-    if(pseudo === '' || pseudo.length === 0 || pseudo ===null || pseudo === undefined || pseudo === Infinity){
+    if(pseudo === '' || pseudo.length === 0 || pseudo === 'null' || pseudo === 'undefined' || pseudo === 'Infinity'){
         // socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
         console.log(`Dans le module : Pseudo non valide!`);
         return false;
@@ -39,7 +39,7 @@ exports.verifUrl = function(url, premiereConnexion){
 // Expression régulière pour vérifier l'url de l'avatar
 // const urlRegex = new RegExp('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$', ig);
 
-    const urlRegex = new RegExp('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$', 'ig');
+    const urlRegex = new RegExp('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$', 'igm');
 
     if(url.match(urlRegex) && premiereConnexion){
         console.log(`Url OK!!!`);
