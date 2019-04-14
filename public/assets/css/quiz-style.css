@@ -59,7 +59,7 @@ p, span, label, #menu{
     /* background-image: url(../img/border-orange_2x.png); */
 }
 
-.icone > a > img{
+.icones{
     width: 60px;
     border-color: yellow;
     border-width: 2px;
