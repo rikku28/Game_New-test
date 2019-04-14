@@ -335,8 +335,9 @@ var classement = function(){
         log('Pseudo : ' + checkPseudo);
         if(!checkPseudo){
             log(`On est dans la condition !checkPseudo`);
-            socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
-            console.log(`Pseudo non valide!`);
+            socket.emit('badPseudo', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+            // socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+            log(`Pseudo non valide!`);
         }
 
         let checkPwd = checkLogin.verifPwd(infosUser.mdp);
@@ -344,7 +345,7 @@ var classement = function(){
         if(!checkPwd){
             log(`On est dans la condition !checkPwd`);
             socket.emit('badPwd', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
-            console.log(`Mot de passe non valide!`);
+            log(`Mot de passe non valide!`);
         }
 
         log(`First login vaut : ${infosUser.firstLogin}`);
@@ -355,7 +356,7 @@ var classement = function(){
             log(checkUrl);
             if(!checkUrl){
                 socket.emit('badAvatar', {msg: 'L\'url du lien vers votre avatar est vide ou non valide. Cela doit commencer par \'http://\' ou \'https://\''});
-                console.log(`Url non valide!`);
+                log(`Url non valide!`);
             }
         }
 
