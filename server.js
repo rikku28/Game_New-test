@@ -104,7 +104,7 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
             if(error){
                 log(`Impossible de récupérer la liste des meilleurs scores.`);
             } else{
-                // log(datas);
+                log(datas);
                 bestScores = datas;
                 log('Nombre de scores récupérés : ' + bestScores.length);
             }

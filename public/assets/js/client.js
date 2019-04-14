@@ -227,9 +227,9 @@ socket.on('userUnknown', function(info){
 
         $.each(tabPlayers, function(index, value) {
             log(index + ' ' + value);
-            log('Pseudo : ' + tabPlayers[index][index+1].pseudo);
+            log('Pseudo : ' + tabPlayers[index][1].pseudo);
 
-            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index][index+1].identifiant + '"><img src="' + tabPlayers[index][index+1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index][index+1].pseudo + ' - Score : <span class="score">' + tabPlayers[index][index+1].score + '</span></p>');
+            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index][1].identifiant + '"><img src="' + tabPlayers[index][1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index][1].pseudo + ' - Score : <span class="score">' + tabPlayers[index][1].score + '</span></p>');
         });
 
             // }
