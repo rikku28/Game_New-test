@@ -216,17 +216,25 @@ socket.on('userUnknown', function(info){
         log(tabPlayers);
         $('#online-scores').empty();
 
-        let ranking = 1;
-        for (var i = 0; i < tabPlayers.length; i++) {
-          if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
-            ranking++;
-              $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[i].identifiant + '"><img src="' + tabPlayers[i].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[i].pseudo + ' - Score : <span class="score">' + tabPlayers[i].score + '</span></p>');
-          }
-          tabPlayers[i].rank = ranking;
-        };
+        // let ranking = 1;
+        // for (var i = 0; i < tabPlayers.length; i++) {
+            // tabPlayers[i].rank = ranking;
+            // if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
+            //   log(ranking);
+            // ranking++;
+
+        $.each(tabRanking, function(index, value) {
+            log(index + ' ' + value);
+            log('Pseudo : ' + tabPlayers[i][i+1].pseudo);
+
+            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[i][i+1].identifiant + '"><img src="' + tabPlayers[i][i+1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[i][i+1].pseudo + ' - Score : <span class="score">' + tabPlayers[i][i+1].score + '</span></p>');
+        });
+
+            // }
+        // };
     
         log(tabPlayers);
-        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0].pseudo + '. Vous remportez la partie.</strong></p>');
+        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0][1].pseudo + '. Vous remportez la partie.</strong></p>');
 
         // for (var player in tabPlayers){
         //     $('#online-scores').append('<p class="fin-partie" id="end-' + joueurs[player].identifiant + '"><img src="' + joueurs[player].avatar + '" class="rounded" width="50px"/> ' + joueurs[player].pseudo + ' - Score : <span class="score">' + joueurs[player].score + '</span></p>');
@@ -238,7 +246,8 @@ socket.on('userUnknown', function(info){
         // let tabRanking = Object.entries(infos);
         let tabRanking = infos;
         log(tabRanking);
-
+        $('#all-best-scores').empty();
+        
         $.each(tabRanking, function(index, value) {
             log(index + ' ' + value);
             $('#all-best-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[index].identifiant + '"><img src="' + tabRanking[index].avatar + '" class="rounded" width="40px"/> ' + tabRanking[index].pseudo + ' - Score : <span class="score">' + tabRanking[index].bestScore + '</span></p>');

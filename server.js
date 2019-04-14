@@ -468,7 +468,6 @@ socket.on('answer', function(reponse){
                 msg : msgEndGame
             });
 
-
         MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
             if(error){
                 throw error;
@@ -502,39 +501,39 @@ socket.on('answer', function(reponse){
             }
         });
 
-            MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
-                if(error){
-                    throw error;
-                    log(`Connexion à Mongo impossible!`);
-                } else{
-                    log(`On est dans le "else" de la fonction "nextQuestion".`);
-                    let myScore = players[socket.id].score;
-                    const db = client.db(dbName);
-                    const collection = db.collection('users');
-                    collection.findOne({pseudo: players[socket.id].pseudo}, {projection:{pseudo:1, lastScore:1, bestScore:1, _id:0}}, function(error, datas){
-                        log('Fin de partie : On cherche les données du joueur en BDD.')
-                        log(datas);
-                        if(error){
-                            // throw error;
-                            log(`Que se passe-t-il? ${error}`);
-                        } else{
-                            log('Meilleur score du joueur, avant màj : ' + datas.bestScore);
-                            if(myScore > datas.bestScore){
-                                collection.updateOne({pseudo: players[socket.id].pseudo},
-                                {$set: {lastScore: myScore, bestScore: myScore}});
-                                log(`Dernier score + meilleur score du joueur mis à jour. ${myScore}`);
-                                client.close();
-                            } else{
-                                collection.updateOne({pseudo: players[socket.id].pseudo},
-                                {$set: {lastScore: myScore}});
-                                log(`Seul le dernier score du joueur est mis à jour.`);
-                                client.close();
-                            }
-                        }
-                    });
-                }
-            });
-            
+            // MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+            //     if(error){
+            //         throw error;
+            //         log(`Connexion à Mongo impossible!`);
+            //     } else{
+            //         log(`On est dans le "else" de la fonction "nextQuestion".`);
+            //         let myScore = players[socket.id].score;
+            //         const db = client.db(dbName);
+            //         const collection = db.collection('users');
+            //         collection.findOne({pseudo: players[socket.id].pseudo}, {projection:{pseudo:1, lastScore:1, bestScore:1, _id:0}}, function(error, datas){
+            //             log('Fin de partie : On cherche les données du joueur en BDD.')
+            //             log(datas);
+            //             if(error){
+            //                 // throw error;
+            //                 log(`Que se passe-t-il? ${error}`);
+            //             } else{
+            //                 log('Meilleur score du joueur, avant màj : ' + datas.bestScore);
+            //                 if(myScore > datas.bestScore){
+            //                     collection.updateOne({pseudo: players[socket.id].pseudo},
+            //                     {$set: {lastScore: myScore, bestScore: myScore}});
+            //                     log(`Dernier score + meilleur score du joueur mis à jour. ${myScore}`);
+            //                     client.close();
+            //                 } else{
+            //                     collection.updateOne({pseudo: players[socket.id].pseudo},
+            //                     {$set: {lastScore: myScore}});
+            //                     log(`Seul le dernier score du joueur est mis à jour.`);
+            //                     client.close();
+            //                 }
+            //             }
+            //         });
+            //     }
+            // });
+
         } else{
             log(`Tour n° ${tour}`);
             listeQuestions[tour].tour = tour;
