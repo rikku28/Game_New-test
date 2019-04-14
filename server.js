@@ -103,6 +103,7 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
             if(error){
                 log(`Impossible de récupérer la liste des meilleurs scores.`);
             } else{
+                log(datas);
                 bestScores = datas;
                 log('Nombre de scores récupérés : ' + Object.keys(bestScores).length);
             }
@@ -352,7 +353,7 @@ var classement = function(){
 
     socket.on('login', function(infosUser){
         socket.emit('classement', bestScores);
-        
+
         log('infosUser : ', infosUser);
 
         let checkPseudo = checkLogin.verifPseudo(infosUser.pseudo);
