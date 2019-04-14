@@ -233,6 +233,21 @@ socket.on('userUnknown', function(info){
         // }
     });
 
+    socket.on('classement', function(infos){
+        log(`On est dans le classement des joueurs.`);
+        let tabRanking = Object.entries(infos);
+        log(tabRanking);
+
+        tabRanking.sort(function(a, b){
+            return b.bestScore - a.bestScore
+        });
+        log(tabRanking);
+        
+        for (var rank in tabRanking){
+            $('#online-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[rank].identifiant + '"><img src="' + tabRanking[rank].avatar + '" class="rounded" width="40px"/> ' + tabRanking[rank].pseudo + ' - Score : <span class="score">' + tabRanking[rank].bestScore + '</span></p>');
+        }
+    });
+
 /*********************************** Affichage de la question en cours *******************************************/
     // var showQuestion = setTimeout(function(question){
     //     $('.cache-quiz').show();

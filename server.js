@@ -43,6 +43,7 @@ var listeQuestions;
 var infosJoueursBDD;
 var attenteJoueur = true;
 var finPartie = false;
+var bestScores = {};
 
 /********************************** Création du serveur HTTP avec Express **********************************/
 app.get('/', function(req, res, next){
@@ -85,6 +86,26 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
                 tourMax = datas.length;
                 // log(listeQuestions);
                 // res.render('utilisateurs', {title:'Liste des utilisateurs en base', liste: datas});
+            }
+            client.close();
+        });
+    }
+});
+
+/**************************** Récupération des meilleurs scores des joueurs ****************************/
+MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
+    if(error){
+        console.log(`Connexion à Mongo impossible!`);
+    } else{
+        const db = client.db(dbName);
+        const collection = db.collection('users');
+        collection.find({}, {projection:{pseudo:1, avatar:1, lastScore:1, bestScore:1, _id:0}}, function(error,datas) {
+            if(error){
+                log(`Impossible de récupérer la liste des meilleurs scores.`);
+            } else{
+                bestScores = datas;
+                log('Nombre de scores récupérés : ' + Object.keys(bestScores).length);
+                socket.emit('classement', bestScores);
             }
             client.close();
         });
@@ -299,7 +320,7 @@ var classement = function(){
                                 } else{
                                     log(7);
                                     socket.pseudo = dInfosJoueur.pseudo;
-                                    let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, infosJoueursBDD.img, socket.id);
+                                    let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, infosJoueursBDD.avatar, socket.id);
                                     log('Nouveau joueur : ', newPlayer);
                                     let pseudo = dInfosJoueur.pseudo;
                                     players[socket.id] = newPlayer;
@@ -439,10 +460,6 @@ socket.on('answer', function(reponse){
             let msgEndGame = 'Fin de partie!';
             startGame = false;
             tour = 0;
-            io.emit('endGame', {
-                players : players,
-                msg : msgEndGame
-            });
 
             MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                 if(error){
@@ -454,7 +471,7 @@ socket.on('answer', function(reponse){
                     const db = client.db(dbName);
                     const collection = db.collection('users');
                     
-                    collection.findOne({pseudo: players[socket.id].pseudo}, {projection:{pseudo:1, score:1, _id:0}}, function(error, datas){
+                    collection.findOne({pseudo: players[socket.id].pseudo}, {projection:{pseudo:1, lastScore:1, bestScore:1, _id:0}}, function(error, datas){
                         log('Fin de partie : On cherche les données du joueur en BDD.')
                         log(datas);
                         if(error){
@@ -466,14 +483,19 @@ socket.on('answer', function(reponse){
                                 collection.updateOne({pseudo: players[socket.id].pseudo},
                                 {$set: {lastScore: myScore, bestScore: myScore}});
                                 log(`Dernier score + meilleur score du joueur mis à jour. ${myScore}`);
+                                client.close();
                             } else{
                                 collection.updateOne({pseudo: players[socket.id].pseudo},
                                 {$set: {lastScore: myScore}});
                                 log(`Seul le dernier score du joueur est mis à jour.`);
+                                client.close();
                             }
+                            io.emit('endGame', {
+                                players : players,
+                                msg : msgEndGame
+                            });
                         }
                     });
-                    client.close();
                 }
             });
         } else{
