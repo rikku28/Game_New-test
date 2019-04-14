@@ -26,7 +26,7 @@
         log('Coucou côté client');
 // On masque toutes les balises sauf celles du formulaire de connexion.
         $('.cache-login-form').hide();
-        $('.cache-quizz').hide();
+        $('.cache-quiz').hide();
         $('.cache-infos-joueurs').hide(); // à la place de .fadeOut()
 
 // Joueur déjà inscrit :
@@ -79,8 +79,12 @@ socket.on('badAvatar', function(info){
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badAvatar"><strong>' + info.msg + '</strong></p>');
 });
 
+socket.on('badInfos', function(info){
+    $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badInfos"><strong>' + info.msg + '</strong></p>');
+});
+
 socket.on('userUnknown', function(info){
-    $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="userUnknown"><strong> Joueur introuvable. Veuillez vous connecter avec les bons identifiants, ou vous inscrire si c\'est la 1ère fois que vous participez au quizz Pokémon.</strong></p>');
+    $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="userUnknown"><strong> Joueur introuvable. Veuillez vous connecter avec les bons identifiants, ou vous inscrire si c\'est la 1ère fois que vous participez au quiz Pokémon.</strong></p>');
     $('.cache-login-form').hide();
     $('#btn-connexion').fadeIn();
 });
@@ -93,7 +97,7 @@ socket.on('userUnknown', function(info){
         $('#welcome').html('<h1 style="font-size: 3em">Bienvenue ' + infos.pseudo + ' <img src="' + infos.avatar + '" width="75px"/></h1>');
         players.push(infos.pseudo);
         log(players);
-        $('section#quizz').append('<p>Répondez à 10 questions plus vite que votre adversaire pour gagner des points.</p>')
+        $('section#quiz').append('<p>Répondez à 10 questions plus vite que votre adversaire pour gagner des points.</p>')
     });
 
     socket.on('newPlayer', function(infos){
@@ -151,7 +155,7 @@ socket.on('userUnknown', function(info){
         // }
 
         $('#zone-infos').prepend('<p><strong><em>La partie commence : Question n°0!</em></strong></p>');
-        $('.cache-quizz').show();
+        $('.cache-quiz').show();
         currentQuestion(q0);
         // showQuestion(q0);    // setTimeout qui se déclenche avant "l'écoute" de "startGame".
     });
@@ -168,7 +172,7 @@ socket.on('userUnknown', function(info){
     socket.on('nextQuestion', function(qEnCours){
         log(qEnCours);
         $('#zone-infos').prepend('<p><em>Question n°' + qEnCours.tour +'!</em></p>');
-        $('.cache-quizz').show();
+        $('.cache-quiz').show();
         currentQuestion(qEnCours);
     });
 
@@ -190,29 +194,40 @@ socket.on('userUnknown', function(info){
 
 
     socket.on('endGame', function(infos){
-        log(infos);
-        $('.cache-quizz').hide();
-        let joueurs = infos.players;
-        log(joueurs);
-        joueurs.sort(function(a, b){return b.score - a.score});
-        // log(joueurs);
-        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + infos.pseudo + '. Vous remportez la partie.</strong></p>');
-        $('#online-scores').empty();
-        for (var player in joueurs){
-            $('#online-scores').append('<p class="fin-partie" id="end-' + joueurs[player].identifiant + '"><img src="' + joueurs[player].avatar + '" class="rounded" width="50px"/> ' + joueurs[player].pseudo + ' - Score : <span class="score">' + joueurs[player].score + '</span></p>');
-        }
-
         $('#zone-infos').prepend('<p><strong><em>' + infos.msg + '</em></strong></p>');
-    });
+        log(infos);
+        $('.cache-quiz').hide();
+
+        let tabPlayers = Object.entries(infos.players);
+        log(tabPlayers);
+
+        tabPlayers.sort(function(a, b){
+            return b.score - a.score
+        });
+
+        log(tabPlayers);
+        $('#online-scores').empty();
+
+        let ranking = 1;
+        for (var i = 0; i < tabPlayers.length; i++) {
+          if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
+            ranking++;
+              $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[i].identifiant + '"><img src="' + tabPlayers[i].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[i].pseudo + ' - Score : <span class="score">' + tabPlayers[i].score + '</span></p>');
+          }
+          tabPlayers[i].rank = ranking;
+        };
     
-    // socket.on('gg', function(infos){
-    //     log(infos);
-    //     $('#zone-infos').prepend('<p><strong><em> Bravo ' + infos.pseudo + '! Vous avez ' + infos.score + ' gagné la partie. </em></strong></p>');
-    // });
+        log(tabPlayers);
+        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0].pseudo + '. Vous remportez la partie.</strong></p>');
+
+        // for (var player in tabPlayers){
+        //     $('#online-scores').append('<p class="fin-partie" id="end-' + joueurs[player].identifiant + '"><img src="' + joueurs[player].avatar + '" class="rounded" width="50px"/> ' + joueurs[player].pseudo + ' - Score : <span class="score">' + joueurs[player].score + '</span></p>');
+        // }
+    });
 
 /*********************************** Affichage de la question en cours *******************************************/
     // var showQuestion = setTimeout(function(question){
-    //     $('.cache-quizz').show();
+    //     $('.cache-quiz').show();
     //     currentQuestion(question);
     // }, 5000);
 

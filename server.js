@@ -140,6 +140,29 @@ io.on('connection', function(socket){
         }
     };
     
+
+/*********************************** Fin de partie : actuellement géré côté front *******************************************/
+var classement = function(){
+    let tabPlayers = Object.entries(players);
+
+    tabPlayers.sort(function(a, b){
+        return b.score - a.score
+    });
+    log(tabPlayers);
+
+    var rank = 1;
+    for (var i = 0; i < tabPlayers.length; i++) {
+      if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
+          rank++;
+      }
+      tabPlayers[i].rank = rank;
+    };
+
+    log(tabPlayers);
+
+    io.emit('ranking', tabPlayers);
+};
+
 // /*********************************** Fonction pour vérifier que le pseudo n'est pas vide *******************************************/   // Déplacée dans le module
 //     let verifPseudo = function(pseudo){
 //         if(pseudo === '' || pseudo.length === 0 || pseudo ===null || pseudo === undefined || pseudo === Infinity){
@@ -211,7 +234,7 @@ io.on('connection', function(socket){
                             log(`Le pseudonyme n'existe pas en base. On enregistre les infos`);
                             log(2);
 
-// Connexion a Mongo décommantée - erreur : Unhandled Promise Rejection Warning. C'est sûrement dû au "client.close()" plus haut.
+// Connexion a Mongo décommentée - erreur : Unhandled Promise Rejection Warning. C'est sûrement dû au "client.close()" plus haut.
                             MongoClient.connect(url, { useNewUrlParser: true }, function(error,client){
                                 if(error){
                                     log(`Connexion à Mongo impossible!`);
@@ -219,8 +242,9 @@ io.on('connection', function(socket){
                                     log(`On va intégrer les données en base`);
                                     const db = client.db(dbName);
                                     const collection = db.collection('users');
-                            collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img});
+                            collection.insertOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp, avatar: dInfosJoueur.img, lastScore: 0, bestScore: 0});
                                 }
+                                client.close();
                             });
 
                             log(3);
@@ -252,105 +276,92 @@ io.on('connection', function(socket){
                 }
             });
         } else{
-            if ((aPseudo && bPwd) && (!cAvatar && !firstLogin)){
+            if (aPseudo && bPwd && !firstLogin){
                 log(5);
-                let joueurEnBdd = findUserInDB(dInfosJoueur.pseudo, dInfosJoueur.mdp);
-                
-                if(joueurEnBdd.pseudo === dInfosJoueur.pseudo && joueurEnBdd.pwd === dInfosJoueur.mdp){
-                    log(6);
-                    
-                    socket.pseudo = dInfosJoueur.pseudo;
-                    let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, dInfosJoueur.img, socket.id);
-                    log('Nouveau joueur : ', newPlayer);
-                    let pseudo = dInfosJoueur.pseudo;
-                    players[socket.id] = newPlayer;
-                    socket.playerId = players[socket.id].identifiant;
-                    nbPlayers++;
-        
-                    log(`Nb joueurs : ${nbPlayers}`);
-                    socket.emit('loginOK', newPlayer);
-                    socket.broadcast.emit('newPlayer', newPlayer);
-                    log(players);
-                    io.emit('onlinePlayers', players);
-        
-                    // checkNbPlayers();
-                }
+                MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+                    if(error){
+                        throw error;
+                        log(`Connexion à Mongo impossible!`);
+                    } else{
+                        log(`On est dans le "else" de la fonction "findUserInDB".`);
+                        const db = client.db(dbName);
+                        const collection = db.collection('users');
+                        collection.findOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp}, function(error,datas){
+                            log(`On rentre dans la fonction de callback.`);
+                            if(error){
+                                log(`Que se passe-t-il? ${error}`);
+                            } else{
+                                if(!datas){
+                                    log(6);
+                                    socket.emit('badInfos', {msg: 'Le pseudo et/ou le mot de passe est incorrect. Veuillez réessayer.'});
+                                } else{
+                                    log(7);
+                                    socket.pseudo = dInfosJoueur.pseudo;
+                                    let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, datas.img, socket.id);
+                                    log('Nouveau joueur : ', newPlayer);
+                                    let pseudo = dInfosJoueur.pseudo;
+                                    players[socket.id] = newPlayer;
+                                    socket.playerId = players[socket.id].identifiant;
+                                    nbPlayers++;
+                        
+                                    log(`Nb joueurs : ${nbPlayers}`);
+                                    socket.emit('loginOK', newPlayer);
+                                    socket.broadcast.emit('newPlayer', newPlayer);
+                                    log(players);
+                                    io.emit('onlinePlayers', players);
+                                    checkNbPlayers();
+                                }
+                            }
+                        })
+                    }
+                    client.close();
+                });
             } else{
-                log(7);
+                log(8);
                 socket.emit('userUnknown');
             }
         }
     };
-
+};
 /*********************************** Connexion d'un utilisateur *******************************************/
 
-log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
-log(`Le jeu est-il en cours? ${startGame}`);
+    log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
+    log(`Le jeu est-il en cours? ${startGame}`);
 
-socket.on('login', function(infosUser){
-    log('infosUser : ', infosUser);
+    socket.on('login', function(infosUser){
+        log('infosUser : ', infosUser);
 
-    let checkPseudo = checkLogin.verifPseudo(infosUser.pseudo);
-    log(checkPseudo);
-    if(!checkPseudo){
-        socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
-        console.log(`Pseudo non valide!`);
-    }
+        let checkPseudo = checkLogin.verifPseudo(infosUser.pseudo);
+        log(checkPseudo);
+        if(!checkPseudo){
+            socket.emit('badPseudo', {msg: 'Votre pseudonyme est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+            console.log(`Pseudo non valide!`);
+        }
 
-    let checkPwd = checkLogin.verifPwd(infosUser.mdp);
-    log(checkPwd);
-    if(!checkPwd){
-        socket.emit('badPwd', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
-        console.log(`Mot de passe non valide!`);
-    }
+        let checkPwd = checkLogin.verifPwd(infosUser.mdp);
+        log(checkPwd);
+        if(!checkPwd){
+            socket.emit('badPwd', {msg: 'Votre mot de passe est vide ou équivalent à une valeur non autorisée (null, undefined et Infinity).'});
+            console.log(`Mot de passe non valide!`);
+        }
 
-    let checkUrl = checkLogin.verifUrl(infosUser.img);
-    log(checkUrl);
-    if(!checkUrl){
-        socket.emit('badAvatar', {msg: 'L\'url du lien vers votre avatar est vide ou non valide. Cela doit commencer par \'http://\' ou \'https://\''});
-        console.log(`Url non valide!`);
-    }
+        log(`First login vaut : ${infosUser.firstLogin}`);
+        let checkUrl = checkLogin.verifUrl(infosUser.img);
+        // let checkUrl = checkLogin.verifUrl(infosUser.img, infosUser.firstLogin);
+        if(infosUser.firstLogin){
+            log(checkUrl);
+            if(!checkUrl){
+                socket.emit('badAvatar', {msg: 'L\'url du lien vers votre avatar est vide ou non valide. Cela doit commencer par \'http://\' ou \'https://\''});
+                console.log(`Url non valide!`);
+            }
+        }
 
-    log(`First login vaut : ${infosUser.firstLogin}`);
+        checkVerifs(checkPseudo, checkPwd, checkUrl, infosUser);
 
-    checkVerifs(checkPseudo, checkPwd, checkUrl, infosUser);
+        checkNbPlayers();
+    });
 
-    checkNbPlayers();
-
-});
-
-    // log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
-    // log(`Le jeu est-il en cours? ${startGame}`);
-    // socket.on('login', function(infosUser){
-    //     log('infosUser : ', infosUser);
-
-    //     // if(){
-
-    //     // } else{
-    //         socket.pseudo = infosUser.pseudo;
-    //         let newPlayer = new Player(infosUser.pseudo, infosUser.mdp, infosUser.img, socket.id);
-    //         log('Nouveau joueur : ', newPlayer);
-    //         let pseudo = infosUser.pseudo;
-    //         // players[infosUser.pseudo] = newPlayer;
-    //         players[socket.id] = newPlayer;
-    //         socket.playerId = players[socket.id].identifiant;
-    //         // players.push(newPlayer);
-    //         // players(newPlayer.pseudo) = newPlayer;
-    //         nbPlayers++;
-    //         log(`Nb joueurs : ${nbPlayers}`);
-    //         socket.emit('loginOK', newPlayer);
-    //         socket.broadcast.emit('newPlayer', newPlayer);
-    //         log(players);
-    //         io.emit('onlinePlayers', players);
-
-    //         checkNbPlayers();
-    //         // io.emit('onlinePlayers', newPlayer);
-
-    //     // }
-        
-    // });
-
-// Echange de messages entre joueurs
+/*********************************** Echange de messages entre joueurs *******************************************/
     socket.on('chatMsg', function (message){
         log(message);
         message = message;
@@ -412,13 +423,6 @@ socket.on('answer', function(reponse){
 
 });
 
-// Logs serveur :
-    // Réponse BDD : 151 undefined
-    // Réponse reçue  null object
-    // Mauvaise réponse!
-    // Réponse BDD : 151 undefined
-    // Réponse reçue  151 string
-    // Bonne réponse!
 
 /*********************************** Question suivante *******************************************/
     var nextQuestion = function(){
@@ -431,7 +435,38 @@ socket.on('answer', function(reponse){
             tour = 0;
             io.emit('endGame', {
                 players : players,
-                msg : msgEndGame});
+                msg : msgEndGame
+            });
+
+            MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+                if(error){
+                    throw error;
+                    log(`Connexion à Mongo impossible!`);
+                } else{
+                    log(`On est dans le "else" de la fonction "nextQuestion".`);
+                    let myScore = players[socket.id].score;
+                    const db = client.db(dbName);
+                    const collection = db.collection('users');
+                    
+                    collection.findOne({pseudo: players[socket.id].pseudo}, {projection:{pseudo:1, score:1, _id:0}}, function(error, datas){
+                        if(error){
+                            // throw error;
+                            log(`Que se passe-t-il? ${error}`);
+                        } else{
+                            if(myScore > datas.bestScore){
+                                collection.update({pseudo: players[socket.id].pseudo},
+                                {$set: {lastScore: myScore, bestScore: myScore}});
+                                log(`Dernier score + meilleur score du joueur mis à jour.`);
+                            } else{
+                                collection.update({pseudo: players[socket.id].pseudo},
+                                {$set: {lastScore: myScore}});
+                                log(`Seul le dernier score du joueur est mis à jour.`);
+                            }
+                        }
+                    });
+                    client.close();
+                }
+            });
         } else{
             log(`Tour n° ${tour}`);
             listeQuestions[tour].tour = tour;
@@ -439,26 +474,7 @@ socket.on('answer', function(reponse){
 
             io.emit('nextQuestion', listeQuestions[tour]);
         }
-
     };
-
-/*********************************** Fin de partie *******************************************/
-    // var theWinnerIs = function(){
-    //     let scores = [];
-    //     let winner;
-
-// checkScores
-    //     for (var p in players){
-            
-    //     }
-    //     log(scores);
-
-    //     socket.emit('gg', {
-    //         id: socket.playerId,
-    //         pseudo: socket.pseudo}
-    //     );
-    // }
-
 
 /*********************************** Déconnexion d'un utilisateur *******************************************/
 // Déconnexion d'un utilisateur

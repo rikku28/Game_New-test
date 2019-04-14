@@ -7,8 +7,6 @@
 console.log(`Bienvenue dans le module check-login.js!`);
 var exports = module.exports = {};
 
-// exports.log = console.log();
-
 // Fonction pour vérifier que le pseudo n'est pas vide
 exports.verifPseudo = function(pseudo){
 // let verifPseudo = function(pseudo){
@@ -37,13 +35,13 @@ exports.verifPwd  = function(pwd){
 
 // Fonction pour vérifier que l'url de l'avatar est correcte
 // let verifUrl = function(url){
-exports.verifUrl = function(url){
+exports.verifUrl = function(url, premiereConnexion){
 // Expression régulière pour vérifier l'url de l'avatar
 // const urlRegex = new RegExp('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$', ig);
 
     const urlRegex = new RegExp('^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$', 'ig');
 
-    if(url.match(urlRegex)){
+    if(url.match(urlRegex) && premiereConnexion){
         console.log(`Url OK!!!`);
         return true;
     } else{

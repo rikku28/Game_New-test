@@ -33,12 +33,13 @@ h3, legend{
     font-family: 'Ranchers', 'Bangers', 'Boogaloo', cursive;
 }
 
-p, span, label{
+p, span, label, #menu{
 
     font-family: 'BenchNine', 'Saira Extra Condensed', sans-serif;
     font-size: 1.4em;
 
 }
+
 .gras{
     /* font-weight: bold; */
     color: #7c3a01;
@@ -56,4 +57,18 @@ p, span, label{
     background-repeat: repeat;
     /* padding: 15px; */
     /* background-image: url(../img/border-orange_2x.png); */
+}
+
+.icone{
+    width: 120px;
+    border-color: yellow;
+    border-width: 2px;
+    border-radius: 15px;
+}
+
+#flaticon-freepik-credits{
+    color: #7c3a01;
+    font-family: 'BenchNine', 'Saira Extra Condensed', sans-serif;
+    font-size: 0.8em;
+    font-style: italic;
 }
