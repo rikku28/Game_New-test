@@ -105,7 +105,6 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
             } else{
                 bestScores = datas;
                 log('Nombre de scores récupérés : ' + Object.keys(bestScores).length);
-                socket.emit('classement', bestScores);
             }
             client.close();
         });
@@ -352,6 +351,8 @@ var classement = function(){
     log(`Le jeu est-il en cours? ${startGame}`);
 
     socket.on('login', function(infosUser){
+        socket.emit('classement', bestScores);
+        
         log('infosUser : ', infosUser);
 
         let checkPseudo = checkLogin.verifPseudo(infosUser.pseudo);
