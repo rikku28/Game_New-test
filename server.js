@@ -359,7 +359,7 @@ var classement = function(){
                 log(`Url non valide!`);
             }
         }
-
+        log('1st Login : ' + infosUser.firstLogin);
         checkVerifs(checkPseudo, checkPwd, checkUrl, infosUser);
 
         checkNbPlayers();

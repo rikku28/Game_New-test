@@ -33,17 +33,17 @@
 // Joueur déjà inscrit :
         $('#welcomeBack').click(function(e){
             // e.preventDefault();
+            premiereConnexion = false;
             $('.cache-login-form').show();
             $('.img-avatar').hide();
-            // $('#btn-connexion').remove();
             $('#btn-connexion').hide();
         });
 
+// Inscription d'un nouveau joueur :
         $('#firstConnexion').click(function(e){
             // e.preventDefault();
-            $('.cache-login-form').show();
             premiereConnexion = true;
-            // $('#btn-connexion').remove();
+            $('.cache-login-form').show();
             $('#btn-connexion').hide();
         });
 
@@ -279,7 +279,7 @@ socket.on('userUnknown', function(info){
             const mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
     // let jour = jours[indexJour] + ' ' + numeroJour + ' ' + mois[indexMois] + ' ' + annee; 
             // console.log(jour); 
-            let txtDate = document.createTextNode('Aujourd\'hui, nous sommes le ' + jours[indexJour] + ' ' + numeroJour + ' ' + mois[indexMois] + ' ' + dateJour.getFullYear());
+            let txtDate = document.createTextNode('Nous sommes le ' + jours[indexJour] + ' ' + numeroJour + ' ' + mois[indexMois] + ' ' + dateJour.getFullYear());
             todayP.appendChild(txtDate);
         })();
     });
