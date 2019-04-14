@@ -104,7 +104,7 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
             if(error){
                 log(`Impossible de récupérer la liste des meilleurs scores.`);
             } else{
-                log(datas);
+                // log(datas);
                 bestScores = datas;
                 log('Nombre de scores récupérés : ' + bestScores.length);
             }
@@ -463,6 +463,44 @@ socket.on('answer', function(reponse){
             let msgEndGame = 'Fin de partie!';
             startGame = false;
             tour = 0;
+            io.emit('endGame', {
+                players : players,
+                msg : msgEndGame
+            });
+
+
+        MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
+            if(error){
+                throw error;
+                log(`Connexion à Mongo impossible!`);
+            } else{
+                log(`On est dans le "else" de la fonction "nextQuestion".`);
+                let myScore = players[socket.id].score;
+                const db = client.db(dbName);
+                const collection = db.collection('users');
+
+                var rankingAllPlayers = collection.find();
+                rankingAllPlayers.forEach(function(rankingPlayer){
+                    var i = 0;
+                    var myScore = 0;
+
+                    if(rankingPlayer.pseudo === players[socket.id].pseudo){
+                        myScore = players[socket.id].score;
+                        if(myScore > rankingPlayer.bestScore){
+                            collection.updateOne({pseudo: players[socket.id].pseudo},
+                            {$set: {lastScore: myScore, bestScore: myScore}});
+                            log(`Dernier score + meilleur score du joueur mis à jour. ${myScore}`);
+                            client.close();
+                        } else{
+                            collection.updateOne({pseudo: players[socket.id].pseudo},
+                            {$set: {lastScore: myScore}});
+                            log(`Seul le dernier score du joueur est mis à jour.`);
+                            client.close();
+                        }
+                    }
+                });
+            }
+        });
 
             MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                 if(error){
@@ -473,7 +511,6 @@ socket.on('answer', function(reponse){
                     let myScore = players[socket.id].score;
                     const db = client.db(dbName);
                     const collection = db.collection('users');
-                    
                     collection.findOne({pseudo: players[socket.id].pseudo}, {projection:{pseudo:1, lastScore:1, bestScore:1, _id:0}}, function(error, datas){
                         log('Fin de partie : On cherche les données du joueur en BDD.')
                         log(datas);
@@ -493,14 +530,11 @@ socket.on('answer', function(reponse){
                                 log(`Seul le dernier score du joueur est mis à jour.`);
                                 client.close();
                             }
-                            io.emit('endGame', {
-                                players : players,
-                                msg : msgEndGame
-                            });
                         }
                     });
                 }
             });
+            
         } else{
             log(`Tour n° ${tour}`);
             listeQuestions[tour].tour = tour;
