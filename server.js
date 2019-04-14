@@ -287,7 +287,9 @@ var classement = function(){
                         const db = client.db(dbName);
                         const collection = db.collection('users');
                         collection.findOne({pseudo: dInfosJoueur.pseudo, pwd: dInfosJoueur.mdp}, function(error,datas){
+                            infosJoueursBDD = datas;
                             log(`On rentre dans la fonction de callback.`);
+                            log(infosJoueursBDD);
                             if(error){
                                 log(`Que se passe-t-il? ${error}`);
                             } else{
@@ -297,7 +299,7 @@ var classement = function(){
                                 } else{
                                     log(7);
                                     socket.pseudo = dInfosJoueur.pseudo;
-                                    let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, datas.img, socket.id);
+                                    let newPlayer = new Player(dInfosJoueur.pseudo, dInfosJoueur.mdp, infosJoueursBDD.img, socket.id);
                                     log('Nouveau joueur : ', newPlayer);
                                     let pseudo = dInfosJoueur.pseudo;
                                     players[socket.id] = newPlayer;
@@ -453,16 +455,19 @@ socket.on('answer', function(reponse){
                     const collection = db.collection('users');
                     
                     collection.findOne({pseudo: players[socket.id].pseudo}, {projection:{pseudo:1, score:1, _id:0}}, function(error, datas){
+                        log('Fin de partie : On cherche les données du joueur en BDD.')
+                        log(datas);
                         if(error){
                             // throw error;
                             log(`Que se passe-t-il? ${error}`);
                         } else{
+                            log('Meilleur score du joueur, avant màj : ' + datas.bestScore);
                             if(myScore > datas.bestScore){
-                                collection.update({pseudo: players[socket.id].pseudo},
+                                collection.updateOne({pseudo: players[socket.id].pseudo},
                                 {$set: {lastScore: myScore, bestScore: myScore}});
-                                log(`Dernier score + meilleur score du joueur mis à jour.`);
+                                log(`Dernier score + meilleur score du joueur mis à jour. ${myScore}`);
                             } else{
-                                collection.update({pseudo: players[socket.id].pseudo},
+                                collection.updateOne({pseudo: players[socket.id].pseudo},
                                 {$set: {lastScore: myScore}});
                                 log(`Seul le dernier score du joueur est mis à jour.`);
                             }
