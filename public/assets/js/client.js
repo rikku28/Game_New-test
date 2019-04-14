@@ -216,6 +216,8 @@ socket.on('userUnknown', function(info){
         log(tabPlayers);
         $('#online-scores').empty();
 
+        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0][1].pseudo + '. Vous remportez la partie.</strong></p>');
+
         // let ranking = 1;
         // for (var i = 0; i < tabPlayers.length; i++) {
             // tabPlayers[i].rank = ranking;
@@ -225,16 +227,13 @@ socket.on('userUnknown', function(info){
 
         $.each(tabPlayers, function(index, value) {
             log(index + ' ' + value);
-            log('Pseudo : ' + tabPlayers[i][i+1].pseudo);
+            log('Pseudo : ' + tabPlayers[index][index+1].pseudo);
 
-            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[i][i+1].identifiant + '"><img src="' + tabPlayers[i][i+1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[i][i+1].pseudo + ' - Score : <span class="score">' + tabPlayers[i][i+1].score + '</span></p>');
+            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index][index+1].identifiant + '"><img src="' + tabPlayers[index][index+1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index][index+1].pseudo + ' - Score : <span class="score">' + tabPlayers[index][index+1].score + '</span></p>');
         });
 
             // }
         // };
-    
-        log(tabPlayers);
-        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0][1].pseudo + '. Vous remportez la partie.</strong></p>');
 
         // for (var player in tabPlayers){
         //     $('#online-scores').append('<p class="fin-partie" id="end-' + joueurs[player].identifiant + '"><img src="' + joueurs[player].avatar + '" class="rounded" width="50px"/> ' + joueurs[player].pseudo + ' - Score : <span class="score">' + joueurs[player].score + '</span></p>');
