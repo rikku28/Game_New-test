@@ -323,6 +323,7 @@ var classement = function(){
                                     socket.broadcast.emit('newPlayer', newPlayer);
                                     log(players);
                                     io.emit('onlinePlayers', players);
+                                    logged = true;
                                     checkNbPlayers();
                                 }
                             }
@@ -479,7 +480,7 @@ socket.on('answer', function(reponse){
                         let iPlayer = 0;
                         for(var player in players){
                             log(players[player].pseudo + ' ' + iPlayer);
-                            
+
                             let myScore = players[player].score;
 
                         collection.findOne({pseudo: players[player].pseudo}, {projection:{pseudo:1, lastScore:1, bestScore:1, _id:0}}, function(error, datas){
@@ -522,18 +523,18 @@ socket.on('answer', function(reponse){
                                         // });
                                         }
                                     });
-                                } else{
-                                    collection.updateOne({pseudo: players[player].pseudo},
-                                    {$set: {lastScore: myScore}}, function(error, datas){
-                                        if(error){
-                                            log(`Impossible de mettre à jour "lastScore".`);
-                                            throw error;
-                                        } else{
-                                            log(`Seul le dernier score du joueur est mis à jour.`);
-                                            iPlayer++;
-                                            // client.close();
-                                        }
-                                    });
+                                // } else{
+                                //     collection.updateOne({pseudo: players[player].pseudo},
+                                //     {$set: {lastScore: myScore}}, function(error, datas){
+                                //         if(error){
+                                //             log(`Impossible de mettre à jour "lastScore".`);
+                                //             throw error;
+                                //         } else{
+                                //             log(`Seul le dernier score du joueur est mis à jour.`);
+                                //             iPlayer++;
+                                //             // client.close();
+                                //         }
+                                //     });
                                 }
                             }
                         });
@@ -622,9 +623,10 @@ socket.on('answer', function(reponse){
         log('Déconnexion : ', socket.id, reason);
         log('Joueur qui vient de se déconnecter : ', players[socket.id]);
         log(`Nombre de joueurs connectés (avant décrémentation si loggée) : ${nbPlayers}`);
+        nbPlayers--;
         if(logged){
+            // nbPlayers--;
             socket.broadcast.emit('decoPlayer', {pseudo: socket.pseudo, id: socket.playerId});
-            nbPlayers--;
             log(`Nombre de joueurs connectés (après une déconnexion loggée) : ${nbPlayers}`);
             delete players[socket.id];
         }

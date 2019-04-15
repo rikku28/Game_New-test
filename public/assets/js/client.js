@@ -208,23 +208,36 @@ socket.on('userUnknown', function(info){
         log(infos);
         $('.cache-quiz').hide();
 
-        let tabPlayers = Object.entries(infos.players);
+        // let tabPlayers = Object.entries(infos.players);
+        let tabPlayers = [];
+        for(var key in infos){
+            tabPlayers.push(infos[key]);
+        }
         log(tabPlayers);
 
         tabPlayers.sort(function(a, b){
             return b.score - a.score
         });
 
+        for (var i = 0; i < tabPlayers.length; i++) {
+            tabPlayers[i].rank = i + 1;
+        }
+        
         log(tabPlayers);
+
         $('#online-scores').empty();
 
-        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0][1].pseudo + '. Vous remportez la partie.</strong></p>');
+        // $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0][1].pseudo + '. Vous remportez la partie.</strong></p>');
+        $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0].pseudo + '. Vous remportez la partie.</strong></p>');
 
         $.each(tabPlayers, function(index, value) {
             log(index + ' ' + value);
-            log('Pseudo : ' + tabPlayers[index][1].pseudo);
+            // log('Pseudo : ' + tabPlayers[index][1].pseudo);
+            log('Pseudo : ' + tabPlayers[index].pseudo);
 
-            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index][1].identifiant + '"><img src="' + tabPlayers[index][1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index][1].pseudo + ' - Score : <span class="score">' + tabPlayers[index][1].score + '</span></p>');
+            // $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index][1].identifiant + '"><img src="' + tabPlayers[index][1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index][1].pseudo + ' - Score : <span class="score">' + tabPlayers[index][1].score + '</span></p>');
+
+            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[1].identifiant + '"><img src="' + tabPlayers[1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[1].pseudo + ' - Score : <span class="score">' + tabPlayers[1].score + '</span></p>');
         });
     });
 
