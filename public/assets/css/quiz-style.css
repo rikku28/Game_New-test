@@ -35,15 +35,11 @@ h3, legend{
 }
 
 p, span, label, #menu{
-
     font-family: 'BenchNine', 'Saira Extra Condensed', sans-serif;
     font-size: 1.4em;
-
 }
 
-
-
-#best-scores, .gras{
+ancre-classement, .gras{
     /* font-weight: bold; */
     color: #7c3a01;
     font-family: 'Bangers', 'Boogaloo', cursive;
