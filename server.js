@@ -513,6 +513,7 @@ socket.on('answer', function(reponse){
                                                         bestScores = datas;
                                                         log('Nombre de scores récupérés : ' + bestScores.length);
                                                         socket.emit('classement', bestScores);
+                                                        iPlayer++;
                                                     }
                                                     // client.close();
                                                 });
@@ -528,6 +529,7 @@ socket.on('answer', function(reponse){
                                             throw error;
                                         } else{
                                             log(`Seul le dernier score du joueur est mis à jour.`);
+                                            iPlayer++;
                                             // client.close();
                                         }
                                     });
@@ -535,7 +537,6 @@ socket.on('answer', function(reponse){
                             }
                         });
 
-                            iPlayer++;
                         };
                     }
                 });
