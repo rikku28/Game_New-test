@@ -241,7 +241,7 @@ socket.on('userUnknown', function(info){
 
             // $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index][1].identifiant + '"><img src="' + tabPlayers[index][1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index][1].pseudo + ' - Score : <span class="score">' + tabPlayers[index][1].score + '</span></p>');
 
-            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[1].identifiant + '"><img src="' + tabPlayers[1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[1].pseudo + ' - Score : <span class="score">' + tabPlayers[1].score + '</span></p>');
+            $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index].identifiant + '"><img src="' + tabPlayers[index].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index].pseudo + ' - Score : <span class="score">' + tabPlayers[index].score + '</span></p>');
         });
     });
 
