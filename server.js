@@ -387,6 +387,10 @@ var classement = function(){
         io.emit('afficheChatMsg',  {pseudo: players[socket.id].pseudo, msg: message});
     });
 
+/*********************************** Echange de messages entre joueurs *******************************************/
+    socket.on('restart-game', function (message){
+        checkNbPlayers();
+    });
 
 /*********************************** Vérification de la réponse sélectionnée *******************************************/
     var checkAnswer = function(answer){

@@ -159,7 +159,7 @@ socket.on('userUnknown', function(info){
 
     $('#btn-start-game').click(function(e){
         e.preventDefault();
-        socket.emit('start-game');
+        socket.emit('restart-game');
     })
 
     
