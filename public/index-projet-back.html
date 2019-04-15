@@ -30,14 +30,7 @@
 <body>
     <header class="row cache-header">
         <section id="menu" class="col-md-3 offset-md-3 mb-3">
-            <ul>
-                <li><a href="#quiz">Quiz</a></li>
-                <li><a href="#chat">Chat et joueurs en ligne</a></li>
-                <li><a href="#best-scores">Liste des scores</a></li>
-                <li><a href="assets/pdf/CV-Ame-GM.pdf" target="_blank">Mon C.V.</a></li>
-                <li><a href="https://github.com/rikku28" target="_blank">Mon github</a></li>
-                <li><a href="http://rikku28.yo.fr/" target="_blank">Projet précédent: Jeu C.V.</a></li>
-            </ul>
+            <a href="#best-scores">Liste des scores</a>
         </section>
         <section id="jeu" class="col-md-3 offset-md-3 mb-3">
             <div id="start-game">
@@ -52,6 +45,7 @@
                     <h1 class="row mx-auto mb-4">Bienvenue sur le quiz Pokémon</h1>
                     <div class="row mb-3">
                         <p>Il s'agît d'un quiz multijoueur, sur le thème de Pokémon. Avec un ou plusieurs amis, affrontez-vous sur de 15 questions. Le 1er qui donnera la bonne réponse remportera le point de la question concernée.</p>
+                        <p>Le quiz se lance automatiquement à l'arrivée du 2ème joueur.</p>
                         <p><strong>ATTENTION : </strong>Les réponses sont présentées dans un formulaire avec des boutons radio. Il faut donc bien cliquer dans le bouton pour valider votre réponse.</p>
                         <p>Que le meilleur gagne!</p>
                     </div>
@@ -59,9 +53,9 @@
 
 
 <!-- Formulaire de connexion -->
-                <div class="row mb-3" id="btn-connexion">
-                    <button type="button" id="welcomeBack" class="btn btn-warning btn-lg col-md-4 offset-md-1">Connexion</button>
-                    <button type="button" id="firstConnexion" class="btn btn-primary btn-lg col-md-4 offset-md-2">Inscription</button>
+                <div class="row mb-5" id="btn-connexion">
+                    <button type="button" id="welcomeBack" class="btn btn-warning btn-lg col-md-4 offset-md-1 mb-3">Connexion</button>
+                    <button type="button" id="firstConnexion" class="btn btn-primary btn-lg col-md-4 offset-md-2 mb-3">Inscription</button>
                 </div>
                 <form class="needs-validation cache-login-form" novalidate id="login-form">
                       <div class="form-row">
@@ -109,7 +103,7 @@
                 <div id="questions">
                     <h2>Question du quiz</h2>
                     <div class="row">
-                        <div id="indices" class="col-md-12">
+                        <div id="indices" class="col-md-12 mx-auto">
                             <img id="indice-img" alt="indice en image" src="https://www.nautiljon.com/images/actualite/00/17/selon_les_concepteurs_de_la_serie_pokemon_pikachu_n_est_pas_une_souris_9271.jpg">
                         </div>
                         <h3 id="question-en-cours" class="col-md-8 offset-md-2">-</h3>

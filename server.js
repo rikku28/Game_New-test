@@ -466,9 +466,9 @@ socket.on('answer', function(reponse){
                 players : players,
                 msg : msgEndGame
             });
-            
+
             let iPlayer = 0;
-            for(player in players){
+            for(var player in players){
                 log(players[player].pseudo + ' ' + iPlayer);
             
                 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
