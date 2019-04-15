@@ -97,7 +97,7 @@ socket.on('userUnknown', function(info){
         log(`Pseudo transmis au joueur connecté : ${infos}`);
         $('#login-form').remove();
         $('.cache-header').fadeIn();
-        $('.cache-infos-joueurs').show(); // ou .fadeIn()?
+        $('.cache-infos-joueurs').show();
         $('#welcome').html('<h1 style="font-size: 3em">Bienvenue ' + infos.pseudo + ' <img src="' + infos.avatar + '" width="75px"/></h1>');
         players.push(infos.pseudo);
         log(players);
@@ -107,18 +107,14 @@ socket.on('userUnknown', function(info){
     socket.on('newPlayer', function(infos){
         log('Pseudo transmis aux autres joueurs', infos);
         $('#zone-infos').prepend('<p><em> ' + infos.pseudo + ' a rejoint la partie !</em></p>');
-        // $('#online-players').append('<p><img src="' + infos.avatar + '" width="50px"/> ' + infos.pseudo + ' - Score : ' + infos.score + '</p>');
-        // players
     });
 
 // Affichage des joueurs en ligne
     socket.on('onlinePlayers', function(infos){
         $('#online-scores').empty();
-        // $('#online-players').append('<h2>Question du quiz</h2>');
         log('Joueurs en ligne', infos);
         for (var player in infos){
             $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" class="rounded" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
-            // A voir pour utiliser infos[player].identifiant à la place.
         }
     });
     
@@ -129,7 +125,6 @@ socket.on('userUnknown', function(info){
         $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' s\'est déconnecté !</em></p>');
         let balPlayerDis = document.getElementById(infos.id);
         $(balPlayerDis).remove();
-        // A faire : Suppression de la balise dont l'id correspond au pseudo
         // $('#'pseudo).remove();
     });
 
@@ -142,7 +137,6 @@ socket.on('userUnknown', function(info){
     });
 
     socket.on('afficheChatMsg', function(msg){
-        // $('#zone-infos').append('<p><img src="' + msg.img + '"/>"</p><p><strong>' + msg.pseudo + '</strong> : ' + msg.msg + '</p>');
         $('#zone-infos').prepend('<p><strong>' + msg.pseudo + '</strong> : ' + msg.msg + '</p>');
     });
 
@@ -161,7 +155,6 @@ socket.on('userUnknown', function(info){
         $('#zone-infos').prepend('<p><strong><em>La partie commence : Question n°0!</em></strong></p>');
         $('.cache-quiz').show();
         currentQuestion(q0);
-        // showQuestion(q0);    // setTimeout qui se déclenche avant "l'écoute" de "startGame".
     });
 
     $('#btn-start-game').click(function(e){
@@ -197,9 +190,7 @@ socket.on('userUnknown', function(info){
     socket.on('dommage', function(infos){
         log(infos);
         $('#zone-infos').prepend('<p class="text-danger"><em> Ce n\'est pas la bonne réponse ' + infos.pseudo + '. Réessayez.</em></p>');
-        // if(questionEnCours.indiceTxt){
         $('#indice-txt').text('Indice : ' + infos.indiceTxt);
-        // };
     });
 
 
@@ -213,33 +204,21 @@ socket.on('userUnknown', function(info){
         for(var key in infos){
             tabPlayers.push(infos[key]);
         }
-        log(tabPlayers);
+        // log(tabPlayers);
 
         tabPlayers.sort(function(a, b){
             return b.score - a.score
         });
-
-        // let rank = 1;
-        // for (var i = 0; i < tabPlayers.length; i++) {
-        //     if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
-        //         rank++;
-        //     }
-        //     tabPlayers[i].rank = rank;
-        // };
-        
-        log(tabPlayers);
+      
+        // log(tabPlayers);
 
         $('#online-scores').empty();
 
-        // $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0][1].pseudo + '. Vous remportez la partie.</strong></p>');
         $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0].pseudo + '. Vous remportez la partie.</strong></p>');
 
         $.each(tabPlayers, function(index, value) {
             log(index + ' ' + value);
-            // log('Pseudo : ' + tabPlayers[index][1].pseudo);
             log('Pseudo : ' + tabPlayers[index].pseudo);
-
-            // $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index][1].identifiant + '"><img src="' + tabPlayers[index][1].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index][1].pseudo + ' - Score : <span class="score">' + tabPlayers[index][1].score + '</span></p>');
 
             $('#online-scores').append('<p class="fin-partie" id="end-' + tabPlayers[index].identifiant + '"><img src="' + tabPlayers[index].avatar + '" class="rounded" width="50px"/> ' + tabPlayers[index].pseudo + ' - Score : <span class="score">' + tabPlayers[index].score + '</span></p>');
         });
@@ -257,21 +236,6 @@ socket.on('userUnknown', function(info){
             $('#all-best-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[index].identifiant + '"><img src="' + tabRanking[index].avatar + '" class="rounded" width="40px"/> ' + tabRanking[index].pseudo + ' - Score : <span class="score">' + tabRanking[index].bestScore + '</span></p>');
         });
 
-        // let i = 0;
-        // tabRanking.forEach(function(rank){
-        //     log(i);
-        //     $('#all-best-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[rank].identifiant + '"><img src="' + tabRanking[rank].avatar + '" class="rounded" width="40px"/> ' + tabRanking[rank].pseudo + ' - Score : <span class="score">' + tabRanking[rank].bestScore + '</span></p>');
-        //     i++
-        // });
-
-        // tabRanking.sort(function(a, b){
-        //     return b.bestScore - a.bestScore
-        // });
-        // log(tabRanking);
-        
-        // for (var rank in tabRanking){
-        //     $('#online-scores').append('<p class="fin-partie col-md-5 offset-md-1" id="end-' + tabRanking[rank].identifiant + '"><img src="' + tabRanking[rank].avatar + '" class="rounded" width="40px"/> ' + tabRanking[rank].pseudo + ' - Score : <span class="score">' + tabRanking[rank].bestScore + '</span></p>');
-        // }
     });
 
 /*********************************** Affichage de la question en cours *******************************************/
