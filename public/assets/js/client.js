@@ -204,13 +204,13 @@ socket.on('userUnknown', function(info){
 
 
     socket.on('endGame', function(infos){
-        $('#zone-infos').prepend('<p><strong><em>' + infos.msg + '</em></strong></p>');
+        $('#zone-infos').prepend('<p><strong><em>Fin de partie</em></strong></p>');
         log(infos);
         $('.cache-quiz').hide();
 
         // let tabPlayers = Object.entries(infos.players);
         let tabPlayers = [];
-        for(var key in infos.players){
+        for(var key in infos){
             tabPlayers.push(infos[key]);
         }
         log(tabPlayers);

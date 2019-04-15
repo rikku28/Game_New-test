@@ -459,14 +459,15 @@ socket.on('answer', function(reponse){
         log(`Tour n° ${tour} vs ${tourMax} questions MAX!`);
         // if(tour > listeQuestions.length){
         if(tour === tourMax){
-            let msgEndGame = 'Fin de partie!';
+            // let msgEndGame = 'Fin de partie!';
             startGame = false;
             tour = 0;
 
-            io.emit('endGame', {
-                players : players,
-                msg : msgEndGame
-            });
+            // io.emit('endGame', {
+            //     players : players,
+            //     msg : msgEndGame
+            // });
+            io.emit('endGame', players);
 
                 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                     if(error){
