@@ -11,9 +11,6 @@
 /************** Constante de raccourci pour "console.log" + déclaration des variables globales ***************/
         const log = console.log;
 // On déclare l'ip et le port auxquels le socket sera relié.
-        // var socket = io('http://192.168.0.122:3333');
-        // var socket = io('http://10.53.43.142:3333');
-        // var socket = io('http://10.53.42.8:3333');
         var socket = io();
 
 // Date et timestamp de la date du jour
@@ -56,7 +53,6 @@
         socket.emit('login', {
             firstLogin: premiereConnexion,
             pseudo : $('#login-form-pseudo').val(),
-            // mail: $('#"login-form-email').val(),
             mdp: $('#login-form-mdp').val(),
             img: $('#login-form-avatar').val()
         });
@@ -168,6 +164,12 @@ socket.on('userUnknown', function(info){
         // showQuestion(q0);    // setTimeout qui se déclenche avant "l'écoute" de "startGame".
     });
 
+    $('#btn-start-game').click(function(e){
+        e.preventDefault();
+        socket.emit('start-game');
+    })
+
+    
     $('#question-form').click(function(e){
         e.preventDefault();
         // clearTimeout(premQuestion);
