@@ -219,9 +219,13 @@ socket.on('userUnknown', function(info){
             return b.score - a.score
         });
 
-        for (var i = 0; i < tabPlayers.length; i++) {
-            tabPlayers[i].rank = i + 1;
-        }
+        let rank = 1;
+        for (var i = 0; i < array.length; i++) {
+            if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
+                rank++;
+            }
+            tabPlayers[i].rank = rank;
+        };
         
         log(tabPlayers);
 
