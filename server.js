@@ -94,29 +94,29 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
 
 /**************************** Récupération des meilleurs scores des joueurs ****************************/
 
-let recupBestScores = function(){
+// let recupBestScores = function(){
     MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
         if(error){
             console.log(`Connexion à Mongo impossible!`);
         } else{
             const db = client.db(dbName);
             const collection = db.collection('users');
-            collection.find({}, {projection:{pseudo:1, avatar: 1, lastScore:1, bestScore:1, _id:0}}).sort({bestScore: -1}).toArray(function(error,datas){
+            collection.find({}, {projection:{pseudo:1, avatar: 1, lastScore:1, bestScore:1, _id:0}}).sort({bestScore: -1, lastScore: -1}).toArray(function(error,datas){
                 if(error){
                     log(`Impossible de récupérer la liste des meilleurs scores.`);
                 } else{
                     log(datas);
                     bestScores = datas;
                     log('Nombre de scores récupérés : ' + bestScores.length);
-                    socket.emit('classement', bestScores);
+                    // socket.emit('classement', bestScores);
                 }
                 client.close();
             });
         }
     });
-};
+// };
 
-recupBestScores();
+// recupBestScores();
 
 /************************************** Création de joueurs **********************************************/
 var Player = function(pseudo, pwd, urlImg, socketId){
@@ -461,6 +461,7 @@ socket.on('answer', function(reponse){
                 msg : msgEndGame
             });
 
+
             MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                 if(error){
                     throw error;
@@ -482,8 +483,26 @@ socket.on('answer', function(reponse){
                                 collection.updateOne({pseudo: players[socket.id].pseudo},
                                 {$set: {lastScore: myScore, bestScore: myScore}}, function(error, datas){
                                     log(`Dernier score + meilleur score du joueur mis à jour. ${myScore}`);
-                                    client.close();
-                                    // recupBestScores();
+                                    // client.close();
+                                    // MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
+                                    //     if(error){
+                                    //         console.log(`Connexion à Mongo impossible!`);
+                                    //     } else{
+                                    //         const db = client.db(dbName);
+                                    //         const collection = db.collection('users');
+                                            collection.find({}, {projection:{pseudo:1, avatar: 1, lastScore:1, bestScore:1, _id:0}}).sort({bestScore: -1, lastScore: -1}).toArray(function(error,datas){
+                                                if(error){
+                                                    log(`Impossible de récupérer la liste des meilleurs scores.`);
+                                                } else{
+                                                    log(datas);
+                                                    bestScores = datas;
+                                                    log('Nombre de scores récupérés : ' + bestScores.length);
+                                                    socket.emit('classement', bestScores);
+                                                }
+                                                client.close();
+                                            });
+                                        // }
+                                    // });
                                 });
                             } else{
                                 collection.updateMany({pseudo: players[socket.id].pseudo},
