@@ -220,7 +220,7 @@ socket.on('userUnknown', function(info){
         });
 
         let rank = 1;
-        for (var i = 0; i < array.length; i++) {
+        for (var i = 0; i < tabPlayers.length; i++) {
             if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
                 rank++;
             }
