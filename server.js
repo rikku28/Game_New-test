@@ -389,6 +389,7 @@ var classement = function(){
 
 /*********************************** Echange de messages entre joueurs *******************************************/
     socket.on('restart-game', function (message){
+        io.emit('onlinePlayers', players);
         checkNbPlayers();
     });
 

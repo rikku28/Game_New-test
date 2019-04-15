@@ -159,6 +159,14 @@ socket.on('userUnknown', function(info){
 
     $('#btn-start-game').click(function(e){
         e.preventDefault();
+
+        // $('#online-scores').empty();
+        // log('Joueurs en ligne', infos);
+
+        // for (var player in infos){
+        //     $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" class="rounded" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
+        // }
+
         socket.emit('restart-game');
     })
 
