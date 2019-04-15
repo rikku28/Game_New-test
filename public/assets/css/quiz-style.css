@@ -28,6 +28,7 @@ h2{
 }
 
 h3, legend{
+    color: #7c3a01;
     font-size: 1.8em;
     text-align: center;
     font-family: 'Ranchers', 'Bangers', 'Boogaloo', cursive;
@@ -40,7 +41,9 @@ p, span, label, #menu{
 
 }
 
-.gras{
+
+
+#best-scores, .gras{
     /* font-weight: bold; */
     color: #7c3a01;
     font-family: 'Bangers', 'Boogaloo', cursive;
