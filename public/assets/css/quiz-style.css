@@ -39,7 +39,7 @@ p, span, label, #menu{
     font-size: 1.4em;
 }
 
-#ancre-classement, .gras{
+#ancre-classement, #btn-start-game, .gras{
     /* font-weight: bold; */
     color: #7c3a01;
     font-family: 'Bangers', 'Boogaloo', cursive;
