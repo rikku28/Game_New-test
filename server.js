@@ -473,14 +473,15 @@ socket.on('answer', function(reponse){
                         throw error;
                     } else{
                         log(`On est dans le "else" de la fonction "nextQuestion".`);
-                        let myScore = players[player].score;
                         const db = client.db(dbName);
                         const collection = db.collection('users');
 
                         let iPlayer = 0;
                         for(var player in players){
                             log(players[player].pseudo + ' ' + iPlayer);
-                        
+                            
+                            let myScore = players[player].score;
+
                         collection.findOne({pseudo: players[player].pseudo}, {projection:{pseudo:1, lastScore:1, bestScore:1, _id:0}}, function(error, datas){
                             log('Fin de partie : On cherche les données du joueur en BDD.')
                             log(datas);
