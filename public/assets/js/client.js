@@ -210,7 +210,7 @@ socket.on('userUnknown', function(info){
 
         // let tabPlayers = Object.entries(infos.players);
         let tabPlayers = [];
-        for(var key in infos){
+        for(var key in infos.players){
             tabPlayers.push(infos[key]);
         }
         log(tabPlayers);
@@ -219,13 +219,13 @@ socket.on('userUnknown', function(info){
             return b.score - a.score
         });
 
-        let rank = 1;
-        for (var i = 0; i < tabPlayers.length; i++) {
-            if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
-                rank++;
-            }
-            tabPlayers[i].rank = rank;
-        };
+        // let rank = 1;
+        // for (var i = 0; i < tabPlayers.length; i++) {
+        //     if (i > 0 && tabPlayers[i].score < tabPlayers[i - 1].score) {
+        //         rank++;
+        //     }
+        //     tabPlayers[i].rank = rank;
+        // };
         
         log(tabPlayers);
 
