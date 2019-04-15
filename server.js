@@ -105,7 +105,7 @@ MongoClient.connect(url,{ useNewUrlParser: true },function(error,client) {
                 if(error){
                     log(`Impossible de récupérer la liste des meilleurs scores.`);
                 } else{
-                    log(datas);
+                    // log(datas);
                     bestScores = datas;
                     log('Nombre de scores récupérés : ' + bestScores.length);
                     // socket.emit('classement', bestScores);
@@ -467,10 +467,6 @@ socket.on('answer', function(reponse){
                 msg : msgEndGame
             });
 
-            let iPlayer = 0;
-            for(var player in players){
-                log(players[player].pseudo + ' ' + iPlayer);
-            
                 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                     if(error){
                         log(`Connexion à Mongo impossible!`);
@@ -480,6 +476,10 @@ socket.on('answer', function(reponse){
                         let myScore = players[player].score;
                         const db = client.db(dbName);
                         const collection = db.collection('users');
+
+                        let iPlayer = 0;
+                        for(var player in players){
+                            log(players[player].pseudo + ' ' + iPlayer);
                         
                         collection.findOne({pseudo: players[player].pseudo}, {projection:{pseudo:1, lastScore:1, bestScore:1, _id:0}}, function(error, datas){
                             log('Fin de partie : On cherche les données du joueur en BDD.')
@@ -514,7 +514,7 @@ socket.on('answer', function(reponse){
                                                         log('Nombre de scores récupérés : ' + bestScores.length);
                                                         socket.emit('classement', bestScores);
                                                     }
-                                                    client.close();
+                                                    // client.close();
                                                 });
                                             // }
                                         // });
@@ -528,17 +528,18 @@ socket.on('answer', function(reponse){
                                             throw error;
                                         } else{
                                             log(`Seul le dernier score du joueur est mis à jour.`);
-                                            client.close();
+                                            // client.close();
                                         }
                                     });
                                 }
                             }
                         });
+
+                            iPlayer++;
+                        };
                     }
                 });
             
-                iPlayer++;
-            };
             // MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
             //     if(error){
             //         throw error;
