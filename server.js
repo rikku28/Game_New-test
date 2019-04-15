@@ -202,27 +202,6 @@ var classement = function(){
 //         }
 //     };
 
-/**************************** Récupération des infos pour vérifier si le joueur existe en base ****************************/
-// var findUserInDB = function(aPseudo, bPwd){
-//     console.log(`On est dans la fonction "findUserInDB".`);
-//     log(`aPseudo vaut ${aPseudo} et bPwd vaut ${bPwd}`);
-//     MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
-//         if(error){
-//             log(`Connexion à Mongo impossible!`);
-//         } else{
-//             log(`On est dans le "else" de la fonction "findUserInDB".`);
-//             const db = client.db(dbName);
-//             const collection = db.collection('users');
-//             collection.findOne({}, function(error,datas){
-//                 log('Infos récupérées : ', datas);
-//                 infosJoueursBDD = datas;
-//                 client.close();
-//                 //     return datas;
-//             });
-//         }
-//     });
-// };
-
 /*********************************** Fonction globale de vérification des identifiants du joueur qui se connecte *******************************************/
     let checkVerifs = function(aPseudo, bPwd, cAvatar, dInfosJoueur){
         log(`On est dans la fonction "checkVerifs".`);
