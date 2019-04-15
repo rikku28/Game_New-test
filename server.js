@@ -101,8 +101,7 @@ let recupBestScores = function(){
         } else{
             const db = client.db(dbName);
             const collection = db.collection('users');
-            // collection.find({}, {projection:{pseudo:1, avatar:1, lastScore:1, bestScore:1, _id:0}}, function(error,datas){
-            collection.find({}, {projection:{pseudo:1, avatar: 1, lastScore:1, bestScore:1, _id:0}).sort({bestScore: -1}).toArray(function(error,datas) {
+            collection.find({}, {projection:{pseudo:1, avatar: 1, lastScore:1, bestScore:1, _id:0}}).sort({bestScore: -1}).toArray(function(error,datas){
                 if(error){
                     log(`Impossible de récupérer la liste des meilleurs scores.`);
                 } else{
