@@ -44,7 +44,7 @@ p, span, label, #menu{
     /* font-weight: bold; */
     color: #7c3a01;
     font-family: 'Bangers', 'Boogaloo', cursive;
-    font-size: 1em;
+    font-size: 1.2em;
 }
 
 #indice-img{
@@ -69,6 +69,6 @@ p, span, label, #menu{
 #flaticon-freepik-credits{
     color: #7c3a01;
     font-family: 'BenchNine', 'Saira Extra Condensed', sans-serif;
-    font-size: 0.8em;
+    font-size: 0.5em;
     font-style: italic;
 }
