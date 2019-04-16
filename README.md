@@ -1,7 +1,7 @@
 # Quiz Pokémon multijoueurs
 
 URL du quiz : http://rikku28.herokuapp.com/
-Quiz réalisé en javascript avec Node.js, Express JS, Socket.IO, MongoDB.
+Quiz réalisé en javascript avec Node.js, Express JS, Socket.IO, MongoDB et jQuery.
 
 ## Table of Contents
 
