@@ -43,7 +43,8 @@ p, span, label, #menu{
     /* font-weight: bold; */
     color: #7c3a01;
     font-family: 'Bangers', 'Boogaloo', cursive;
-    font-size: 1.2em;
+    font-size: 1.3em;
+    font-weight: normal;
 }
 
 #indice-img{
