@@ -10,14 +10,15 @@
 
 /************** Constante de raccourci pour "console.log" + déclaration des variables globales ***************/
         const log = console.log;
+        var players = [];
+        var premiereConnexion = false;
+        var startGame = false;
 // On déclare l'ip et le port auxquels le socket sera relié.
         var socket = io();
 
 // Date et timestamp de la date du jour
         var dateJour = new Date();
         var timestamp=dateJour.getTime(dateJour);
-        var players = [];
-        var premiereConnexion = false;
 
 /******************************************* Actions côté client ********************************************/
         log('Coucou côté client');
@@ -71,22 +72,22 @@ socket.on('alreadyUsedPseudo', function(info){
 
 
 socket.on('badPwd', function(info){
-    log(`badPwd`);
+    // log(`badPwd`);
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badPwd"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('badAvatar', function(info){
-    log(`badAvatar`);
+    // log(`badAvatar`);
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badAvatar"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('badInfos', function(info){
-    log(`badInfos`);
+    // log(`badInfos`);
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="badInfos"><strong>' + info.msg + '</strong></p>');
 });
 
 socket.on('userUnknown', function(info){
-    log(`userUnknown`);
+    // log(`userUnknown`);
     $('#date-jour').prepend('<p class="text-danger msg-login-incorrect" id="userUnknown"><strong> Joueur introuvable. Veuillez vous connecter avec les bons identifiants, ou vous inscrire si c\'est la 1ère fois que vous participez au quiz Pokémon.</strong></p>');
     $('.cache-login-form').hide();
     $('#btn-connexion').fadeIn();
@@ -100,19 +101,19 @@ socket.on('userUnknown', function(info){
         $('.cache-infos-joueurs').show();
         $('#welcome').html('<h1 style="font-size: 3em">Bienvenue ' + infos.pseudo + ' <img src="' + infos.avatar + '" width="75px"/></h1>');
         players.push(infos.pseudo);
-        log(players);
+        // log(players);
         $('section#quiz').append('<p>Répondez à 10 questions plus vite que votre adversaire pour gagner des points.</p>')
     });
 
     socket.on('newPlayer', function(infos){
-        log('Pseudo transmis aux autres joueurs', infos);
+        // log('Pseudo transmis aux autres joueurs', infos);
         $('#zone-infos').prepend('<p><em> ' + infos.pseudo + ' a rejoint la partie !</em></p>');
     });
 
 // Affichage des joueurs en ligne
     socket.on('onlinePlayers', function(infos){
         $('#online-scores').empty();
-        log('Joueurs en ligne', infos);
+        // log('Joueurs en ligne', infos);
         for (var player in infos){
             $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" class="rounded" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
         }
@@ -120,12 +121,11 @@ socket.on('userUnknown', function(info){
     
 // Déconnexion d'un joueur
     socket.on('decoPlayer', function(infos){
-        log('Joueur déconnecté : ', infos);
-        // $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' - ' + infos.id + ' s\'est déconnecté !</em></p>');
+        // log('Joueur déconnecté : ', infos);
+
         $('#zone-infos').prepend('<p><em>' + infos.pseudo + ' s\'est déconnecté !</em></p>');
         let balPlayerDis = document.getElementById(infos.id);
         $(balPlayerDis).remove();
-        // $('#'pseudo).remove();
     });
 
 // Echange de messages
@@ -140,37 +140,31 @@ socket.on('userUnknown', function(info){
         $('#zone-infos').prepend('<p><strong>' + msg.pseudo + '</strong> : ' + msg.msg + '</p>');
     });
 
-
     socket.on('attenteJoueur', function(){
         $('#zone-infos').prepend('<p><em>Attente d\'un autre joueur.</em></p>');
     });
 
+// Lancement du jeu
     socket.on('startGame', function(q0){
         log(q0);
-
-        // for (var player in infos){
-        //     $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
-        // }
+        startGame = true;
 
         $('#zone-infos').prepend('<p><strong><em>La partie commence : Question n°0!</em></strong></p>');
         $('.cache-quiz').show();
         currentQuestion(q0);
     });
 
+// Déclenchement d'une action lorsqu'un joueur clique sur le bouton permettant de relancer le jeu (utilisation plutôt après une manche, vu que le jeu se lance automatiquement dès qu'il y a 2 joueurs connectés.) 
     $('#btn-start-game').click(function(e){
         e.preventDefault();
-
-        // $('#online-scores').empty();
-        // log('Joueurs en ligne', infos);
-
-        // for (var player in infos){
-        //     $('#online-scores').append('<p class="infos-joueurs" id="' + infos[player].identifiant + '"><img src="' + infos[player].avatar + '" class="rounded" width="50px"/> ' + infos[player].pseudo + ' - Score : <span class="score">' + infos[player].score + '</span></p>');
-        // }
+        startGame = true;
 
         socket.emit('restart-game');
     })
 
-    
+
+/******************************************* Gestion des questions côté client ********************************************/
+// Récupération de la réponse sélectionnée
     $('#question-form').click(function(e){
         e.preventDefault();
         // clearTimeout(premQuestion);
@@ -179,7 +173,8 @@ socket.on('userUnknown', function(info){
         log(reponseSelectionnee);
         socket.emit('answer', reponseSelectionnee);
     });
-    
+
+// Passage à la question suivante
     socket.on('nextQuestion', function(qEnCours){
         log(qEnCours);
         $('#zone-infos').prepend('<p><em>Question n°' + qEnCours.tour +'!</em></p>');
@@ -187,6 +182,7 @@ socket.on('userUnknown', function(info){
         currentQuestion(qEnCours);
     });
 
+// Gestion des réponses (si correcte ou fausse, après vérification côté serveur)
     socket.on('bravo', function(infos){
         log(infos);
         $('#zone-infos').prepend('<p class="text-success"><em>' + infos.pseudo + ' remporte le point. </em></p>');
@@ -202,24 +198,49 @@ socket.on('userUnknown', function(info){
     });
 
 
+
+/*********************************** Affichage de la question en cours *******************************************/
+    var currentQuestion = function(questionEnCours){
+// Affichage de la question et ses indices
+        $('#indice-txt').empty();
+        $('div#questions>h2').text('Question n°' + questionEnCours.tour);
+        log('Question n°' + questionEnCours.identifiant);
+        $('#question-en-cours').text('Question : '+ questionEnCours.question);
+        $('#indice-img').removeAttr('src');
+        let indiceEnImage = 'assets/img/indices/' + questionEnCours.indiceImg;
+        log(indiceEnImage);
+        $('#indice-img').attr('src', indiceEnImage);
+        
+//  Affichage des réponses
+        $('input[name=q1]:radio').removeAttr('value');
+        $('input#rep1').attr('value', questionEnCours.reponses[1]);
+        $('input#rep1 + label').text(questionEnCours.reponses[1]);
+        $('input#rep2').attr('value', questionEnCours.reponses[2]);
+        $('input#rep2 + label').text(questionEnCours.reponses[2]);
+        $('input#rep3').attr('value', questionEnCours.reponses[3]);
+        $('input#rep3 + label').text(questionEnCours.reponses[3]);
+        $('input#rep4').attr('value', questionEnCours.reponses[4]);
+        $('input#rep4 + label').text(questionEnCours.reponses[4]);
+    };
+
+/******************************************* Fin de partie ********************************************/
     socket.on('endGame', function(infos){
         $('#zone-infos').prepend('<p><strong><em>Fin de partie</em></strong></p>');
         log(infos);
         $('.cache-quiz').hide();
+        startGame = false;
 
-        // let tabPlayers = Object.entries(infos.players);
         let tabPlayers = [];
         for(var key in infos){
             tabPlayers.push(infos[key]);
-        }
-        // log(tabPlayers);
+        };
 
+        // log(tabPlayers);
         tabPlayers.sort(function(a, b){
             return b.score - a.score
         });
       
         // log(tabPlayers);
-
         $('#online-scores').empty();
 
         $('#zone-infos').prepend('<p class="text-warning bg-primary"><strong> Félicitations ' + tabPlayers[0].pseudo + '. Vous remportez la partie.</strong></p>');
@@ -232,6 +253,7 @@ socket.on('userUnknown', function(info){
         });
     });
 
+/******************************************* Affichage du classement général ********************************************/
     socket.on('classement', function(infos){
         log(`On est dans le classement des joueurs.`);
         // let tabRanking = Object.entries(infos);
@@ -245,40 +267,7 @@ socket.on('userUnknown', function(info){
         });
 
     });
-
-/*********************************** Affichage de la question en cours *******************************************/
-    // var showQuestion = setTimeout(function(question){
-    //     $('.cache-quiz').show();
-    //     currentQuestion(question);
-    // }, 5000);
-
-    var currentQuestion = function(questionEnCours){
-// Affichage de la question et ses indices
-        // $('div#questions>h2').text('Question n°' + questionEnCours.identifiant);
-        $('#indice-txt').empty();
-        $('div#questions>h2').text('Question n°' + questionEnCours.tour);
-        log('Question n°' + questionEnCours.identifiant);
-        $('#question-en-cours').text('Question : '+ questionEnCours.question);
-        $('#indice-img').removeAttr('src');
-        let indiceEnImage = 'assets/img/indices/' + questionEnCours.indiceImg;
-        log(indiceEnImage);
-        $('#indice-img').attr('src', indiceEnImage);
-        // $('#indice-img').attr('src', questionEnCours.indiceImg);
-
-//  Affichage des réponses
-        $('input[name=q1]:radio').removeAttr('value');
-        $('input#rep1').attr('value', questionEnCours.reponses[1]);
-        $('input#rep1 + label').text(questionEnCours.reponses[1]);
-        $('input#rep2').attr('value', questionEnCours.reponses[2]);
-        $('input#rep2 + label').text(questionEnCours.reponses[2]);
-        $('input#rep3').attr('value', questionEnCours.reponses[3]);
-        $('input#rep3 + label').text(questionEnCours.reponses[3]);
-        $('input#rep4').attr('value', questionEnCours.reponses[4]);
-        $('input#rep4 + label').text(questionEnCours.reponses[4]);
-    };
     
-
-
 /***********************************************************************/
 /******************** Affichage de la date du jour ********************/
 /*********************************************************************/
