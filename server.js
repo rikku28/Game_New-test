@@ -38,7 +38,7 @@ var players = {};
 var nbPlayers = 0;
 var startGame = false;
 var tour = 0;
-var tourMax = 15;
+var tourMax = 25;
 var listeQuestions;
 var infosJoueursBDD;
 var attenteJoueur = true;
