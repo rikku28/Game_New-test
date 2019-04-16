@@ -10,14 +10,12 @@ Quiz réalisé en javascript avec Node.js, Express JS, Socket.IO, MongoDB et jQu
 - [Arborescence du projet](#Arborescence-du-projet)
 - [Installation](#installation)
 - [Hébergement](#Hébergement)
-
 <!-- - [Options](#options)
   - [Game_New-test options](#Game_New-test-options)
   - [http-proxy events](#http-proxy-events)
   - [http-proxy options](#http-proxy-options)
 - [WebSocket](#websocket)
   - [External WebSocket upgrade](#external-websocket-upgrade) -->
-
 - [Changelog](#changelog)
 - [License](#license)
 - [Remerciements](#Remerciements)
