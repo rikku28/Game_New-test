@@ -96,7 +96,7 @@ Exemple de document de cette collection :
 ```
 {
     "_id": {
-        "$oid": "ID généré par la BDD"
+        "$oid": "ID unique généré par la BDD"
     },
     "identifiant": "0",
     "question": "Quelle est la date de sortie des 1ers jeux Pokémon, versions Bleue et Rouge, en Europe?",
@@ -123,7 +123,7 @@ Exemple de document de cette collection :
 ```
 {
     "_id": {
-        "$oid": "5cadbc38fb6fc01d56643200"
+        "$oid": "Autre ID unique généré par la BDD"
     },
     "pseudo": "Rikku",
     "pwd": "un mot de passe",
