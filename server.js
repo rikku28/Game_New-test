@@ -223,8 +223,9 @@ var classement = function(){
 
             MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                 if(error){
-                    throw error;
                     log(`Connexion à Mongo impossible!`);
+                    log(error);
+                    // throw error;
                 } else{
                     log(`On est dans le "else" de la fonction "findUserInDB".`);
                     const db = client.db(dbName);
@@ -289,8 +290,9 @@ var classement = function(){
                 log(5);
                 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                     if(error){
-                        throw error;
+                        log(error);
                         log(`Connexion à Mongo impossible!`);
+                        // throw error;
                     } else{
                         log(`On est dans le "else" de la fonction "findUserInDB".`);
                         const db = client.db(dbName);
@@ -410,8 +412,9 @@ var classement = function(){
             log(`Score du joueur ${players[socket.id].pseudo} : ${players[socket.id].score}`);
             MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                 if(error){
-                    throw error;
                     log(`Connexion à Mongo impossible!`);
+                    log(error);
+                    // throw error;
                 } else{
                     log(`On est dans le "else" de la connextion Mongo de la fonction "checkAnswer".`);
                     let myScore = players[socket.id].score;
@@ -467,7 +470,8 @@ socket.on('answer', function(reponse){
                 MongoClient.connect(url,{ useNewUrlParser: true },function(error,client){
                     if(error){
                         log(`Connexion à Mongo impossible!`);
-                        throw error;
+                        log(error);
+                        // throw error;
                     } else{
                         log(`On est dans le "else" de la fonction "nextQuestion".`);
                         const db = client.db(dbName);
@@ -484,7 +488,8 @@ socket.on('answer', function(reponse){
                             log(datas);
                             if(error){
                                 log(`Que se passe-t-il? ${error}`);
-                                throw error;
+                                log(error);
+                                // throw error;
                             } else{
                                 log('Meilleur score du joueur, avant màj : ' + datas.bestScore);
                                 if(myScore > datas.bestScore){
@@ -492,13 +497,15 @@ socket.on('answer', function(reponse){
                                     {$set: {lastScore: myScore, bestScore: myScore}}, function(error, datas){
                                         if(error){
                                             log(`Tiens, y aurait-il un problème? ${error}`);
-                                            throw error;
+                                            log(error);
+                                            // throw error;
                                         } else{
                                             log(`Dernier score + meilleur score du joueur mis à jour. ${myScore}`);
                                                 collection.find({}, {projection:{pseudo:1, avatar: 1, lastScore:1, bestScore:1, _id:0}}).sort({bestScore: -1, lastScore: -1}).toArray(function(error,datas){
                                                     if(error){
                                                         log(`Impossible de récupérer la liste des meilleurs scores.`);
-                                                        throw error;
+                                                        log(error);
+                                                        // throw error;
                                                     } else{
                                                         log(datas);
                                                         bestScores = datas;
