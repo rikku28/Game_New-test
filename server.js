@@ -337,6 +337,7 @@ var classement = function(){
         }
     };
 // };
+
 /*********************************** Connexion d'un utilisateur *******************************************/
     log('Un nouvel utilisateur vient de se connecter. ' + socket.id);
     log(`Le jeu est-il en cours? ${startGame}`);
@@ -380,7 +381,7 @@ var classement = function(){
         checkNbPlayers();
     });
 
-/*********************************** Echange de messages entre joueurs *******************************************/
+/**************************************** Echange de messages entre joueurs ************************************************/
     socket.on('chatMsg', function (message){
         log('Pseudo : ', players[socket.id].pseudo);
         log(message);
@@ -389,7 +390,7 @@ var classement = function(){
         io.emit('afficheChatMsg',  {pseudo: players[socket.id].pseudo, msg: message});
     });
 
-/*********************************** Echange de messages entre joueurs *******************************************/
+/************************************************ Relance du jeu ********************************************************/
     socket.on('restart-game', function (message){
         checkNbPlayers();
         io.emit('onlinePlayers', players);
